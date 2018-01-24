@@ -1,0 +1,16 @@
+--- dir.props
++++ dir.props
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <Import Condition="Exists('..\dir.props')" Project="..\dir.props" />
+ 
+@@ -16,6 +16,7 @@
+     <PackageOutputRoot Condition="'$(PackageOutputRoot)'==''">$(BinDir)packages/</PackageOutputRoot>
+ 
+     <!-- Input Directories -->
++    <PackagesDir>$(NUGET_PACKAGES)</PackagesDir>
+     <PackagesDir Condition="'$(PackagesDir)'==''">$(ProjectDir)packages/</PackagesDir>
+     <ToolsDir Condition="'$(ToolsDir)'==''">$(ProjectDir)Tools/</ToolsDir>
+   </PropertyGroup>
