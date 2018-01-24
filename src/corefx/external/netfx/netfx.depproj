@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))\dir.props" />
+  <Import Project="$(SourceDir)\shims\netfxreference.props" />
+  <PropertyGroup>
+    <BinPlaceRef>true</BinPlaceRef>
+    <NuGetDeploySourceItem>Reference</NuGetDeploySourceItem>
+    <NugetRuntimeIdentifier>None</NugetRuntimeIdentifier>
+    <RefOutputPath>$(RefPath)</RefOutputPath>
+    <TargetingPackPackageVersion>1.0.1</TargetingPackPackageVersion>
+    <TargetingPackPackageVersion Condition="'$(TargetGroup)' == 'net471'">1.0.0-preview</TargetingPackPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(NuGetTargetMoniker)' == '.NETFramework,Version=v4.6.3'">
+    <!-- Missing 4.6.3 targeting pack, use 462 for now -->
+    <TargetingPackNugetPackageId>Microsoft.TargetingPack.NETFramework.v4.6.2</TargetingPackNugetPackageId>
+  </PropertyGroup>
+  <PropertyGroup Condition="!$(NuGetTargetMoniker.StartsWith('.NETFramework'))">
+    <!-- For things not .NETFramework we need the net461 targeting pack to generate facades -->
+    <NuGetTargetMoniker>.NETFramework,Version=v4.6.1</NuGetTargetMoniker>
+    <NuGetTargetMonikerShort>net461</NuGetTargetMonikerShort>
+    <TargetingPackNugetPackageId>Microsoft.TargetingPack.NETFramework.v4.6.1</TargetingPackNugetPackageId>
+    <RefOutputPath>$(NetFxRefPath)</RefOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="$(TargetingPackNugetPackageId)">
+      <Version>$(TargetingPackPackageVersion)</Version>
+    </PackageReference>
+    <PackageReference Include="NETStandard.Library" Condition="'$(TargetGroup)' == 'netfx'">
+      <Version>$(NETStandardLibraryPackageVersion)</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BinPlaceConfiguration Include="$(Configuration)">
+      <RefPath>$(RefOutputPath)</RefPath>
+    </BinPlaceConfiguration>
+
+    <FileToExclude Include="System.EnterpriseServices" />
+    <FileToExclude Include="System.EnterpriseServices.Thunk" />
+    <FileToExclude Include="System.EnterpriseServices.Wrapper" />
+  </ItemGroup>
+
+  <Target Name="FilterNETStandardShims" BeforeTargets="FilterNugetPackages"
+          Condition="'$(RefOutputPath)' == '$(NetFxRefPath)'">
+    <PropertyGroup>
+      <_NETStandardRefFolder>$(PackagesDir)$(NETStandardLibraryPackageId.ToLower())\$(NETStandardLibraryPackageVersion)\build\netstandard2.0\ref</_NETStandardRefFolder>
+    </PropertyGroup>
+    <ItemGroup>
+      <_excludeForNetFx Include="@(NetFxReference);netstandard" />
+      <_allnetstandardAssemblies Include="$(_NETStandardRefFolder)\*.dll" />
+      <_netstandardAssemblyFileNames Include="@(_allnetstandardAssemblies->'%(Filename)')" Exclude="@(_excludeForNetFx)" />
+      <_netstandardShimAssemblies Include="@(_netstandardAssemblyFileNames->'$(_NETStandardRefFolder)\%(Identity).dll')" />
+      <FileToExclude Include="@(_netstandardAssemblyFileNames)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="AddNETStandardShims" AfterTargets="FilterNugetPackages"
+          Condition="'$(RefOutputPath)' == '$(NetFxRefPath)'">
+    <ItemGroup>
+      <Reference Include="@(_netstandardShimAssemblies)">
+        <Private>False</Private>
+        <NuGetPackageId>$(NETStandardLibraryPackageId)</NuGetPackageId>
+        <NuGetPackageVersion>$(NETStandardLibraryPackageVersion)</NuGetPackageVersion>
+      </Reference>
+    </ItemGroup>
+  </Target>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))\dir.targets" />
+</Project>

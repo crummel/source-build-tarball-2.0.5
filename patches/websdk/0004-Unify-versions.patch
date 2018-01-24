@@ -1,0 +1,50 @@
+From a99c6037ca385f516e9aa16fa5f6586c8a6cc436 Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Tue, 24 Oct 2017 16:35:04 -0400
+Subject: [PATCH 1/1] Unify Versions
+
+---
+ .../Microsoft.NET.Sdk.Publish.Tasks.csproj                          | 4 ++--
+ .../Microsoft.NET.Sdk.Publish.Tasks.Tests.csproj                    | 6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/src/Publish/Microsoft.NET.Sdk.Publish.Tasks/Microsoft.NET.Sdk.Publish.Tasks.csproj b/src/Publish/Microsoft.NET.Sdk.Publish.Tasks/Microsoft.NET.Sdk.Publish.Tasks.csproj
+index 2208825..0918aee 100644
+--- a/src/Publish/Microsoft.NET.Sdk.Publish.Tasks/Microsoft.NET.Sdk.Publish.Tasks.csproj
++++ b/src/Publish/Microsoft.NET.Sdk.Publish.Tasks/Microsoft.NET.Sdk.Publish.Tasks.csproj
+@@ -20,8 +20,8 @@
+     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+   </PropertyGroup>
+   <ItemGroup>
+-    <PackageReference Include="Microsoft.Build.Framework" Version="15.1.1012" ExcludeAssets="Runtime" />
+-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.1.1012" ExcludeAssets="Runtime" />
++    <PackageReference Include="Microsoft.Build.Framework" Version="15.4.8" ExcludeAssets="Runtime" />
++    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.4.8" ExcludeAssets="Runtime" />
+     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="4.3.0" />
+   </ItemGroup>
+diff --git a/test/Publish/Microsoft.NET.Sdk.Publish.Tasks.Tests/Microsoft.NET.Sdk.Publish.Tasks.Tests.csproj b/test/Publish/Microsoft.NET.Sdk.Publish.Tasks.Tests/Microsoft.NET.Sdk.Publish.Tasks.Tests.csproj
+index 81218d3..6339a2e 100644
+--- a/test/Publish/Microsoft.NET.Sdk.Publish.Tasks.Tests/Microsoft.NET.Sdk.Publish.Tasks.Tests.csproj
++++ b/test/Publish/Microsoft.NET.Sdk.Publish.Tasks.Tests/Microsoft.NET.Sdk.Publish.Tasks.Tests.csproj
+@@ -5,8 +5,8 @@
+   </PropertyGroup>
+   
+   <ItemGroup>
+-    <PackageReference Include="Microsoft.Build.Framework" Version="15.1.1012" />
+-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.1.1012" />
++    <PackageReference Include="Microsoft.Build.Framework" Version="15.4.8" />
++    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.4.8" />
+     
+     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0-preview-20170628-02" />
+     <PackageReference Include="xunit" Version="2.2.0" />
+@@ -37,4 +37,4 @@
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+     </None>
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+1.8.3.1
+

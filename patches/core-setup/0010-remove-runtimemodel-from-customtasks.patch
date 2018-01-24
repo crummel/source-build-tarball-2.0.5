@@ -1,0 +1,24 @@
+From e37b193ec38e0b41d84a997dbaadc04342585b1c Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Mon, 18 Sep 2017 18:08:40 -0400
+Subject: [PATCH 1/1] remove runtimemodel from customtasks
+
+---
+ build.proj | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/build.proj b/build.proj
+index 0cadd7b..df27be9 100644
+--- a/build.proj
++++ b/build.proj
+@@ -50,7 +50,6 @@
+         <CustomTaskDependencies Include="$(BuildToolsTaskDir)Newtonsoft.Json.dll" />
+         <CustomTaskDependencies Include="$(BuildToolsTaskDir)Microsoft.DotNet.PlatformAbstractions.dll" />
+         <CustomTaskDependencies Include="$(PackagesDir)microsoft.extensions.dependencymodel\1.1.1\lib\$(DependencyModelTFM)\Microsoft.Extensions.DependencyModel.dll" />
+-        <CustomTaskDependencies Include="$(PackagesDir)nuget.runtimemodel\3.5.0\lib\$(NugetModelTFM)\NuGet.RuntimeModel.dll" />
+       </ItemGroup>
+       <Copy SourceFiles="@(CustomTaskDependencies)"
+             DestinationFolder="$(LocalBuildToolsTaskDir)"
+-- 
+1.8.3.1
+

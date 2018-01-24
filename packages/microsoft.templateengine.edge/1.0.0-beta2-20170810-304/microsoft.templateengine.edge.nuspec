@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.TemplateEngine.Edge</id>
+    <version>1.0.0-beta2-20170810-304</version>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Helper package for adding Template Engine to consuming applications</description>
+    <releaseNotes>Commit Hash: 238e130268b235be44641bff66d57d75214475d9</releaseNotes>
+    <copyright>Copyright © Microsoft Corporation</copyright>
+    <dependencies>
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="Microsoft.TemplateEngine.Abstractions" version="1.0.0-beta2-20170810-304" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.TemplateEngine.Utils" version="1.0.0-beta2-20170810-304" exclude="Build,Analyzers" />
+        <dependency id="System.IO.Compression" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="8.0.3" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard1.5">
+        <dependency id="Microsoft.TemplateEngine.Abstractions" version="1.0.0-beta2-20170810-304" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.TemplateEngine.Utils" version="1.0.0-beta2-20170810-304" exclude="Build,Analyzers" />
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+        <dependency id="System.IO.Compression" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="System.Runtime.Loader" version="4.3.0" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="9.0.1" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

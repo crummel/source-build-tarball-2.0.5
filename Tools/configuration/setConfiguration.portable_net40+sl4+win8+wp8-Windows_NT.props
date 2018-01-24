@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_parse_BuildConfigurations>;$(BuildConfigurations.Replace('%0A','').Replace('%0D','').Replace(' ',''));</_parse_BuildConfigurations>
+  </PropertyGroup>
+  <Choose>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';portable_net40+sl4+win8+wp8-Windows_NT;'))">
+      <PropertyGroup>
+        <Configuration>portable_net40+sl4+win8+wp8-Windows_NT-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';portable_net40+sl4+win8+wp8;')) OR $(_parse_BuildConfigurations.Contains(';portable_net40+sl4+win8+wp8-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>portable_net40+sl4+win8+wp8-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <ConfigurationErrorMsg>$(ConfigurationErrorMsg)Could not find a compatible configuration for BuildConfiguration '$(BuildConfiguration)' from BuildConfigurations '$(_parse_BuildConfigurations)'.  Considered portable_net40+sl4+win8+wp8-Windows_NT;portable_net40+sl4+win8+wp8;portable_net40+sl4+win8+wp8-AnyOS.</ConfigurationErrorMsg>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+</Project>

@@ -1,0 +1,29 @@
+From 41ae2b3830d4be0369b332a7d168296e1f8c0aaa Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Tue, 17 Oct 2017 19:59:06 -0400
+Subject: [PATCH 1/1] fix roslyn
+
+---
+ src/redist/redist.csproj | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/redist/redist.csproj b/src/redist/redist.csproj
+index c45cd6b..650c98f 100644
+--- a/src/redist/redist.csproj
++++ b/src/redist/redist.csproj
+@@ -76,7 +76,8 @@
+      ReplacementStrings="$(ReplacementString)" />
+    <DotNetPublish
+      ToolPath="$(Stage0Directory)"
+      Configuration="$(Configuration)"
+-      ProjectPath="$(SrcDirectory)/tool_roslyn_satellites/tool_roslyn_satellites.csproj" />
++      ProjectPath="$(SrcDirectory)/tool_roslyn_satellites/tool_roslyn_satellites.csproj"
++      MSBuildArgs="/p:Rid=$(Rid)" />
+    <AddToDeps TargetDeps="@(RoslynDeps)" AdditionalDeps="@(RoslynSatelliteDeps)" />
+    <Delete Files="@(RoslynSatelliteDeps)" />
+  </Target>
+
+  <Target Name="PublishFSharp"
+-- 
+1.8.3.1
+

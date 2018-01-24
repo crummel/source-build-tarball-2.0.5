@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_parse_BuildConfigurations>;$(BuildConfigurations.Replace('%0A','').Replace('%0D','').Replace(' ',''));</_parse_BuildConfigurations>
+  </PropertyGroup>
+  <Choose>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netcoreapp2.0-Linux;'))">
+      <PropertyGroup>
+        <Configuration>netcoreapp2.0-Linux-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netcoreapp1.0-Linux;'))">
+      <PropertyGroup>
+        <Configuration>netcoreapp1.0-Linux-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard2.0-Linux;'))">
+      <PropertyGroup>
+        <Configuration>netstandard2.0-Linux-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.6-Linux;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.6-Linux-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.5-Linux;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.5-Linux-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.4-Linux;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.4-Linux-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.3-Linux;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.3-Linux-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.2-Linux;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.2-Linux-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.1-Linux;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.1-Linux-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.0-Linux;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.0-Linux-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netcoreapp2.0-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netcoreapp2.0-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netcoreapp1.0-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netcoreapp1.0-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard2.0-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard2.0-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.6-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.6-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.5-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.5-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.4-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.4-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.3-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.3-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.2-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.2-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.1-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.1-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.0-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.0-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netcoreapp2.0;')) OR $(_parse_BuildConfigurations.Contains(';netcoreapp2.0-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netcoreapp2.0-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netcoreapp1.0;')) OR $(_parse_BuildConfigurations.Contains(';netcoreapp1.0-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netcoreapp1.0-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard2.0;')) OR $(_parse_BuildConfigurations.Contains(';netstandard2.0-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard2.0-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.6;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.6-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.6-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.5;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.5-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.5-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.4;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.4-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.4-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.3;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.3-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.3-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.2;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.2-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.2-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.1;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.1-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.1-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.0;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.0-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.0-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <ConfigurationErrorMsg>$(ConfigurationErrorMsg)Could not find a compatible configuration for BuildConfiguration '$(BuildConfiguration)' from BuildConfigurations '$(_parse_BuildConfigurations)'.  Considered netcoreapp2.0-Linux;netcoreapp1.0-Linux;netstandard2.0-Linux;netstandard1.6-Linux;netstandard1.5-Linux;netstandard1.4-Linux;netstandard1.3-Linux;netstandard1.2-Linux;netstandard1.1-Linux;netstandard1.0-Linux;netcoreapp2.0-Unix;netcoreapp1.0-Unix;netstandard2.0-Unix;netstandard1.6-Unix;netstandard1.5-Unix;netstandard1.4-Unix;netstandard1.3-Unix;netstandard1.2-Unix;netstandard1.1-Unix;netstandard1.0-Unix;netcoreapp2.0;netcoreapp2.0-AnyOS;netcoreapp1.0;netcoreapp1.0-AnyOS;netstandard2.0;netstandard2.0-AnyOS;netstandard1.6;netstandard1.6-AnyOS;netstandard1.5;netstandard1.5-AnyOS;netstandard1.4;netstandard1.4-AnyOS;netstandard1.3;netstandard1.3-AnyOS;netstandard1.2;netstandard1.2-AnyOS;netstandard1.1;netstandard1.1-AnyOS;netstandard1.0;netstandard1.0-AnyOS.</ConfigurationErrorMsg>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+</Project>

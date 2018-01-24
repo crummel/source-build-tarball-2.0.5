@@ -1,0 +1,407 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="TargetGroup;OSGroup;ConfigurationGroup;ArchGroup">
+  <Import Project="$(MSBuildThisFileDirectory)setConfiguration.props" />
+  <PropertyGroup>
+    <_parse_Configuration>-$(Configuration)-</_parse_Configuration>
+  </PropertyGroup>
+  <Choose>
+    <When Condition="$(_parse_Configuration.Contains('-netcore50-'))">
+      <PropertyGroup>
+        <TargetGroup>netcore50</TargetGroup>
+        <TargetingPackNugetPackageId>Microsoft.TargetingPack.Private.NetNative</TargetingPackNugetPackageId>
+        <NuGetTargetMoniker>.NETCore,Version=v5.0</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>netcore50</NuGetTargetMonikerShort>
+        <UWPCompatible>true</UWPCompatible>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-netcore50aot-'))">
+      <PropertyGroup>
+        <TargetGroup>netcore50aot</TargetGroup>
+        <PackageTargetRuntimeSuffix>aot</PackageTargetRuntimeSuffix>
+        <TargetingPackNugetPackageId>Microsoft.TargetingPack.Private.NetNative</TargetingPackNugetPackageId>
+        <NuGetTargetMoniker>.NETCore,Version=v5.0</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>netcore50</NuGetTargetMonikerShort>
+        <UWPCompatible>true</UWPCompatible>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-uap101aot-'))">
+      <PropertyGroup>
+        <TargetGroup>uap101aot</TargetGroup>
+        <PackageTargetRuntimeSuffix>aot</PackageTargetRuntimeSuffix>
+        <NuGetTargetMoniker>UAP,Version=v10.1</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>uap10.1</NuGetTargetMonikerShort>
+        <UWPCompatible>true</UWPCompatible>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-uap101-'))">
+      <PropertyGroup>
+        <TargetGroup>uap101</TargetGroup>
+        <NuGetTargetMoniker>UAP,Version=v10.1</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>uap10.1</NuGetTargetMonikerShort>
+        <UWPCompatible>true</UWPCompatible>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-uap-'))">
+      <PropertyGroup>
+        <TargetGroup>uap</TargetGroup>
+        <NuGetTargetMoniker>UAP,Version=v10.1</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>uap10.1</NuGetTargetMonikerShort>
+        <UWPCompatible>true</UWPCompatible>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-uapaot-'))">
+      <PropertyGroup>
+        <TargetGroup>uapaot</TargetGroup>
+        <PackageTargetRuntimeSuffix>aot</PackageTargetRuntimeSuffix>
+        <NuGetTargetMoniker>UAP,Version=v10.1</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>uap10.1</NuGetTargetMonikerShort>
+        <UWPCompatible>true</UWPCompatible>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-netstandard1.0-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard1.0</TargetGroup>
+        <NuGetTargetMoniker>.NETStandard,Version=v1.0</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>netstandard1.0</NuGetTargetMonikerShort>
+        <UWPCompatible>true</UWPCompatible>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-netstandard1.1-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard1.1</TargetGroup>
+        <NuGetTargetMoniker>.NETStandard,Version=v1.1</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>netstandard1.1</NuGetTargetMonikerShort>
+        <UWPCompatible>true</UWPCompatible>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-netstandard1.2-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard1.2</TargetGroup>
+        <NuGetTargetMoniker>.NETStandard,Version=v1.2</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>netstandard1.2</NuGetTargetMonikerShort>
+        <UWPCompatible>true</UWPCompatible>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-netstandard1.3-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard1.3</TargetGroup>
+        <NuGetTargetMoniker>.NETStandard,Version=v1.3</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>netstandard1.3</NuGetTargetMonikerShort>
+        <UWPCompatible>true</UWPCompatible>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-netstandard1.4-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard1.4</TargetGroup>
+        <NuGetTargetMoniker>.NETStandard,Version=v1.4</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>netstandard1.4</NuGetTargetMonikerShort>
+        <UWPCompatible>true</UWPCompatible>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-netstandard1.5-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard1.5</TargetGroup>
+        <NuGetTargetMoniker>.NETStandard,Version=v1.5</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>netstandard1.5</NuGetTargetMonikerShort>
+        <UWPCompatible>true</UWPCompatible>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-netstandard1.6-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard1.6</TargetGroup>
+        <NuGetTargetMoniker>.NETStandard,Version=v1.6</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>netstandard1.6</NuGetTargetMonikerShort>
+        <UWPCompatible>true</UWPCompatible>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-netstandard2.0-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard2.0</TargetGroup>
+        <NuGetTargetMoniker>.NETStandard,Version=v2.0</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>netstandard2.0</NuGetTargetMonikerShort>
+        <UWPCompatible>true</UWPCompatible>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-netstandard-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard</TargetGroup>
+        <NuGetTargetMoniker>.NETStandard,Version=v2.0</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>netstandard2.0</NuGetTargetMonikerShort>
+        <UWPCompatible>true</UWPCompatible>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-netcoreapp1.0-'))">
+      <PropertyGroup>
+        <TargetGroup>netcoreapp1.0</TargetGroup>
+        <NuGetTargetMoniker>.NETCoreApp,Version=v1.0</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>netcoreapp1.0</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-netcoreapp2.0-'))">
+      <PropertyGroup>
+        <TargetGroup>netcoreapp2.0</TargetGroup>
+        <NuGetTargetMoniker>.NETCoreApp,Version=v2.0</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>netcoreapp2.0</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-netcoreapp-'))">
+      <PropertyGroup>
+        <TargetGroup>netcoreapp</TargetGroup>
+        <NuGetTargetMoniker>.NETCoreApp,Version=v2.0</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>netcoreapp2.0</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-netcoreapp1.2-'))">
+      <PropertyGroup>
+        <TargetGroup>netcoreapp1.2</TargetGroup>
+        <NuGetTargetMoniker>.NETCoreApp,Version=v1.2</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>netcoreapp1.2</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-netcoreapp1.2corert-'))">
+      <PropertyGroup>
+        <TargetGroup>netcoreapp1.2corert</TargetGroup>
+        <NuGetTargetMoniker>.NETCoreApp,Version=v1.2</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>netcoreapp1.2</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-net45-'))">
+      <PropertyGroup>
+        <TargetGroup>net45</TargetGroup>
+        <TargetingPackNugetPackageId>Microsoft.TargetingPack.NETFramework.v4.5</TargetingPackNugetPackageId>
+        <NuGetTargetMoniker>.NETFramework,Version=v4.5</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>net45</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-net451-'))">
+      <PropertyGroup>
+        <TargetGroup>net451</TargetGroup>
+        <TargetingPackNugetPackageId>Microsoft.TargetingPack.NETFramework.v4.5.1</TargetingPackNugetPackageId>
+        <NuGetTargetMoniker>.NETFramework,Version=v4.5.1</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>net451</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-net46-'))">
+      <PropertyGroup>
+        <TargetGroup>net46</TargetGroup>
+        <TargetingPackNugetPackageId>Microsoft.TargetingPack.NETFramework.v4.6</TargetingPackNugetPackageId>
+        <NuGetTargetMoniker>.NETFramework,Version=v4.6</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>net46</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-net461-'))">
+      <PropertyGroup>
+        <TargetGroup>net461</TargetGroup>
+        <TargetingPackNugetPackageId>Microsoft.TargetingPack.NETFramework.v4.6.1</TargetingPackNugetPackageId>
+        <NuGetTargetMoniker>.NETFramework,Version=v4.6.1</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>net461</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-netfx-'))">
+      <PropertyGroup>
+        <TargetGroup>netfx</TargetGroup>
+        <TargetingPackNugetPackageId>Microsoft.TargetingPack.NETFramework.v4.6.1</TargetingPackNugetPackageId>
+        <NuGetTargetMoniker>.NETFramework,Version=v4.6.1</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>net461</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-net462-'))">
+      <PropertyGroup>
+        <TargetGroup>net462</TargetGroup>
+        <TargetingPackNugetPackageId>Microsoft.TargetingPack.NETFramework.v4.6.2</TargetingPackNugetPackageId>
+        <NuGetTargetMoniker>.NETFramework,Version=v4.6.2</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>net462</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-net463-'))">
+      <PropertyGroup>
+        <TargetGroup>net463</TargetGroup>
+        <TargetingPackNugetPackageId>Microsoft.TargetingPack.NETFramework.v4.6.3</TargetingPackNugetPackageId>
+        <NuGetTargetMoniker>.NETFramework,Version=v4.6.3</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>net463</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-net47-'))">
+      <PropertyGroup>
+        <TargetGroup>net47</TargetGroup>
+        <TargetingPackNugetPackageId>Microsoft.TargetingPack.NETFramework.v4.7</TargetingPackNugetPackageId>
+        <NuGetTargetMoniker>.NETFramework,Version=v4.7</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>net47</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-net471-'))">
+      <PropertyGroup>
+        <TargetGroup>net471</TargetGroup>
+        <TargetingPackNugetPackageId>Microsoft.TargetingPack.NETFramework.v4.7.1</TargetingPackNugetPackageId>
+        <NuGetTargetMoniker>.NETFramework,Version=v4.7.1</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>net471</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-win8-'))">
+      <PropertyGroup>
+        <TargetGroup>win8</TargetGroup>
+        <NuGetTargetMoniker>Windows,Version=v8.0</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>win8</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-wpa81-'))">
+      <PropertyGroup>
+        <TargetGroup>wpa81</TargetGroup>
+        <NuGetTargetMoniker>WindowsPhoneApp,Version=v8.1</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>wpa81</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-portable_net45+win8+sl5-'))">
+      <PropertyGroup>
+        <TargetGroup>portable_net45+win8+sl5</TargetGroup>
+        <TargetingPackNugetPackageId>Microsoft.TargetingPack.Portable.v4.0.Profile47</TargetingPackNugetPackageId>
+        <NuGetTargetMoniker>.NETPortable,Version=v0.0,Profile=Profile47</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>portable-net45+win8+sl5</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-portable_net40+sl4+win8+wp8-'))">
+      <PropertyGroup>
+        <TargetGroup>portable_net40+sl4+win8+wp8</TargetGroup>
+        <TargetingPackNugetPackageId>Microsoft.TargetingPack.Portable.v4.0.Profile36</TargetingPackNugetPackageId>
+        <NuGetTargetMoniker>.NETPortable,Version=v0.0,Profile=Profile36</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>portable-net40+sl4+win8+wp8</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-package-'))">
+      <PropertyGroup>
+        <TargetGroup>package</TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-mono-'))">
+      <PropertyGroup>
+        <TargetGroup>mono</TargetGroup>
+        <NuGetTargetMoniker>.NETFramework,Version=v4.6.3</NuGetTargetMoniker>
+        <NuGetTargetMonikerShort>net463</NuGetTargetMonikerShort>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <ConfigurationErrorMsg>$(ConfigurationErrorMsg)Could not find a value for TargetGroup from Configuration '$(Configuration)'.</ConfigurationErrorMsg>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  <Choose>
+    <When Condition="$(_parse_Configuration.Contains('-Windows_NT-'))">
+      <PropertyGroup>
+        <OSGroup>Windows_NT</OSGroup>
+        <TargetsWindows>true</TargetsWindows>
+        <PackageTargetRuntime>win</PackageTargetRuntime>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-Unix-'))">
+      <PropertyGroup>
+        <OSGroup>Unix</OSGroup>
+        <TargetsUnix>true</TargetsUnix>
+        <TargetsLinux>true</TargetsLinux>
+        <PackageTargetRuntime>unix</PackageTargetRuntime>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-Linux-'))">
+      <PropertyGroup>
+        <OSGroup>Linux</OSGroup>
+        <TargetsUnix>true</TargetsUnix>
+        <TargetsLinux>true</TargetsLinux>
+        <PackageTargetRuntime>linux</PackageTargetRuntime>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-OSX-'))">
+      <PropertyGroup>
+        <OSGroup>OSX</OSGroup>
+        <TargetsUnix>true</TargetsUnix>
+        <TargetsOSX>true</TargetsOSX>
+        <PackageTargetRuntime>osx</PackageTargetRuntime>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-FreeBSD-'))">
+      <PropertyGroup>
+        <OSGroup>FreeBSD</OSGroup>
+        <TargetsUnix>true</TargetsUnix>
+        <TargetsFreeBSD>true</TargetsFreeBSD>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-NetBSD-'))">
+      <PropertyGroup>
+        <OSGroup>NetBSD</OSGroup>
+        <TargetsUnix>true</TargetsUnix>
+        <TargetsNetBSD>true</TargetsNetBSD>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-AnyOS-'))">
+      <PropertyGroup>
+        <OSGroup>AnyOS</OSGroup>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <OSGroup>AnyOS</OSGroup>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  <Choose>
+    <When Condition="$(_parse_Configuration.Contains('-Debug-'))">
+      <PropertyGroup>
+        <ConfigurationGroup>Debug</ConfigurationGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_Configuration.Contains('-Release-'))">
+      <PropertyGroup>
+        <ConfigurationGroup>Release</ConfigurationGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(ConfigurationGroup)' == 'Debug'" />
+    <When Condition="'$(ConfigurationGroup)' == 'Release'" />
+    <Otherwise>
+      <PropertyGroup>
+        <ConfigurationGroup>Debug</ConfigurationGroup>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  <PropertyGroup>
+    <_parse_BuildConfiguration>-$(BuildConfiguration)-</_parse_BuildConfiguration>
+  </PropertyGroup>
+  <Choose>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-x86-'))">
+      <PropertyGroup>
+        <ArchGroup>x86</ArchGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-x64-'))">
+      <PropertyGroup>
+        <ArchGroup>x64</ArchGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-arm-'))">
+      <PropertyGroup>
+        <ArchGroup>arm</ArchGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-arm64-'))">
+      <PropertyGroup>
+        <ArchGroup>arm64</ArchGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-armel-'))">
+      <PropertyGroup>
+        <ArchGroup>armel</ArchGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(ArchGroup)' == 'x86'" />
+    <When Condition="'$(ArchGroup)' == 'x64'" />
+    <When Condition="'$(ArchGroup)' == 'arm'" />
+    <When Condition="'$(ArchGroup)' == 'arm64'" />
+    <When Condition="'$(ArchGroup)' == 'armel'" />
+    <Otherwise>
+      <PropertyGroup>
+        <ArchGroup>x64</ArchGroup>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  <PropertyGroup>
+    <RuntimeOS Condition="'$(RuntimeOS)' == ''">rhel.7</RuntimeOS>
+  </PropertyGroup>
+</Project>

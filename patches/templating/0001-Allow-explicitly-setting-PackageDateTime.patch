@@ -1,0 +1,32 @@
+From a208dbda58410845ab259551f05f8ed39b410a66 Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Wed, 25 Oct 2017 18:38:40 -0400
+Subject: [PATCH 1/1] Allow explicitly setting PackageDateTime
+
+This allows someone who is recreating the build at a later date to
+ensure that the version number used is correct instead of just picking
+up the current date.
+---
+ Version.props | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Version.props b/Version.props
+index c8d4012..8d1ab71 100644
+--- a/Version.props
++++ b/Version.props
+@@ -3,10 +3,11 @@
+     <PackageReleaseVersion>1.0.0</PackageReleaseVersion>
+     <PackageBuildQuality>$(BUILD_QUALITY)</PackageBuildQuality>
+     <PackageBuildQuality Condition=" '$(PackageBuildQuality)' == '' ">beta1</PackageBuildQuality>
++    <PackageDateTime Condition="'$(PackageDateTime)' == ''">$([System.DateTime]::Now.ToString("yyyyMMdd"))</PackageDateTime>
+     <PackageVersion>$(PackageReleaseVersion)-$(PackageBuildQuality)</PackageVersion>
+     <BUILD_NUMBER Condition="'$(BUILD_NUMBER)' == ''">0</BUILD_NUMBER>
+     <AssemblyReleaseVersion>$(PackageReleaseVersion).$(BUILD_NUMBER)</AssemblyReleaseVersion>
+-    <PackageVersion Condition="'$(NO_TIMESTAMP)' != 'true'">$(PackageVersion)-$([System.DateTime]::Now.ToString("yyyyMMdd"))-$(BUILD_NUMBER)</PackageVersion>
++    <PackageVersion Condition="'$(NO_TIMESTAMP)' != 'true'">$(PackageVersion)-$(PackageDateTime)-$(BUILD_NUMBER)</PackageVersion>
+   </PropertyGroup>
+   <PropertyGroup>
+     <Authors>Microsoft</Authors>
+-- 
+1.8.3.1
+

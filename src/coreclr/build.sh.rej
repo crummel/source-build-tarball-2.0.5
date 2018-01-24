@@ -1,0 +1,11 @@
+--- build.sh
++++ build.sh
+@@ -609,7 +609,7 @@
+ # Set the various build properties here so that CMake and MSBuild can pick them up
+ __ProjectDir="$__ProjectRoot"
+ __SourceDir="$__ProjectDir/src"
+-__PackagesDir="$__ProjectDir/packages"
++__PackagesDir="${NUGET_PACKAGES:-${__ProjectDir}/packages}"
+ __RootBinDir="$__ProjectDir/bin"
+ __UnprocessedBuildArgs=
+ __RunArgs=

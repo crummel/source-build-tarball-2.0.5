@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_parse_BuildConfigurations>;$(BuildConfigurations.Replace('%0A','').Replace('%0D','').Replace(' ',''));</_parse_BuildConfigurations>
+  </PropertyGroup>
+  <Choose>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.3;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.3-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.3-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.2;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.2-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.2-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.1;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.1-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.1-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.0;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.0-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.0-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <ConfigurationErrorMsg>$(ConfigurationErrorMsg)Could not find a compatible configuration for BuildConfiguration '$(BuildConfiguration)' from BuildConfigurations '$(_parse_BuildConfigurations)'.  Considered netstandard1.3;netstandard1.3-AnyOS;netstandard1.2;netstandard1.2-AnyOS;netstandard1.1;netstandard1.1-AnyOS;netstandard1.0;netstandard1.0-AnyOS.</ConfigurationErrorMsg>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+</Project>

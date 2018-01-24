@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <CLITargets Condition=" '$(CLITargets)' == '' ">Prepare;Compile;Package</CLITargets>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <IncludeNuGetPackageArchive Condition=" '$(IncludeNuGetPackageArchive)' == '' ">true</IncludeNuGetPackageArchive>
+    <SkipBuildingInstallers Condition=" '$(SkipBuildingInstallers)' == '' ">false</SkipBuildingInstallers>
+    <IncludeAspNetCoreRuntime Condition="'$(IncludeAspNetCoreRuntime)' == ''">true</IncludeAspNetCoreRuntime>
+    <IncludeMSBuildSdkResolver Condition="'$(IncludeMSBuildSdkResolver)' == ''">true</IncludeMSBuildSdkResolver>
+    <UsePortableLinuxSharedFramework Condition=" '$(UsePortableLinuxSharedFramework)' == '' AND '$(OSPlatform)' == 'linux' ">true</UsePortableLinuxSharedFramework>
+    <IncludeSharedFrameworksForBackwardsCompatibilityTests Condition=" $(IncludeSharedFrameworksForBackwardsCompatibilityTests) == '' AND '$(Rid)' != 'linux-x64' ">true</IncludeSharedFrameworksForBackwardsCompatibilityTests>
+    <HighEntropyVA>true</HighEntropyVA>
+  </PropertyGroup>
+</Project>

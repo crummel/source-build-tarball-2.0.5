@@ -1,0 +1,309 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_parse_BuildConfiguration>-$(BuildConfiguration)-</_parse_BuildConfiguration>
+  </PropertyGroup>
+  <Choose>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netcore50-'))">
+      <PropertyGroup>
+        <TargetGroup>netcore50</TargetGroup>
+        <_bc_TargetGroup>netcore50</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netcore50aot-'))">
+      <PropertyGroup>
+        <TargetGroup>netcore50aot</TargetGroup>
+        <_bc_TargetGroup>netcore50aot</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-uap101aot-'))">
+      <PropertyGroup>
+        <TargetGroup>uap101aot</TargetGroup>
+        <_bc_TargetGroup>uap101aot</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-uap101-'))">
+      <PropertyGroup>
+        <TargetGroup>uap101</TargetGroup>
+        <_bc_TargetGroup>uap101</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-uap-'))">
+      <PropertyGroup>
+        <TargetGroup>uap</TargetGroup>
+        <_bc_TargetGroup>uap</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-uapaot-'))">
+      <PropertyGroup>
+        <TargetGroup>uapaot</TargetGroup>
+        <_bc_TargetGroup>uapaot</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netstandard1.0-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard1.0</TargetGroup>
+        <_bc_TargetGroup>netstandard1.0</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netstandard1.1-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard1.1</TargetGroup>
+        <_bc_TargetGroup>netstandard1.1</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netstandard1.2-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard1.2</TargetGroup>
+        <_bc_TargetGroup>netstandard1.2</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netstandard1.3-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard1.3</TargetGroup>
+        <_bc_TargetGroup>netstandard1.3</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netstandard1.4-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard1.4</TargetGroup>
+        <_bc_TargetGroup>netstandard1.4</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netstandard1.5-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard1.5</TargetGroup>
+        <_bc_TargetGroup>netstandard1.5</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netstandard1.6-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard1.6</TargetGroup>
+        <_bc_TargetGroup>netstandard1.6</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netstandard2.0-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard2.0</TargetGroup>
+        <_bc_TargetGroup>netstandard2.0</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netstandard-'))">
+      <PropertyGroup>
+        <TargetGroup>netstandard</TargetGroup>
+        <_bc_TargetGroup>netstandard</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netcoreapp1.0-'))">
+      <PropertyGroup>
+        <TargetGroup>netcoreapp1.0</TargetGroup>
+        <_bc_TargetGroup>netcoreapp1.0</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netcoreapp2.0-'))">
+      <PropertyGroup>
+        <TargetGroup>netcoreapp2.0</TargetGroup>
+        <_bc_TargetGroup>netcoreapp2.0</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netcoreapp-'))">
+      <PropertyGroup>
+        <TargetGroup>netcoreapp</TargetGroup>
+        <_bc_TargetGroup>netcoreapp</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netcoreapp1.2-'))">
+      <PropertyGroup>
+        <TargetGroup>netcoreapp1.2</TargetGroup>
+        <_bc_TargetGroup>netcoreapp1.2</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netcoreapp1.2corert-'))">
+      <PropertyGroup>
+        <TargetGroup>netcoreapp1.2corert</TargetGroup>
+        <_bc_TargetGroup>netcoreapp1.2corert</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-net45-'))">
+      <PropertyGroup>
+        <TargetGroup>net45</TargetGroup>
+        <_bc_TargetGroup>net45</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-net451-'))">
+      <PropertyGroup>
+        <TargetGroup>net451</TargetGroup>
+        <_bc_TargetGroup>net451</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-net46-'))">
+      <PropertyGroup>
+        <TargetGroup>net46</TargetGroup>
+        <_bc_TargetGroup>net46</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-net461-'))">
+      <PropertyGroup>
+        <TargetGroup>net461</TargetGroup>
+        <_bc_TargetGroup>net461</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-netfx-'))">
+      <PropertyGroup>
+        <TargetGroup>netfx</TargetGroup>
+        <_bc_TargetGroup>netfx</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-net462-'))">
+      <PropertyGroup>
+        <TargetGroup>net462</TargetGroup>
+        <_bc_TargetGroup>net462</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-net463-'))">
+      <PropertyGroup>
+        <TargetGroup>net463</TargetGroup>
+        <_bc_TargetGroup>net463</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-net47-'))">
+      <PropertyGroup>
+        <TargetGroup>net47</TargetGroup>
+        <_bc_TargetGroup>net47</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-net471-'))">
+      <PropertyGroup>
+        <TargetGroup>net471</TargetGroup>
+        <_bc_TargetGroup>net471</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-win8-'))">
+      <PropertyGroup>
+        <TargetGroup>win8</TargetGroup>
+        <_bc_TargetGroup>win8</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-wpa81-'))">
+      <PropertyGroup>
+        <TargetGroup>wpa81</TargetGroup>
+        <_bc_TargetGroup>wpa81</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-portable_net45+win8+sl5-'))">
+      <PropertyGroup>
+        <TargetGroup>portable_net45+win8+sl5</TargetGroup>
+        <_bc_TargetGroup>portable_net45+win8+sl5</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-portable_net40+sl4+win8+wp8-'))">
+      <PropertyGroup>
+        <TargetGroup>portable_net40+sl4+win8+wp8</TargetGroup>
+        <_bc_TargetGroup>portable_net40+sl4+win8+wp8</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-package-'))">
+      <PropertyGroup>
+        <TargetGroup>package</TargetGroup>
+        <_bc_TargetGroup>package</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-mono-'))">
+      <PropertyGroup>
+        <TargetGroup>mono</TargetGroup>
+        <_bc_TargetGroup>mono</_bc_TargetGroup>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <ConfigurationErrorMsg>$(ConfigurationErrorMsg)Could not find a value for TargetGroup from BuildConfiguration '$(BuildConfiguration)'.</ConfigurationErrorMsg>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  <Choose>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-Windows_NT-'))">
+      <PropertyGroup>
+        <OSGroup>Windows_NT</OSGroup>
+        <_bc_OSGroup>Windows_NT</_bc_OSGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-Unix-'))">
+      <PropertyGroup>
+        <OSGroup>Unix</OSGroup>
+        <_bc_OSGroup>Unix</_bc_OSGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-Linux-'))">
+      <PropertyGroup>
+        <OSGroup>Linux</OSGroup>
+        <_bc_OSGroup>Linux</_bc_OSGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-OSX-'))">
+      <PropertyGroup>
+        <OSGroup>OSX</OSGroup>
+        <_bc_OSGroup>OSX</_bc_OSGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-FreeBSD-'))">
+      <PropertyGroup>
+        <OSGroup>FreeBSD</OSGroup>
+        <_bc_OSGroup>FreeBSD</_bc_OSGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-NetBSD-'))">
+      <PropertyGroup>
+        <OSGroup>NetBSD</OSGroup>
+        <_bc_OSGroup>NetBSD</_bc_OSGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-AnyOS-'))">
+      <PropertyGroup>
+        <OSGroup>AnyOS</OSGroup>
+        <_bc_OSGroup>AnyOS</_bc_OSGroup>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <OSGroup>AnyOS</OSGroup>
+        <_bc_OSGroup>AnyOS</_bc_OSGroup>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  <Choose>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-Debug-'))">
+      <PropertyGroup>
+        <ConfigurationGroup>Debug</ConfigurationGroup>
+        <_bc_ConfigurationGroup>Debug</_bc_ConfigurationGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfiguration.Contains('-Release-'))">
+      <PropertyGroup>
+        <ConfigurationGroup>Release</ConfigurationGroup>
+        <_bc_ConfigurationGroup>Release</_bc_ConfigurationGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(ConfigurationGroup)' == 'Debug'">
+      <PropertyGroup>
+        <_bc_ConfigurationGroup>Debug</_bc_ConfigurationGroup>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(ConfigurationGroup)' == 'Release'">
+      <PropertyGroup>
+        <_bc_ConfigurationGroup>Release</_bc_ConfigurationGroup>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <ConfigurationGroup>Debug</ConfigurationGroup>
+        <_bc_ConfigurationGroup>Debug</_bc_ConfigurationGroup>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  <PropertyGroup Condition="'$(Configuration)' == ''">
+    <_import_BuildConfiguration_props>$(MSBuildThisFileDirectory)setConfiguration.$(TargetGroup)-$(OSGroup).props</_import_BuildConfiguration_props>
+    <Configuration Condition="'$(BuildConfigurations)' == ''">$(BuildConfiguration)</Configuration>
+    <ConfigurationErrorMsg Condition="'$(BuildConfigurations)' != '' AND !Exists('$(_import_BuildConfiguration_props)')">$(ConfigurationErrorMsg)Configuration is not set and $(BuildConfiguration) is not a known value for BuildConfiguration.</ConfigurationErrorMsg>
+  </PropertyGroup>
+  <Import Project="$(_import_BuildConfiguration_props)" Condition="'$(BuildConfigurations)' != '' AND '$(Configuration)' == '' AND Exists('$(_import_BuildConfiguration_props)')" />
+</Project>

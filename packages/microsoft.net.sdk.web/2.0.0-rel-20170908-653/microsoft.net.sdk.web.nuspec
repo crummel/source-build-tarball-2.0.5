@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.NET.Sdk.Web</id>
+    <version>2.0.0-rel-20170908-653</version>
+    <authors>Microsoft Corporation</authors>
+    <owners>Microsoft</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm</licenseUrl>
+    <projectUrl>https://github.com/aspnet/websdk</projectUrl>
+    <description>This package contains MSBuild targets and tasks for building and publishing ASP.NET Core projects. This package is required for building and publishing ASP.NET Core projects.</description>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <language>en-US</language>
+    <dependencies>
+      <dependency id="Microsoft.NET.Sdk" version="2.0.1-servicing-20170926-1" />
+      <dependency id="Microsoft.NET.Sdk.Web.ProjectSystem" version="2.0.0-rel-20170908-653" />
+      <dependency id="Microsoft.NET.Sdk.Publish" version="2.0.0-rel-20170908-653" />
+    </dependencies>
+  </metadata>
+</package>

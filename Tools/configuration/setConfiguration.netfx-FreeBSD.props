@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_parse_BuildConfigurations>;$(BuildConfigurations.Replace('%0A','').Replace('%0D','').Replace(' ',''));</_parse_BuildConfigurations>
+  </PropertyGroup>
+  <Choose>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netfx-FreeBSD;'))">
+      <PropertyGroup>
+        <Configuration>netfx-FreeBSD-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';net461-FreeBSD;'))">
+      <PropertyGroup>
+        <Configuration>net461-FreeBSD-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';net46-FreeBSD;'))">
+      <PropertyGroup>
+        <Configuration>net46-FreeBSD-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';net451-FreeBSD;'))">
+      <PropertyGroup>
+        <Configuration>net451-FreeBSD-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';net45-FreeBSD;'))">
+      <PropertyGroup>
+        <Configuration>net45-FreeBSD-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard-FreeBSD;'))">
+      <PropertyGroup>
+        <Configuration>netstandard-FreeBSD-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard2.0-FreeBSD;'))">
+      <PropertyGroup>
+        <Configuration>netstandard2.0-FreeBSD-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.6-FreeBSD;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.6-FreeBSD-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.5-FreeBSD;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.5-FreeBSD-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.4-FreeBSD;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.4-FreeBSD-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.3-FreeBSD;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.3-FreeBSD-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.2-FreeBSD;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.2-FreeBSD-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.1-FreeBSD;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.1-FreeBSD-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.0-FreeBSD;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.0-FreeBSD-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netfx-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netfx-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';net461-Unix;'))">
+      <PropertyGroup>
+        <Configuration>net461-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';net46-Unix;'))">
+      <PropertyGroup>
+        <Configuration>net46-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';net451-Unix;'))">
+      <PropertyGroup>
+        <Configuration>net451-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';net45-Unix;'))">
+      <PropertyGroup>
+        <Configuration>net45-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard2.0-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard2.0-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.6-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.6-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.5-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.5-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.4-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.4-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.3-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.3-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.2-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.2-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.1-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.1-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.0-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.0-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netfx;')) OR $(_parse_BuildConfigurations.Contains(';netfx-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netfx-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';net461;')) OR $(_parse_BuildConfigurations.Contains(';net461-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>net461-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';net46;')) OR $(_parse_BuildConfigurations.Contains(';net46-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>net46-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';net451;')) OR $(_parse_BuildConfigurations.Contains(';net451-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>net451-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';net45;')) OR $(_parse_BuildConfigurations.Contains(';net45-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>net45-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard;')) OR $(_parse_BuildConfigurations.Contains(';netstandard-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard2.0;')) OR $(_parse_BuildConfigurations.Contains(';netstandard2.0-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard2.0-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.6;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.6-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.6-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.5;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.5-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.5-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.4;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.4-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.4-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.3;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.3-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.3-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.2;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.2-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.2-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.1;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.1-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.1-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.0;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.0-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.0-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <ConfigurationErrorMsg>$(ConfigurationErrorMsg)Could not find a compatible configuration for BuildConfiguration '$(BuildConfiguration)' from BuildConfigurations '$(_parse_BuildConfigurations)'.  Considered netfx-FreeBSD;net461-FreeBSD;net46-FreeBSD;net451-FreeBSD;net45-FreeBSD;netstandard-FreeBSD;netstandard2.0-FreeBSD;netstandard1.6-FreeBSD;netstandard1.5-FreeBSD;netstandard1.4-FreeBSD;netstandard1.3-FreeBSD;netstandard1.2-FreeBSD;netstandard1.1-FreeBSD;netstandard1.0-FreeBSD;netfx-Unix;net461-Unix;net46-Unix;net451-Unix;net45-Unix;netstandard-Unix;netstandard2.0-Unix;netstandard1.6-Unix;netstandard1.5-Unix;netstandard1.4-Unix;netstandard1.3-Unix;netstandard1.2-Unix;netstandard1.1-Unix;netstandard1.0-Unix;netfx;netfx-AnyOS;net461;net461-AnyOS;net46;net46-AnyOS;net451;net451-AnyOS;net45;net45-AnyOS;netstandard;netstandard-AnyOS;netstandard2.0;netstandard2.0-AnyOS;netstandard1.6;netstandard1.6-AnyOS;netstandard1.5;netstandard1.5-AnyOS;netstandard1.4;netstandard1.4-AnyOS;netstandard1.3;netstandard1.3-AnyOS;netstandard1.2;netstandard1.2-AnyOS;netstandard1.1;netstandard1.1-AnyOS;netstandard1.0;netstandard1.0-AnyOS.</ConfigurationErrorMsg>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+</Project>

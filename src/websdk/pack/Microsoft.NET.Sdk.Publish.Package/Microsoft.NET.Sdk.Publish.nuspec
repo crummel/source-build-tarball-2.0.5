@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.NET.Sdk.Publish</id>
+    <version>$WebSdkVersion$</version>
+    <title>Microsoft.NET.Sdk.Publish</title>
+    <authors>Microsoft Corporation</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>https://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm</licenseUrl>
+    <projectUrl>https://github.com/aspnet/websdk</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>This package contains MSBuild targets and tasks for publishing ASP.NET projects. This package is required for publishing ASP.NET Core projects.</description>
+    <copyright>&#169; Microsoft Corporation. All rights reserved.</copyright>
+    <tags></tags>
+  </metadata>
+  <files>
+    <file src="$WebSdkRoot$bin\$Configuration$\netstandard1.3\Microsoft.NET.Sdk.Publish.Tasks.dll" target="tools\netcoreapp1.0\" />
+    <file src="$WebSdkRoot$bin\$Configuration$\netstandard1.3\Newtonsoft.Json.dll" target="tools\netcoreapp1.0\" />
+    <file src="$WebSdkSource$Publish\Microsoft.NET.Sdk.Publish.Targets\netstandard1.0\ComputeTargets\*.*" target="build\netstandard1.0\ComputeTargets\" />
+    <file src="$WebSdkSource$Publish\Microsoft.NET.Sdk.Publish.Targets\netstandard1.0\PublishTargets\*.*" target="build\netstandard1.0\PublishTargets\" />
+    <file src="$WebSdkSource$Publish\Microsoft.NET.Sdk.Publish.Targets\netstandard1.0\CopyTargets\*.*" target="build\netstandard1.0\CopyTargets\" />
+    <file src="$WebSdkSource$Publish\Microsoft.NET.Sdk.Publish.Targets\netstandard1.0\TransformTargets\*.*" target="build\netstandard1.0\TransformTargets\" />
+    <file src="$WebSdkSource$Publish\Microsoft.NET.Sdk.Publish.Targets\netstandard1.0\PublishProfiles\*.*" target="build\netstandard1.0\PublishProfiles\" />
+    <file src="$WebSdkSource$Publish\Microsoft.NET.Sdk.Publish.Targets\netstandard1.0\DotNetCLIToolTargets\*.*" target="build\netstandard1.0\DotNetCLIToolTargets\" />
+    <file src="$WebSdkSource$Publish\Microsoft.NET.Sdk.Publish.Targets\netstandard1.0\Microsoft.NET.Sdk.Publish.props" target="build\netstandard1.0\" />
+    <file src="$WebSdkSource$Publish\Microsoft.NET.Sdk.Publish.Targets\netstandard1.0\Microsoft.NET.Sdk.Publish.targets" target="build\netstandard1.0\" />
+    <file src="$WebSdkSource$Publish\Microsoft.NET.Sdk.Publish.Targets\Sdk.props" target="Sdk\" />
+    <file src="$WebSdkSource$Publish\Microsoft.NET.Sdk.Publish.Targets\Sdk.targets" target="Sdk\" />
+  </files>
+</package>

@@ -1,0 +1,19 @@
+--- build/build.proj
++++ build/build.proj
+@@ -14,7 +14,7 @@
+   </Target>
+   
+   <Target Name="Build">
+-    <MSBuild Projects="@(SolutionFile)" Targets="Build" />
++    <MSBuild Projects="@(PackProject)" Targets="Build" />
+   </Target>
+ 
+   <Target Name="Test">
+@@ -22,6 +22,6 @@
+   </Target>
+ 
+   <Target Name="Pack">
+-    <MSBuild Projects="@(PackProject)" Targets="Pack" Properties="NoBuild=true" />
++    <MSBuild Projects="@(PackProject)" Targets="Pack" />
+   </Target>
+-</Project>+</Project>

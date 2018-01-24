@@ -1,0 +1,40 @@
+From f195dee5173eb2b4c69993308391c50e32526b69 Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Wed, 18 Oct 2017 03:15:12 -0400
+Subject: [PATCH 1/1] Fix version information
+
+---
+ build/NetCore.props     | 3 +--
+ src/Shared/Constants.cs | 2 +-
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/build/NetCore.props b/build/NetCore.props
+index e0777f0..79aef4e 100644
+--- a/build/NetCore.props
++++ b/build/NetCore.props
+@@ -6,8 +6,7 @@
+     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)MSFT.snk</AssemblyOriginatorKeyFile>
+     <SignAssembly>true</SignAssembly>
+     <PublicSign>true</PublicSign>
+-    <VersionPrefix>15.3.0</VersionPrefix>
+-    <VersionSuffix>preview-000234-01</VersionSuffix>
++    <VersionPrefix>15.4.8</VersionPrefix>
+   </PropertyGroup>
+ 
+   <PropertyGroup>
+diff --git a/src/Shared/Constants.cs b/src/Shared/Constants.cs
+index 61097f5..102a9d5 100644
+--- a/src/Shared/Constants.cs
++++ b/src/Shared/Constants.cs
+@@ -78,7 +78,7 @@ namespace Microsoft.Build.Shared
+         internal const string CurrentAssemblyVersion = Microsoft.VisualStudio.Internal.BrandNames.VSGeneralAssemblyVersion;
+ #endif
+ 
+-        internal const string CurrentAssemblyFileVersion = "15.4.0.0";
++        internal const string CurrentAssemblyFileVersion = "15.4.8.50081";
+ 
+         /// <summary>
+         /// Current version of this MSBuild Engine assembly in the form, e.g, "12.0"
+-- 
+1.8.3.1
+

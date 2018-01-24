@@ -1,0 +1,254 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="es" original="../Resources.resx" build-num="-1296591835">
+    <header>
+      <count-group name="BlackBox wordcount">
+        <count count-type="x-wordCount">178</count>
+        <count count-type="x-adjWordCount">151.3</count>
+        <count count-type="x-curAdjWordCount">151.3</count>
+        <count count-type="x-repeatAdjWordCount">0</count>
+        <count count-type="x-termWordCount">0</count>
+      </count-group>
+      <count-group name="BlackBox wordcount analysis">
+        <count count-type="x-match102%">0</count>
+        <count count-type="x-match101%">0</count>
+        <count count-type="x-match100%">0</count>
+        <count count-type="x-match99-90%">0</count>
+        <count count-type="x-match89-75%">0</count>
+        <count count-type="x-mt">178</count>
+        <count count-type="repetition">0</count>
+      </count-group>
+    </header>
+    <body>
+      <trans-unit id="DataCollectionMessageFormat">
+        <source>Data collection : {0}</source>
+        <target state="translated">Recopilación de datos: {0}</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Mensaje del adaptador de datos de diagnóstico: {0}</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="5" adjWordcount="4.25" curWordcount="4.25"</note>
+      </trans-unit>
+      <trans-unit id="DataCollectorMessageFormat">
+        <source>Data collector '{0}' message: {1}.</source>
+        <target state="translated">Mensaje del recopilador de datos "{0}": {1}.</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Mensaje de adaptador ('{0}') de datos de diagnóstico: {1}.</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="6" adjWordcount="5.1" curWordcount="5.1"</note>
+      </trans-unit>
+      <trans-unit id="DuplicateExtensionUri">
+        <source>Duplicate test extension URI '{0}'.  Ignoring the duplicate extension.</source>
+        <target state="translated">URI de extensión de pruebas duplicado ({0}). Se omitirá la extensión duplicada.</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Duplicar extensión de prueba URI '{0}'.  Se omitirá la extensión duplicada.</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="9" adjWordcount="7.65" curWordcount="7.65"</note>
+      </trans-unit>
+      <trans-unit id="DuplicateSettingsName">
+        <source>Duplicate settings provider named '{0}'.  Ignoring the duplicate provider.</source>
+        <target state="translated">Proveedor de configuración duplicado con el nombre '{0}'. Se omitirá el proveedor duplicado.</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Proveedor de configuración duplicada con el nombre '{0}'.  Se omitirá el proveedor duplicado.</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="9" adjWordcount="7.65" curWordcount="7.65"</note>
+      </trans-unit>
+      <trans-unit id="DuplicateSettingsProvided">
+        <source>Duplicate run settings section named '{0}' found.  Ignoring the duplicate settings.</source>
+        <target state="new">Sección de parámetros de ejecución duplicada con el nombre '{0}'. Se omitirán los parámetros duplicados.</target>
+        <note></note>
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Duplicar la sección de configuración de ejecución denominada '{0}'.  Se omitirá la configuración de duplicados.</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="11" adjWordcount="9.35" curWordcount="9.35"</note>
+      </trans-unit>
+      <trans-unit id="EmptyParenthesis">
+        <source>Error: Empty parenthesis ( )</source>
+        <target state="translated">Error: Paréntesis vacío ( )</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Error: (Paréntesis vacío)</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="3" adjWordcount="2.55" curWordcount="2.55"</note>
+      </trans-unit>
+      <trans-unit id="InvalidCondition">
+        <source>Error: Invalid Condition '{0}'</source>
+        <target state="translated">Error: Condición '{0}' no válida</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Error: Condición no válida '{0}'</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="4" adjWordcount="3.4" curWordcount="3.4"</note>
+      </trans-unit>
+      <trans-unit id="InvalidExtensionUriFormat">
+        <source>Test Extension has an invalid URI '{0}': {1}</source>
+        <target state="translated">La extensión de pruebas tiene un URI no válido ({0}): {1}</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Extensión de prueba tiene un URI no válido '{0}': {1}</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="8" adjWordcount="6.8" curWordcount="6.8"</note>
+      </trans-unit>
+      <trans-unit id="InvalidOperator">
+        <source>Error: Invalid operator '{0}'</source>
+        <target state="translated">Error: Operador no válido ({0})</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Error: Operador no válido '{0}'</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="4" adjWordcount="3.4" curWordcount="3.4"</note>
+      </trans-unit>
+      <trans-unit id="LoggerInitializationError">
+        <source>Exception occurred while initializing logger with URI '{0}'.  The logger will not be used.  Exception: {1}</source>
+        <target state="translated">Se produjo una excepción al inicializar el registrador con el URI '{0}'. No se usará el registrador. Excepción: {1}</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Se produjo una excepción al inicializar el registrador con el URI '{0}'.  El registrador no se utilizará.  Excepción: {1}</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="16" adjWordcount="13.6" curWordcount="13.6"</note>
+      </trans-unit>
+      <trans-unit id="LoggerNotFound">
+        <source>Could not find a test logger with URI or FriendlyName '{0}'.</source>
+        <target state="translated">No se encuentra un registrador de pruebas con el URI o el nombre descriptivo '{0}'.</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">No se pudo encontrar un registrador de prueba con URI o FriendlyName '{0}'.</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="11" adjWordcount="9.35" curWordcount="9.35"</note>
+      </trans-unit>
+      <trans-unit id="MissingCloseParenthesis">
+        <source>Error: Missing ')'</source>
+        <target state="translated">Error: Falta ')'</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Error: Falta el ')'</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="2" adjWordcount="1.7" curWordcount="1.7"</note>
+      </trans-unit>
+      <trans-unit id="MissingOpenParenthesis">
+        <source>Error: Missing '('</source>
+        <target state="translated">Error: Falta '('</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Error: Falta ' ('</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="2" adjWordcount="1.7" curWordcount="1.7"</note>
+      </trans-unit>
+      <trans-unit id="MissingOperand">
+        <source>Error: Missing operand</source>
+        <target state="translated">Error: Falta un operando</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Error: Falta el operando</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="3" adjWordcount="2.55" curWordcount="2.55"</note>
+      </trans-unit>
+      <trans-unit id="MissingOperator">
+        <source>Missing Operator '|' or '&amp;'</source>
+        <target state="translated">Falta el operador '|' o '&amp;'</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Falta el operador ' |' o '&amp;'</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="5" adjWordcount="4.25" curWordcount="4.25"</note>
+      </trans-unit>
+      <trans-unit id="RunSettingsAlreadyLoaded">
+        <source>The Run Settings have already been loaded.</source>
+        <target state="translated">Los parámetros de ejecución ya se han cargado.</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">La configuración de ejecución ya se han cargado.</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="7" adjWordcount="5.95" curWordcount="5.95"</note>
+      </trans-unit>
+      <trans-unit id="RunSettingsParseError">
+        <source>An error occurred while loading the run settings.  Error: {0}</source>
+        <target state="translated">Error al cargar los parámetros de ejecución. Error: {0}</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Se produjo un error al cargar la configuración de ejecución.  Error: {0}</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="10" adjWordcount="8.5" curWordcount="8.5"</note>
+      </trans-unit>
+      <trans-unit id="SettingsNodeInvalidName">
+        <source>Invalid settings node specified. The name property of the settings node must be non-empty.</source>
+        <target state="translated">Se especificó un nodo de configuración no válido. La propiedad de nombre del nodo de configuración no debe estar vacía.</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Nodo de configuración no válido especificado. La propiedad name del nodo configuración debe ser no vacío.</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="14" adjWordcount="11.9" curWordcount="11.9"</note>
+      </trans-unit>
+      <trans-unit id="SettingsProviderInitializationError">
+        <source>An error occurred while initializing the settings provider named '{0}'. Error: {1}</source>
+        <target state="translated">Error al inicializar el proveedor de configuración '{0}'. Error: {1}</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Se produjo un error al inicializar el proveedor de configuración denominado '{0}'. Error: {1}</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="12" adjWordcount="10.2" curWordcount="10.2"</note>
+      </trans-unit>
+      <trans-unit id="SettingsProviderNotFound">
+        <source>Settings Provider named '{0}' was not found.  The settings can not be loaded.</source>
+        <target state="translated">No se encuentra el proveedor de configuración '{0}'. No se puede cargar la configuración.</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">No se encontró el proveedor de configuración denominada '{0}'.  No se puede cargar la configuración.</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="13" adjWordcount="11.05" curWordcount="11.05"</note>
+      </trans-unit>
+      <trans-unit id="TestCaseFilterFormatException">
+        <source>Incorrect format for TestCaseFilter {0}. Specify the correct format and try again. Note that the incorrect format can lead to no test getting executed.</source>
+        <target state="translated">Formato incorrecto de TestCaseFilter {0}. Especifique el formato correcto y vuelva a intentarlo. Tenga en cuenta que un formato incorrecto puede dar lugar a que no se ejecute ninguna prueba.</target>
+        <note />
+        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
+          <target state-qualifier="mt-suggestion">Formato incorrecto para TestCaseFilter {0}. Especificar el formato correcto y vuelva a intentarlo. Tenga en cuenta que el formato incorrecto puede provocar ninguna prueba obteniendo ejecutada.</target>
+        </alt-trans>
+        <note from="bb-metadata">fuzzyMatch="15" wordcount="24" adjWordcount="20.4" curWordcount="20.4"</note>
+      </trans-unit>
+      <trans-unit id="DataCollectorErrorOnGetVariable">
+        <source>Data collector '{0}' failed to provide initialization information. Error: {1}</source>
+        <target state="new">El recopilador de datos "{0}" no pudo proporcionar información de inicialización. Error: {1}</target>
+        <note></note>
+      </trans-unit>
+      <trans-unit id="DataCollectorInitializationError">
+        <source>Data collector '{0}' threw an exception during type loading, construction, or initialization: {1}.</source>
+        <target state="translated">El recopilador de datos "{0}" produjo una excepción durante la carga, creación o inicialización del tipo: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DataCollectorNotFound">
+        <source>Could not find data collector '{0}'</source>
+        <target state="translated">No se pudo encontrar el recopilador de datos "{0}"</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DataCollectorRequestedDuplicateEnvironmentVariable">
+        <source>The data collector '{0}' requested environment variable '{1}' with value '{2}' to be set in test execution environment, but another data collector '{3}' has already requested same environment variable with different value '{4}'.</source>
+        <target state="translated">El recopilador de datos "{0}" solicitó que la variable de entorno "{1}" con el valor "{2}" se estableciera en el entorno de ejecución de pruebas, pero otro recopilador de datos "{3}" ya ha solicitado la misma variable de entorno con otro valor "{4}".</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="IgnoredDuplicateConfiguration">
+        <source>There are multiple configurations that have data collector FriendlyName as '{0}'. Duplicate configurations will be ignored in the test run.</source>
+        <target state="translated">Hay varias configuraciones que tienen el nombre descriptivo del recopilador de datos "{0}". Se omitirán las configuraciones duplicadas en la serie de pruebas.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ReportDataCollectorException">
+        <source>Data collector caught an exception of type '{0}': '{1}'. More details: {2}.</source>
+        <target state="translated">El recopilador de datos detectó una excepción de tipo "{0}": "{1}". Más detalles: {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="WrongDataCollectionContextType">
+        <source>Types deriving from the data collection context cannot be used for sending data and messages.  The DataCollectionContext used for sending data and messages must come from one of the events raised to the data collector.</source>
+        <target state="translated">Los tipos derivados del contexto de recolección de datos no se pueden usar para enviar datos y mensajes. El elemento DataCollectionContext usado para enviar datos y mensajes debe proceder de alguno de los eventos generados para el recolector de datos.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="LoggerUriInvalid">
+        <source>The Test Logger URI '{0}' is not valid.  The Test Logger will be ignored.</source>
+        <target state="translated">El URI de registrador de pruebas '{0}' no es válido. Se omitirá el registrador de pruebas.</target>
+        <note />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

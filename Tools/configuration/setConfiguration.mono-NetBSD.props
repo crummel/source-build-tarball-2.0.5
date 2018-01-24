@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_parse_BuildConfigurations>;$(BuildConfigurations.Replace('%0A','').Replace('%0D','').Replace(' ',''));</_parse_BuildConfigurations>
+  </PropertyGroup>
+  <Choose>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';mono-NetBSD;'))">
+      <PropertyGroup>
+        <Configuration>mono-NetBSD-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';mono-Unix;'))">
+      <PropertyGroup>
+        <Configuration>mono-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';mono;')) OR $(_parse_BuildConfigurations.Contains(';mono-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>mono-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <ConfigurationErrorMsg>$(ConfigurationErrorMsg)Could not find a compatible configuration for BuildConfiguration '$(BuildConfiguration)' from BuildConfigurations '$(_parse_BuildConfigurations)'.  Considered mono-NetBSD;mono-Unix;mono;mono-AnyOS.</ConfigurationErrorMsg>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+</Project>

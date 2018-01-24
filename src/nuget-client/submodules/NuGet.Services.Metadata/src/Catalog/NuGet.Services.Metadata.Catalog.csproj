@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E97F23B8-ECB0-4AFA-B00C-015C39395FEF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NuGet.Services.Metadata.Catalog</RootNamespace>
+    <AssemblyName>NuGet.Services.Metadata.Catalog</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="dotNetRDF, Version=1.0.8.3533, Culture=neutral, PublicKeyToken=6055ffe4c97cc780, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\dotnetrdf.1.0.8.3533\lib\net40\dotNetRDF.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JsonLD, Version=1.0.4.0, Culture=neutral, PublicKeyToken=2e465378e3b1a8dd, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\json-ld.net.1.0.4\lib\net40-Client\JsonLD.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Data.Edm.5.6.4\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Data.OData.5.6.4\lib\net40\Microsoft.Data.OData.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Data.Services.Client.5.6.4\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.1.0\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=4.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WindowsAzure.Storage.4.3.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\newtonsoft.json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NuGet.Versioning, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NuGet.Versioning.3.3.0\lib\net45\NuGet.Versioning.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Spatial, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Spatial.5.6.4\lib\net40\System.Spatial.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="VDS.Common, Version=1.5.0.0, Culture=neutral, PublicKeyToken=ab5f4eb908061bf0, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\VDS.Common.1.5.0\lib\net40-client\VDS.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BatchCollector.cs" />
+    <Compile Include="CatalogIndexEntry.cs" />
+    <Compile Include="CatalogIndexReader.cs" />
+    <Compile Include="CloudBlobStorageExtensions.cs" />
+    <Compile Include="CommitCollector.cs" />
+    <Compile Include="CommitMetadata.cs" />
+    <Compile Include="DeleteCatalogItem.cs" />
+    <Compile Include="Helpers\GraphHelpers.cs" />
+    <Compile Include="NupkgMetadata.cs" />
+    <Compile Include="Persistence\IStorage.cs" />
+    <Compile Include="Persistence\IStorageFactory.cs" />
+    <Compile Include="Pipeline\CommitDetailsStage.cs" />
+    <Compile Include="Pipeline\GraphPackageMetadata.cs" />
+    <Compile Include="Pipeline\NuspecStage.cs" />
+    <Compile Include="Pipeline\PackageEntriesStage.cs" />
+    <Compile Include="Pipeline\PackageHashStage.cs" />
+    <Compile Include="Pipeline\PackageMetadataBase.cs" />
+    <Compile Include="Pipeline\PackagePipeline.cs" />
+    <Compile Include="Pipeline\PackagePipelineCatalogItem.cs" />
+    <Compile Include="Pipeline\PackagePipelineContext.cs" />
+    <Compile Include="Pipeline\PackagePipelineFactory.cs" />
+    <Compile Include="Pipeline\PackagePipelineHelpers.cs" />
+    <Compile Include="Pipeline\PackagePipelinePropertyNames.cs" />
+    <Compile Include="Pipeline\PackagePipelineStage.cs" />
+    <Compile Include="Pipeline\PipelinePackage.cs" />
+    <Compile Include="Pipeline\PublicationDetailsStage.cs" />
+    <Compile Include="Pipeline\XmlStage.cs" />
+    <Compile Include="Registration\RegistrationCollector.cs" />
+    <Compile Include="Registration\IRegistrationPersistence.cs" />
+    <Compile Include="Registration\RecordingStorage.cs" />
+    <Compile Include="Registration\RegistrationCatalogEntry.cs" />
+    <Compile Include="Registration\RegistrationEntryKey.cs" />
+    <Compile Include="Registration\RegistrationMakerCatalogItem.cs" />
+    <Compile Include="Registration\RegistrationMakerCatalogWriter.cs" />
+    <Compile Include="Registration\RegistrationKey.cs" />
+    <Compile Include="Registration\RegistrationMaker.cs" />
+    <Compile Include="Registration\RegistrationPersistence.cs" />
+    <Compile Include="ReindexCatalogCollector.cs" />
+    <Compile Include="HttpReadCursor.cs" />
+    <Compile Include="NuspecCollector.cs" />
+    <Compile Include="RegistrationCatalogCreator.cs" />
+    <Compile Include="RegistrationCatalogCollector.cs" />
+    <Compile Include="RegistrationCatalogItem.cs" />
+    <Compile Include="RegistrationCatalogWriter.cs" />
+    <Compile Include="ReindexCatalogItem.cs" />
+    <Compile Include="SortingCollector.cs" />
+    <Compile Include="SortingGraphCollector.cs" />
+    <Compile Include="StorageWriteLock.cs" />
+    <Compile Include="StoreCollector.cs" />
+    <Compile Include="Test\FindCollector.cs" />
+    <Compile Include="Test\PrintCollector.cs" />
+    <Compile Include="Test\PrintCommitCollector.cs" />
+    <Compile Include="TransHttpClient.cs" />
+    <Compile Include="VerboseFileSystemEmulatorHandler.cs" />
+    <Compile Include="Test\DistinctDependencyPackageIdCollector.cs" />
+    <Compile Include="Test\DistinctPackageIdCollector.cs" />
+    <Compile Include="Test\CheckLinksCollector.cs" />
+    <Compile Include="Test\CountCollector.cs" />
+    <Compile Include="Test\FindFirstCollector.cs" />
+    <Compile Include="Test\PackageCollector.cs" />
+    <Compile Include="VerboseHandler.cs" />
+    <Compile Include="CollectorBase.cs" />
+    <Compile Include="CollectorHttpClient.cs" />
+    <Compile Include="DurableCursor.cs" />
+    <Compile Include="FileSystemEmulatorHandler.cs" />
+    <Compile Include="Helpers\IndexingHelpers.cs" />
+    <Compile Include="Helpers\JsonSort.cs" />
+    <Compile Include="AppendOnlyCatalogItem.cs" />
+    <Compile Include="AppendOnlyCatalogWriter.cs" />
+    <Compile Include="CatalogItemSummary.cs" />
+    <Compile Include="CatalogWriterBase.cs" />
+    <Compile Include="ICatalogGraphPersistence.cs" />
+    <Compile Include="PackageCatalog.cs" />
+    <Compile Include="PackageEntry.cs" />
+    <Compile Include="SingleGraphPersistence.cs" />
+    <Compile Include="MemoryCursor.cs" />
+    <Compile Include="Persistence\AzureStorageFactory.cs" />
+    <Compile Include="Persistence\FileStorageFactory.cs" />
+    <Compile Include="Persistence\StorageFactory.cs" />
+    <Compile Include="Persistence\StreamStorageContent.cs" />
+    <Compile Include="Persistence\StringStorageContent.cs" />
+    <Compile Include="Persistence\StorageContent.cs" />
+    <Compile Include="CatalogContext.cs" />
+    <Compile Include="CatalogItem.cs" />
+    <Compile Include="PackageCatalogItem.cs" />
+    <Compile Include="Persistence\AzureStorage.cs" />
+    <Compile Include="Persistence\FileStorage.cs" />
+    <Compile Include="Persistence\Storage.cs" />
+    <Compile Include="JsonLdIntegration\JsonLdReader.cs" />
+    <Compile Include="JsonLdIntegration\JsonLdWriter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Helpers\SparqlHelpers.cs" />
+    <Compile Include="Helpers\Utils.cs" />
+    <Compile Include="Helpers\XmlHtmlWriter.cs" />
+    <Compile Include="Helpers\XsltHelper.cs" />
+    <Compile Include="ReadCursor.cs" />
+    <Compile Include="ReadWriteCursor.cs" />
+    <Compile Include="Schema.cs" />
+    <Compile Include="WarehouseIntegration\StatisticsCatalogItem.cs" />
+    <Compile Include="WarehouseIntegration\StatsCountCollector.cs" />
+    <Compile Include="WarehouseIntegration\StatsGreaterThanCountCollector.cs" />
+    <Compile Include="WarehouseIntegration\StatsLessThanCountCollector.cs" />
+    <Compile Include="WarehouseIntegration\WarehouseHelper.cs" />
+    <EmbeddedResource Include="sparql\ConstructPackagePageContentGraph.rq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="content\d3.v3.min.js" />
+    <Content Include="content\further.js" />
+    <Content Include="content\Json2Html.js" />
+    <Content Include="content\Json2HtmlStyle.css" />
+    <Content Include="content\jsonld.js" />
+    <Content Include="content\Promise.js" />
+    <EmbeddedResource Include="html\view.html" />
+    <EmbeddedResource Include="xslt\normalizeNuspecNamespace.xslt" />
+    <EmbeddedResource Include="xslt\nuspec.xslt">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="xslt\view.xslt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <EmbeddedResource Include="context\Container.json" />
+    <EmbeddedResource Include="context\Package.json" />
+    <EmbeddedResource Include="context\Segment.json" />
+    <EmbeddedResource Include="context\Registration.json" />
+    <EmbeddedResource Include="context\PackageDetails.json" />
+    <EmbeddedResource Include="context\Ownership.json" />
+    <EmbeddedResource Include="context\Catalog.json" />
+    <EmbeddedResource Include="schema\schema.ttl" />
+    <EmbeddedResource Include="sparql\All.rq" />
+    <EmbeddedResource Include="sparql\SelectInlinePackage.rq" />
+    <EmbeddedResource Include="sparql\SelectDistinctDependency.rq" />
+    <EmbeddedResource Include="sparql\ConstructCatalogEntryGraph.rq" />
+    <EmbeddedResource Include="sparql\ConstructRegistrationPageContentGraph.rq" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

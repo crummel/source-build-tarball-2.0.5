@@ -1,0 +1,54 @@
+{
+  "runtimes": {
+    "linux-arm": {
+      "Microsoft.NETCore.DotNetAppHost": {
+        "runtime.linux-arm.Microsoft.NETCore.DotNetAppHost": "2.0.5"
+      }
+    },
+    "linux-x64": {
+      "Microsoft.NETCore.DotNetAppHost": {
+        "runtime.linux-x64.Microsoft.NETCore.DotNetAppHost": "2.0.5"
+      }
+    },
+    "osx-x64": {
+      "Microsoft.NETCore.DotNetAppHost": {
+        "runtime.osx-x64.Microsoft.NETCore.DotNetAppHost": "2.0.5"
+      }
+    },
+    "rhel.6-x64": {
+      "Microsoft.NETCore.DotNetAppHost": {
+        "runtime.rhel.6-x64.Microsoft.NETCore.DotNetAppHost": "2.0.5"
+      }
+    },
+    "rhel.7.4-x64": {
+      "Microsoft.NETCore.DotNetAppHost": {
+        "runtime.rhel.7.4-x64.Microsoft.NETCore.DotNetAppHost": "2.0.5"
+      }
+    },
+    "tizen.4.0.0-armel": {
+      "Microsoft.NETCore.DotNetAppHost": {
+        "runtime.tizen.4.0.0-armel.Microsoft.NETCore.DotNetAppHost": "2.0.5"
+      }
+    },
+    "win-arm": {
+      "Microsoft.NETCore.DotNetAppHost": {
+        "runtime.win-arm.Microsoft.NETCore.DotNetAppHost": "2.0.5"
+      }
+    },
+    "win-arm64": {
+      "Microsoft.NETCore.DotNetAppHost": {
+        "runtime.win-arm64.Microsoft.NETCore.DotNetAppHost": "2.0.5"
+      }
+    },
+    "win-x64": {
+      "Microsoft.NETCore.DotNetAppHost": {
+        "runtime.win-x64.Microsoft.NETCore.DotNetAppHost": "2.0.5"
+      }
+    },
+    "win-x86": {
+      "Microsoft.NETCore.DotNetAppHost": {
+        "runtime.win-x86.Microsoft.NETCore.DotNetAppHost": "2.0.5"
+      }
+    }
+  }
+}

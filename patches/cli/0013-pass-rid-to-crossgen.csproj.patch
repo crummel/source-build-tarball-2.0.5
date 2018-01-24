@@ -1,0 +1,25 @@
+From 8ee8e7b4e8a23fd84931b280fe0cefcb804f1e23 Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Mon, 16 Oct 2017 03:39:43 -0400
+Subject: [PATCH 1/1] fix rid for crossgen
+
+---
+ tools/CrossGen.Dependencies/CrossGen.Dependencies.csproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/CrossGen.Dependencies/CrossGen.Dependencies.csproj b/tools/CrossGen.Dependencies/CrossGen.Dependencies.csproj
+index e29aa4c..250a2c4 100644
+--- a/tools/CrossGen.Dependencies/CrossGen.Dependencies.csproj
++++ b/tools/CrossGen.Dependencies/CrossGen.Dependencies.csproj
+@@ -3,7 +3,7 @@
+ 
+   <PropertyGroup>
+     <TargetFramework>netcoreapp2.0</TargetFramework>
+-    <RuntimeIdentifier>$(SharedFrameworkRid)</RuntimeIdentifier>
++    <RuntimeIdentifier>rhel.7.4-x64</RuntimeIdentifier>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-- 
+1.8.3.1
+

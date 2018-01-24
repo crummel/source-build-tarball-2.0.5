@@ -1,0 +1,1 @@
+<Project Sdk="Microsoft.NET.Sdk"> <PropertyGroup> <TargetFrameworks>netcoreapp1.0;net46</TargetFrameworks> <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences> </PropertyGroup> <ItemGroup> <PackageReference Include="MicroBuild.Core" Version="0.2.0" /> <PackageReference Include="Microsoft.Portable.Targets" Version="0.1.1-dev" /> </ItemGroup> </Project>

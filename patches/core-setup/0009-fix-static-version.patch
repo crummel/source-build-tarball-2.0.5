@@ -1,0 +1,30 @@
+From 504afb8cf2254378f762e40e7f53311f694677db Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Fri, 15 Sep 2017 19:53:18 -0400
+Subject: [PATCH 1/1] fix platforms issue
+
+---
+ dependencies.props | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/dependencies.props b/dependencies.props
+index e6a5322..45e101c 100644
+--- a/dependencies.props
++++ b/dependencies.props
+@@ -58,12 +58,7 @@
+       <RawVersionsBaseUrl>https://raw.githubusercontent.com/dotnet/versions</RawVersionsBaseUrl>
+     </DependencyBuildInfo>
+ 
+-    <XmlUpdateStep Include="CoreFx">
+-      <Path>$(MSBuildThisFileFullPath)</Path>
+-      <ElementName>PlatformPackageVersion</ElementName>
+-      <PackageId>Microsoft.NETCore.Platforms</PackageId>
+-    </XmlUpdateStep>
+-    <XmlUpdateStep Include="CoreFx">
++   <XmlUpdateStep Include="CoreFx">
+       <Path>$(MSBuildThisFileFullPath)</Path>
+       <ElementName>MicrosoftPrivateCoreFxNETCoreAppPackageVersion</ElementName>
+       <PackageId>Microsoft.Private.CoreFx.NETCoreApp</PackageId>
+-- 
+1.8.3.1
+

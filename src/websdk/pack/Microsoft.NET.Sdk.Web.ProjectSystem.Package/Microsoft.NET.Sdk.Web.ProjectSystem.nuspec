@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.NET.Sdk.Web.ProjectSystem</id>
+    <description>
+      This package contains MSBuild targets and tasks for building ASP.NET Core projects. This package is required for building ASP.NET Core projects.
+    </description>
+    <language>en-US</language>
+    <version>$WebSdkVersion$</version>
+    <authors>Microsoft Corporation</authors>
+    <owners>Microsoft</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm</licenseUrl>
+    <projectUrl>https://github.com/aspnet/websdk</projectUrl>
+    <copyright>&#169; Microsoft Corporation. All rights reserved.</copyright>
+  </metadata>
+  <files>
+    <file src="$WebSdkSource$ProjectSystem\Microsoft.NET.Sdk.Web.ProjectSystem.Targets\netstandard1.0\Microsoft.NET.Sdk.Web.ProjectSystem.props" target="build\netstandard1.0\" />
+    <file src="$WebSdkSource$ProjectSystem\Microsoft.NET.Sdk.Web.ProjectSystem.Targets\netstandard1.0\Microsoft.NET.Sdk.Web.ProjectSystem.targets" target="build\netstandard1.0\" />
+    <file src="$WebSdkSource$ProjectSystem\Microsoft.NET.Sdk.Web.ProjectSystem.Targets\Sdk.props" target="Sdk\" />
+    <file src="$WebSdkSource$ProjectSystem\Microsoft.NET.Sdk.Web.ProjectSystem.Targets\Sdk.targets" target="Sdk\" />
+  </files>
+</package>

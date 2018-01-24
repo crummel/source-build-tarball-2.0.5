@@ -1,0 +1,54 @@
+From ebf6b46f703d139177c463543e90bba51e004b08 Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Mon, 16 Oct 2017 02:46:41 -0400
+Subject: [PATCH 1/1] Provide a way to not include the ASP.NET Runtime Packages
+
+---
+ build/BuildDefaults.props   | 1 +
+ build/BundledRuntimes.props | 6 +++---
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/build/BuildDefaults.props b/build/BuildDefaults.props
+index 64eddcf..268a02e 100644
+--- a/build/BuildDefaults.props
++++ b/build/BuildDefaults.props
+@@ -4,6 +4,7 @@
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+     <IncludeNuGetPackageArchive Condition=" '$(IncludeNuGetPackageArchive)' == '' ">true</IncludeNuGetPackageArchive>
+     <SkipBuildingInstallers Condition=" '$(SkipBuildingInstallers)' == '' ">false</SkipBuildingInstallers>
++    <IncludeAspNetCoreRuntime Condition="'$(IncludeAspNetCoreRuntime)' == ''">true</IncludeAspNetCoreRuntime>
+     <UsePortableLinuxSharedFramework Condition=" '$(UsePortableLinuxSharedFramework)' == '' AND '$(OSPlatform)' == 'linux' ">true</UsePortableLinuxSharedFramework>
+     <IncludeSharedFrameworksForBackwardsCompatibilityTests Condition=" $(IncludeSharedFrameworksForBackwardsCompatibilityTests) == '' AND '$(Rid)' != 'linux-x64' ">true</IncludeSharedFrameworksForBackwardsCompatibilityTests>
+     <HighEntropyVA>true</HighEntropyVA>
+diff --git a/build/BundledRuntimes.props b/build/BundledRuntimes.props
+index cbc7a67..ca91414 100644
+--- a/build/BundledRuntimes.props
++++ b/build/BundledRuntimes.props
+@@ -83,21 +83,21 @@
+     </_DownloadAndExtractItem>
+ 
+   <_DownloadAndExtractItem Include="AspNetCoreRuntimeInstallerWixLibFile"
+-                           Condition=" '$(AspNetCoreRuntimeInstallerWixLibFile)' != '' And !Exists('$(AspNetCoreRuntimeInstallerWixLibFile)')">
++                           Condition="'$(IncludeAspNetCoreRuntime)' == 'true' And '$(SkipBuildingInstallers)' != 'true' And '$(AspNetCoreRuntimeInstallerWixLibFile)' != '' And !Exists('$(AspNetCoreRuntimeInstallerWixLibFile)')">
+       <Url>$(AspNetCoreRuntimeInstallerBlobRootUrl)/$(AspNetCoreRuntimeInstallerWixLibFileName)$(CoreSetupBlobAccessTokenParam)</Url>
+       <DownloadFileName>$(AspNetCoreRuntimeInstallerWixLibFile)</DownloadFileName>
+       <ExtractDestination></ExtractDestination>
+   </_DownloadAndExtractItem>
+ 
+   <_DownloadAndExtractItem Include="AspNetCoreRuntimeInstallerArchiveFile"
+-                           Condition="!Exists('$(AspNetCoreRuntimeInstallerArchiveFile)')">
++                           Condition="'$(IncludeAspNetCoreRuntime)' == 'true' And !Exists('$(AspNetCoreRuntimeInstallerArchiveFile)')">
+       <Url>$(AspNetCoreRuntimeInstallerBlobRootUrl)/$(AspNetCoreRuntimeInstallerArchiveFileName)$(CoreSetupBlobAccessTokenParam)</Url>
+       <DownloadFileName>$(AspNetCoreRuntimeInstallerArchiveFile)</DownloadFileName>
+       <ExtractDestination>$(AspNetRuntimePackageStorePublishDirectory)</ExtractDestination>
+   </_DownloadAndExtractItem>
+ 
+   <_DownloadAndExtractItem Include="AspNetCoreSharedRuntimeVersionFile"
+-                           Condition="!Exists('$(AspNetCoreSharedRuntimeVersionFile)')">
++                           Condition="'$(IncludeAspNetCoreRuntime)' == 'true' And !Exists('$(AspNetCoreSharedRuntimeVersionFile)')">
+       <Url>$(AspNetCoreRuntimeInstallerBlobRootUrl)/$(AspNetCoreSharedRuntimeVersionFileName)$(CoreSetupBlobAccessTokenParam)</Url>
+       <DownloadFileName>$(AspNetCoreSharedRuntimeVersionFile)</DownloadFileName>
+       <ExtractDestination></ExtractDestination>
+-- 
+1.8.3.1
+

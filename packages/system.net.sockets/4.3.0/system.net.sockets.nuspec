@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>System.Net.Sockets</id>
+    <version>4.3.0</version>
+    <authors>dotnet</authors>
+    <owners>dotnet</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Support package for source building containing only refs for System.Net.Sockets.4.3.0</description>
+    <dependencies>
+      <group targetFramework=".NETStandard1.3">
+        <dependency id="Microsoft.NETCore.Platforms" version="1.1.0" />
+        <dependency id="Microsoft.NETCore.Targets" version="1.1.0" />
+        <dependency id="System.IO" version="4.3.0" />
+        <dependency id="System.Net.Primitives" version="4.3.0" />
+        <dependency id="System.Runtime" version="4.3.0" />
+        <dependency id="System.Threading.Tasks" version="4.3.0" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

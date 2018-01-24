@@ -1,0 +1,35 @@
+From bb2dad53f0e23344d486e3f72e46fbdc2f808acc Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Tue, 17 Oct 2017 19:18:02 -0400
+Subject: [PATCH 1/1] fix nupkg targets
+
+---
+ build/package/Nupkg.targets | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/build/package/Nupkg.targets b/build/package/Nupkg.targets
+index 9158c21..f7d216c 100644
+--- a/build/package/Nupkg.targets
++++ b/build/package/Nupkg.targets
+@@ -26,7 +26,8 @@
+                 ProjectPath="%(ProjectsToPack.Identity)/%(ProjectsToPack.ProjectName).csproj"
+                 ToolPath="$(Stage0Directory)"
+                 VersionSuffix="$(VersionSuffix)"
+-                Configuration="$(Configuration)" />
++                Configuration="$(Configuration)"
++                Runtime="$(Rid)"  />
+   </Target>
+ 
+   <Target Name="BuildProjectsForNuGetPackages"
+@@ -36,6 +37,7 @@
+ 
+     <DotNetBuild ToolPath="$(Stage0Directory)"
+                  Configuration="$(Configuration)"
+-                 ProjectPath="%(ProjectsToPack.Identity)/%(ProjectsToPack.ProjectName).csproj" />
++                 ProjectPath="%(ProjectsToPack.Identity)/%(ProjectsToPack.ProjectName).csproj" 
++                 Runtime="$(Rid)" />
+   </Target>
+ </Project>
+-- 
+1.8.3.1
+

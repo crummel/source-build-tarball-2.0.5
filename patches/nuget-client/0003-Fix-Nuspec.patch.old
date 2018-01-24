@@ -1,0 +1,40 @@
+From 1c5eac2cb0b6822bf2df6578e7b3a8d68daf83a9 Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Tue, 17 Oct 2017 02:42:17 -0400
+Subject: [PATCH 1/1] fix Nuspec
+
+---
+ .../NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.nuspec   | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
+
+diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.nuspec b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.nuspec
+index 3d0229a..5fce2fb 100644
+--- a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.nuspec
++++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.nuspec
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0"?>
++<?xml version="1.0"?>
+ <package>
+   <metadata>
+     <id>NuGet.Build.Tasks.Pack</id>
+@@ -8,13 +8,9 @@
+     <description>NuGet pack for dotnet CLI</description>
+   </metadata>
+   <files>
+-    <file src="net45\ilmerge\NuGet.Build.Tasks.Pack.dll" target="Desktop\" />
+-    <file src="net45\ilmerge\NuGet.Build.Tasks.Pack.xml" target="Desktop\" />
+-    <file src="netstandard1.3\ilmerge\NuGet.Build.Tasks.Pack.dll" target="CoreCLR\" />
+-    <file src="netstandard1.3\ilmerge\NuGet.Build.Tasks.Pack.xml" target="CoreCLR\" />
+-    <file src="netstandard1.3\ilmerge\**\NuGet.Build.Tasks.Pack.resources.dll" target="CoreCLR\" />
+-    <file src="net45\ilmerge\**\NuGet.Build.Tasks.Pack.resources.dll" target="Desktop\" />
+-    <file src="net45\Pack.targets" target="buildCrossTargeting\NuGet.Build.Tasks.Pack.targets" />
+-    <file src="net45\Pack.targets" target="build\NuGet.Build.Tasks.Pack.targets" />
++    <file src="..\..\..\artifacts\NuGet.Build.Tasks.Pack.Library\15.0\bin\$configuration$\net45\*.dll" target="Desktop\" />
++    <file src="..\..\..\artifacts\NuGet.Build.Tasks.Pack.Library\15.0\bin\$configuration$\netstandard1.3\*.dll" target="CoreCLR\" />
++    <file src="Pack.targets" target="buildCrossTargeting\NuGet.Build.Tasks.Pack.targets" />
++    <file src="Pack.targets" target="build\NuGet.Build.Tasks.Pack.targets" />
+   </files>
+ </package>
+-- 
+1.8.3.1
+

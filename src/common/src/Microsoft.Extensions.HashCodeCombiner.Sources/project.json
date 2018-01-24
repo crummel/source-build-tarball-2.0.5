@@ -1,0 +1,8 @@
+{
+  "version": "1.0.1",
+  "shared": "*.cs",
+  "dependencies": {},
+  "frameworks": {
+    "netstandard1.0": {}
+  }
+}

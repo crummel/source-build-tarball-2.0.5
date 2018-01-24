@@ -1,0 +1,31 @@
+From 57381f85fdab437d52b5354c6e84fcf93d3ae557 Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Tue, 24 Oct 2017 12:26:07 -0400
+Subject: [PATCH 1/1] Remove localization
+
+---
+ src/dotnet/dotnet.csproj | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/src/dotnet/dotnet.csproj b/src/dotnet/dotnet.csproj
+index 71da966..d949ebf 100644
+--- a/src/dotnet/dotnet.csproj
++++ b/src/dotnet/dotnet.csproj
+@@ -65,7 +65,6 @@
+    <PackageReference Include="Microsoft.DotNet.ProjectJsonMigration" Version="$(MicrosoftDotNetProjectJsonMigrationPackageVersion)" />
+    <PackageReference Include="Microsoft.TemplateEngine.Abstractions" Version="$(MicrosoftTemplateEngineAbstractionsPackageVersion)" />
+    <PackageReference Include="Microsoft.TemplateEngine.Cli" Version="$(MicrosoftTemplateEngineCliPackageVersion)" />
+-    <PackageReference Include="Microsoft.TemplateEngine.Cli.Localization" Version="$(MicrosoftTemplateEngineCliLocalizationPackageVersion)" />
+    <PackageReference Include="Microsoft.TemplateEngine.Orchestrator.RunnableProjects" Version="$(MicrosoftTemplateEngineOrchestratorRunnableProjectsPackageVersion)" />
+    <PackageReference Include="Microsoft.TemplateEngine.Utils" Version="$(MicrosoftTemplateEngineUtilsPackageVersion)" />
+    <PackageReference Include="XliffTasks" Version="$(XliffTasksPackageVersion)" PrivateAssets="All" />
+@@ -74,4 +73,4 @@
+     <Folder Include="commands\dotnet-migrate\xlf" />
+     <Folder Include="dotnet-complete\commands\" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+1.8.3.1
+

@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_parse_BuildConfigurations>;$(BuildConfigurations.Replace('%0A','').Replace('%0D','').Replace(' ',''));</_parse_BuildConfigurations>
+  </PropertyGroup>
+  <Choose>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';uap101aot-OSX;'))">
+      <PropertyGroup>
+        <Configuration>uap101aot-OSX-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netcore50aot-OSX;'))">
+      <PropertyGroup>
+        <Configuration>netcore50aot-OSX-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netcore50-OSX;'))">
+      <PropertyGroup>
+        <Configuration>netcore50-OSX-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';uap101-OSX;'))">
+      <PropertyGroup>
+        <Configuration>uap101-OSX-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard2.0-OSX;'))">
+      <PropertyGroup>
+        <Configuration>netstandard2.0-OSX-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.6-OSX;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.6-OSX-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.5-OSX;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.5-OSX-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.4-OSX;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.4-OSX-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.3-OSX;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.3-OSX-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.2-OSX;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.2-OSX-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.1-OSX;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.1-OSX-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.0-OSX;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.0-OSX-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';uap101aot-Unix;'))">
+      <PropertyGroup>
+        <Configuration>uap101aot-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netcore50aot-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netcore50aot-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netcore50-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netcore50-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';uap101-Unix;'))">
+      <PropertyGroup>
+        <Configuration>uap101-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard2.0-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard2.0-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.6-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.6-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.5-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.5-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.4-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.4-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.3-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.3-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.2-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.2-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.1-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.1-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.0-Unix;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.0-Unix-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';uap101aot;')) OR $(_parse_BuildConfigurations.Contains(';uap101aot-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>uap101aot-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netcore50aot;')) OR $(_parse_BuildConfigurations.Contains(';netcore50aot-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netcore50aot-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netcore50;')) OR $(_parse_BuildConfigurations.Contains(';netcore50-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netcore50-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';uap101;')) OR $(_parse_BuildConfigurations.Contains(';uap101-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>uap101-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard2.0;')) OR $(_parse_BuildConfigurations.Contains(';netstandard2.0-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard2.0-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.6;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.6-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.6-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.5;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.5-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.5-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.4;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.4-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.4-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.3;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.3-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.3-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.2;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.2-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.2-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.1;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.1-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.1-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(_parse_BuildConfigurations.Contains(';netstandard1.0;')) OR $(_parse_BuildConfigurations.Contains(';netstandard1.0-AnyOS;'))">
+      <PropertyGroup>
+        <Configuration>netstandard1.0-$(ConfigurationGroup)</Configuration>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <ConfigurationErrorMsg>$(ConfigurationErrorMsg)Could not find a compatible configuration for BuildConfiguration '$(BuildConfiguration)' from BuildConfigurations '$(_parse_BuildConfigurations)'.  Considered uap101aot-OSX;netcore50aot-OSX;netcore50-OSX;uap101-OSX;netstandard2.0-OSX;netstandard1.6-OSX;netstandard1.5-OSX;netstandard1.4-OSX;netstandard1.3-OSX;netstandard1.2-OSX;netstandard1.1-OSX;netstandard1.0-OSX;uap101aot-Unix;netcore50aot-Unix;netcore50-Unix;uap101-Unix;netstandard2.0-Unix;netstandard1.6-Unix;netstandard1.5-Unix;netstandard1.4-Unix;netstandard1.3-Unix;netstandard1.2-Unix;netstandard1.1-Unix;netstandard1.0-Unix;uap101aot;uap101aot-AnyOS;netcore50aot;netcore50aot-AnyOS;netcore50;netcore50-AnyOS;uap101;uap101-AnyOS;netstandard2.0;netstandard2.0-AnyOS;netstandard1.6;netstandard1.6-AnyOS;netstandard1.5;netstandard1.5-AnyOS;netstandard1.4;netstandard1.4-AnyOS;netstandard1.3;netstandard1.3-AnyOS;netstandard1.2;netstandard1.2-AnyOS;netstandard1.1;netstandard1.1-AnyOS;netstandard1.0;netstandard1.0-AnyOS.</ConfigurationErrorMsg>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+</Project>

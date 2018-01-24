@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.DotNet.Tools.MigrateCommand</id>
+    <version>1.2.1-alpha-002133</version>
+    <authors>Microsoft.DotNet.Tools.MigrateCommand</authors>
+    <owners>Microsoft.DotNet.Tools.MigrateCommand</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework=".NETStandard1.6">
+        <dependency id="Microsoft.DotNet.ProjectJsonMigration" version="1.2.1-alpha-002133" exclude="Build,Analyzers" />
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

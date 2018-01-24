@@ -1,0 +1,80 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../build/NetCore.props" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.3</TargetFramework>
+    <AssemblyName>Microsoft.Build.Framework</AssemblyName>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NETStandard.Library" Version="1.6.0" />
+    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.1.1" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.0.1" />
+    <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\Constants.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="BuildEngineResult.cs" />
+    <Compile Include="BuildErrorEventArgs.cs" />
+    <Compile Include="BuildEventArgs.cs" />
+    <Compile Include="BuildFinishedEventArgs.cs" />
+    <Compile Include="BuildMessageEventArgs.cs" />
+    <Compile Include="BuildStartedEventArgs.cs" />
+    <Compile Include="BuildStatusEventArgs.cs" />
+    <Compile Include="BuildWarningEventArgs.cs" />
+    <Compile Include="CriticalBuildMessageEventArgs.cs" />
+    <Compile Include="CustomBuildEventArgs.cs" />
+    <Compile Include="ExternalProjectFinishedEventArgs.cs" />
+    <Compile Include="ExternalProjectStartedEventArgs.cs" />
+    <Compile Include="FxCopExclusions\Microsoft.Build.Framework.Suppressions.cs" />
+    <Compile Include="IBuildEngine3.cs" />
+    <Compile Include="IBuildEngine4.cs" />
+    <Compile Include="IBuildEngine5.cs" />
+    <Compile Include="IEventSource2.cs" />
+    <Compile Include="IGeneratedTask.cs" />
+    <Compile Include="LazyFormattedBuildEventArgs.cs" />
+    <Compile Include="IBuildEngine.cs" />
+    <Compile Include="IBuildEngine2.cs" />
+    <Compile Include="IEventRedirector.cs" />
+    <Compile Include="IEventSource.cs" />
+    <Compile Include="IForwardingLogger.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="INodeLogger.cs" />
+    <Compile Include="ITask.cs" />
+    <Compile Include="ICancelableTask.cs" />
+    <Compile Include="ITaskFactory.cs" />
+    <Compile Include="ITaskFactory2.cs" />
+    <Compile Include="ITaskHost.cs" />
+    <Compile Include="ITaskItem.cs" />
+    <Compile Include="ITaskItem2.cs" />
+    <Compile Include="LoadInSeparateAppDomainAttribute.cs" />
+    <Compile Include="LoggerException.cs" />
+    <Compile Include="BuildEventContext.cs" />
+    <Compile Include="OutputAttribute.cs" />
+    <Compile Include="ProjectEvaluationFinishedEventArgs.cs" />
+    <Compile Include="ProjectEvaluationStartedEventArgs.cs" />
+    <Compile Include="ProjectImportedEventArgs.cs" />
+    <Compile Include="ProjectFinishedEventArgs.cs" />
+    <Compile Include="ProjectStartedEventArgs.cs" />
+    <Compile Include="Sdk\SdkReference.cs" />
+    <Compile Include="RequiredAttribute.cs" />
+    <Compile Include="RequiredRuntimeAttribute.cs" />
+    <Compile Include="RunInMTAAttribute.cs" />
+    <Compile Include="RunInSTAAttribute.cs" />
+    <Compile Include="Sdk\SdkLogger.cs" />
+    <Compile Include="Sdk\SdkResolver.cs" />
+    <Compile Include="Sdk\SdkResolverContext.cs" />
+    <Compile Include="Sdk\SdkResult.cs" />
+    <Compile Include="Sdk\SdkResultFactory.cs" />
+    <Compile Include="TargetFinishedEventArgs.cs" />
+    <Compile Include="TargetStartedEventArgs.cs" />
+    <Compile Include="TaskCommandLineEventArgs.cs" />
+    <Compile Include="TaskFinishedEventArgs.cs" />
+    <Compile Include="TaskPropertyInfo.cs" />
+    <Compile Include="TaskStartedEventArgs.cs" />
+    <Compile Include="TelemetryEventArgs.cs" />
+  </ItemGroup>
+</Project>

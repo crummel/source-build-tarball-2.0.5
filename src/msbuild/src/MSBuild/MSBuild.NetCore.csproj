@@ -1,0 +1,133 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../build/NetCore.props" />
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>MSBuild</AssemblyName>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>contentFiles</ContentTargetFolders>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <TargetMSBuildToolsVersion>15.0</TargetMSBuildToolsVersion>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <PackageId>Microsoft.Build.Runtime</PackageId>
+    <NuGetVersion>$(VersionPrefix)</NuGetVersion>
+    <NuGetVersion Condition="'$(VersionSuffix)' != ''">$(NuGetVersion)-$(VersionSuffix)</NuGetVersion>
+    <NuspecProperties>id=$(PackageId);version=$(NuGetVersion);outputPathNetCore=$(MSBuildThisFileDirectory)bin/$(Configuration)/netcoreapp1.0/;targetMSBuildToolsVersion=$(TargetMSBuildToolsVersion)</NuspecProperties>
+    <NuspecFile>Microsoft.Build.Runtime.nuspec</NuspecFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.App" Version="1.0.1" />
+    <PackageReference Include="System.Collections.NonGeneric" Version="4.0.1" />
+    <PackageReference Include="System.Diagnostics.FileVersionInfo" Version="4.0.0" />
+    <PackageReference Include="System.Diagnostics.Process" Version="4.1.0" />
+    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.0" />
+    <PackageReference Include="System.IO.Pipes" Version="4.0.0" />
+    <PackageReference Include="System.Reflection.Metadata" Version="1.3.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.1.0" />
+    <PackageReference Include="System.Runtime.Loader" Version="4.0.0" />
+    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.0.0" />
+    <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
+    <PackageReference Include="System.Threading.ThreadPool" Version="4.0.10" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Projectreference Include="..\Build\Microsoft.Build.NetCore.csproj" />
+    <ProjectReference Include="..\Framework\Microsoft.Build.Framework.NetCore.csproj" />
+    <ProjectReference Include="..\Tasks\Microsoft.Build.Tasks.Core.NetCore.csproj" />
+    <ProjectReference Include="..\Utilities\Microsoft.Build.Utilities.Core.NetCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\Compat\SerializableAttribute.cs" />
+    <Compile Include="..\Shared\Compat\SafeHandleZeroOrMinusOneIsInvalid.cs" />
+    <Compile Include="..\Shared\BuildEnvironmentHelper.cs" />
+    <Compile Include="..\Shared\FxCopExclusions\Microsoft.Build.Shared.Suppressions.cs" />
+    <Compile Include="..\Shared\AssemblyNameComparer.cs" />
+    <Compile Include="..\Shared\CollectionHelpers.cs" />
+    <Compile Include="..\Shared\Constants.cs" />
+    <Compile Include="..\Shared\FileDelegates.cs" />
+    <Compile Include="..\Shared\FileUtilities.cs" />
+    <Compile Include="..\Shared\FileUtilities.GetFolderPath.cs" />
+    <Compile Include="..\Shared\FileUtilitiesRegex.cs" />
+    <Compile Include="..\Shared\QuotingUtilities.cs" />
+    <Compile Include="..\Shared\RegisteredTaskObjectCacheBase.cs" />
+    <Compile Include="..\Shared\ResourceUtilities.cs" />
+    <Compile Include="..\Shared\EscapingUtilities.cs" />
+    <Compile Include="..\Shared\ErrorUtilities.cs" />
+    <Compile Include="..\Shared\Modifiers.cs" />
+    <Compile Include="..\Shared\BufferedReadStream.cs" />
+    <Compile Include="..\Shared\CopyOnWriteDictionary.cs" />
+    <Compile Include="..\Shared\HybridDictionary.cs" />
+    <Compile Include="..\Shared\IKeyed.cs" />
+    <Compile Include="..\Shared\MSBuildNameIgnoreCaseComparer.cs" />
+    <Compile Include="..\Shared\ReadOnlyEmptyCollection.cs" />
+    <Compile Include="..\Shared\ReadOnlyEmptyDictionary.cs" />
+    <Compile Include="..\Shared\ReadOnlyEmptyList.cs" />
+    <Compile Include="..\Shared\NativeMethodsShared.cs" />
+    <Compile Include="..\Shared\AssemblyUtilities.cs" />
+    <Compile Include="..\Shared\ExceptionHandling.cs" />
+    <Compile Include="..\Shared\InternalErrorException.cs" />
+    <Compile Include="..\Shared\EventArgsFormatting.cs" />
+    <Compile Include="..\Shared\TempFileUtilities.cs" />
+    <Compile Include="..\Shared\VisualStudioLocationHelper.cs" />
+    <Compile Include="..\Shared\XMakeAttributes.cs" />
+    <Compile Include="..\Shared\INodeEndpoint.cs" />
+    <Compile Include="..\Shared\NodeEndpointOutOfProcBase.cs" />
+    <Compile Include="..\Shared\INodePacket.cs" />
+    <Compile Include="..\Shared\LogMessagePacketBase.cs" />
+    <Compile Include="..\Shared\INodePacketFactory.cs" />
+    <Compile Include="..\Shared\NodePacketFactory.cs" />
+    <Compile Include="..\Shared\INodePacketHandler.cs" />
+    <Compile Include="..\Shared\INodePacketTranslatable.cs" />
+    <Compile Include="..\Shared\INodePacketTranslator.cs" />
+    <Compile Include="..\Shared\NodePacketTranslator.cs" />
+    <Compile Include="..\Shared\CommunicationsUtilities.cs" />
+    <Compile Include="..\Shared\InterningBinaryReader.cs" />
+    <Compile Include="..\Shared\OpportunisticIntern.cs" />
+    <Compile Include="..\Shared\TaskHostConfiguration.cs" />
+    <Compile Include="..\Shared\TaskHostTaskComplete.cs" />
+    <Compile Include="..\Shared\OutOfProcTaskHostTaskResult.cs" />
+    <Compile Include="..\Shared\TaskHostTaskCancelled.cs" />
+    <Compile Include="..\Shared\TaskLoader.cs" />
+    <Compile Include="..\Shared\TypeLoader.cs" />
+    <Compile Include="..\Shared\LoadedType.cs" />
+    <Compile Include="..\Shared\AssemblyLoadInfo.cs" />
+    <Compile Include="..\Shared\NodeBuildComplete.cs" />
+    <Compile Include="..\Shared\NodeShutdown.cs" />
+    <Compile Include="..\Shared\TaskParameter.cs" />
+    <Compile Include="..\Shared\TaskParameterTypeVerifier.cs" />
+    <Compile Include="..\Shared\TaskEngineAssemblyResolver.cs" />
+    <Compile Include="..\Shared\Traits.cs" />
+    <Compile Include="..\Shared\AssemblyNameExtension.cs" />
+    <Compile Include="..\Shared\ThreadPoolExtensions.cs" />
+    <Compile Include="..\Shared\StringBuilderCache.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="AssemblyResources.cs" />
+    <Compile Include="CommandLineSwitches.cs" />
+    <Compile Include="CommandLineSwitchException.cs" />
+    <Compile Include="..\Shared\CoreCLRAssemblyLoader.cs" />
+    <Compile Include="DistributedLoggerRecord.cs" />
+    <Compile Include="FxCopExclusions\MsBuild.Suppressions.cs" />
+    <Compile Include="InitializationException.cs" />
+    <Compile Include="NodeEndpointOutOfProcTaskHost.cs" />
+    <Compile Include="LogMessagePacket.cs" />
+    <Compile Include="ProjectSchemaValidationHandler.cs" />
+    <Compile Include="OutOfProcTaskHostNode.cs" />
+    <Compile Include="OutOfProcTaskAppDomainWrapperBase.cs" />
+    <Compile Include="OutOfProcTaskAppDomainWrapper.cs" />
+    <Compile Include="XMake.cs" />
+
+    <EmbeddedResource Include="Resources\Strings.resx">
+      <LogicalName>$(AssemblyName).Strings.resources</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Shared\Resources\Strings.shared.resx">
+      <LogicalName>$(AssemblyName).Strings.shared.resources</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

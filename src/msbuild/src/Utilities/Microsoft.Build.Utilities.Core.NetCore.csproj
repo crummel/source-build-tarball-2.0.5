@@ -1,0 +1,115 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../build/NetCore.props" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.3</TargetFramework>
+    <AssemblyName>Microsoft.Build.Utilities.Core</AssemblyName>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NETStandard.Library" Version="1.6.0" />
+    <PackageReference Include="System.Collections.NonGeneric" Version="4.0.1" />
+    <PackageReference Include="System.Diagnostics.Process" Version="4.1.0" />
+    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.1.0" />
+    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.1.1" />
+    <PackageReference Include="System.Runtime.Serialization.Xml" Version="4.1.1" />
+    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.0.0" />
+    <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.1.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.0.1" />
+    <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
+    <PackageReference Include="System.Xml.XmlDocument" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Framework/Microsoft.Build.Framework.NetCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\Compat\SafeHandleZeroOrMinusOneIsInvalid.cs" />
+    <Compile Include="..\Shared\AssemblyFolders\AssemblyFoldersEx.cs" />
+    <Compile Include="..\Shared\AssemblyFolders\AssemblyFoldersFromConfig.cs" />
+    <Compile Include="..\Shared\AssemblyFolders\Serialization\AssemblyFolderCollection.cs" />
+    <Compile Include="..\Shared\AssemblyFolders\Serialization\AssemblyFolderItem.cs" />
+    <Compile Include="..\Shared\EnvironmentUtilities.cs" />
+    <Compile Include="..\Shared\FileUtilities.GetFolderPath.cs" />
+    <Compile Include="..\Shared\BuildEnvironmentHelper.cs" />
+    <Compile Include="..\Shared\FxCopExclusions\Microsoft.Build.Shared.Suppressions.cs" />
+    <Compile Include="..\Shared\CanonicalError.cs" />
+    <Compile Include="..\Shared\Constants.cs" />
+    <Compile Include="..\Shared\ExtensionFoldersRegistryKey.cs" />
+    <Compile Include="..\Shared\FileDelegates.cs" />
+    <Compile Include="..\Shared\CopyOnWriteDictionary.cs" />
+    <Compile Include="..\Shared\EncodingUtilities.cs" />
+    <Compile Include="..\Shared\ErrorUtilities.cs" />
+    <Compile Include="..\Shared\EscapingUtilities.cs" />
+    <Compile Include="..\Shared\EventArgsFormatting.cs" />
+    <Compile Include="..\Shared\ExceptionHandling.cs" />
+    <Compile Include="..\Shared\EscapingStringExtensions\EscapingStringExtensions.cs" />
+    <Compile Include="..\Shared\FileUtilities.cs" />
+    <Compile Include="..\Shared\FileMatcher.cs" />
+    <Compile Include="..\Shared\FileUtilitiesRegex.cs" />
+    <Compile Include="..\Shared\FrameworkLocationHelper.cs" />
+    <Compile Include="..\Shared\HybridDictionary.cs" />
+    <Compile Include="..\Shared\InternalErrorException.cs" />
+    <Compile Include="..\Shared\IKeyed.cs" />
+    <Compile Include="..\Shared\MSBuildNameIgnoreCaseComparer.cs" />
+    <Compile Include="..\Shared\Modifiers.cs" />
+    <Compile Include="..\Shared\NativeMethodsShared.cs" />
+    <Compile Include="..\Shared\AssemblyUtilities.cs" />
+    <Compile Include="..\Shared\InprocTrackingNativeMethods.cs" />
+    <Compile Include="..\Shared\OpportunisticIntern.cs" />
+    <Compile Include="..\Shared\ReadOnlyEmptyCollection.cs" />
+    <Compile Include="..\Shared\ReadOnlyEmptyDictionary.cs" />
+    <Compile Include="..\Shared\ReadOnlyEmptyList.cs" />
+    <Compile Include="..\Shared\RegistryDelegates.cs" />
+    <Compile Include="..\Shared\RegistryHelper.cs" />
+    <Compile Include="..\Shared\ResourceUtilities.cs" />
+    <Compile Include="..\Shared\StringBuilderCache.cs" />
+    <Compile Include="..\Shared\TaskLoggingHelper.cs" />
+    <Compile Include="..\Shared\TempFileUtilities.cs" />
+    <Compile Include="..\Shared\Tracing.cs" />
+    <Compile Include="..\Shared\VersionUtilities.cs" />
+    <Compile Include="..\Shared\ToolsetElement.cs" />
+    <Compile Include="..\Shared\VisualStudioLocationHelper.cs" />
+    <Compile Include="..\Shared\Traits.cs" />
+    <Compile Include="ApiContract.cs" />
+    <Compile Include="AppDomainIsolatedTask.cs" />
+    <Compile Include="AssemblyFolders\AssemblyFoldersExInfo.cs" />
+    <Compile Include="AssemblyFolders\AssemblyFoldersFromConfigInfo.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="AssemblyResources.cs" />
+    <Compile Include="CommandLineBuilder.cs" />
+    <Compile Include="FxCopExclusions\Microsoft.Build.Utilities.Suppressions.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="MuxLogger.cs" />
+    <Compile Include="ProcessorArchitecture.cs" />
+    <Compile Include="SDKType.cs" />
+    <Compile Include="TargetPlatformSDK.cs" />
+    <Compile Include="ExtensionSDK.cs" />
+    <Compile Include="SDKManifest.cs" />
+    <Compile Include="PlatformManifest.cs" />
+    <Compile Include="Task.cs" />
+    <Compile Include="TaskItem.cs" />
+    <Compile Include="ToolLocationHelper.cs" />
+    <Compile Include="ToolTask.cs" />
+    <Compile Include="ProcessExtensions.cs" />
+    <Compile Include="TrackedDependencies\CanonicalTrackedInputFiles.cs" />
+    <Compile Include="TrackedDependencies\DependencyTableCache.cs" />
+    <Compile Include="TrackedDependencies\FlatTrackingData.cs" />
+    <Compile Include="TrackedDependencies\FileTracker.cs" />
+    <Compile Include="TrackedDependencies\CanonicalTrackedOutputFiles.cs" />
+    <Compile Include="TrackedDependencies\TrackedDependencies.cs" />
+    <Compile Include="TrackedDependencies\CanonicalTrackedFilesHelper.cs" />
+    <EmbeddedResource Include="Resources\Strings.resx">
+      <LogicalName>$(AssemblyName).Strings.resources</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Shared\Resources\Strings.shared.resx">
+      <Link>Resources\Strings.shared.resx</Link>
+      <SubType>Designer</SubType>
+      <LogicalName>$(AssemblyName).Strings.shared.resources</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

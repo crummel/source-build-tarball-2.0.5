@@ -1,0 +1,60 @@
+From b915b8760985842eab6ee23fe89fe7659ac62428 Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Tue, 10 Oct 2017 17:34:36 -0400
+Subject: [PATCH 1/1] add intermediate packages
+
+---
+ dir.props                                        | 3 ++-
+ src/sharedFramework/framework/framework.csproj   | 4 ++++
+ src/sharedFramework/lockedhost/lockedhost.csproj | 3 +++
+ 3 files changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/dir.props b/dir.props
+index d299d43..08376cc 100644
+--- a/dir.props
++++ b/dir.props
+@@ -277,6 +277,7 @@
+ 
+     <SharedFrameworkPublishDir>$(IntermediateOutputRootPath)sharedFrameworkPublish\</SharedFrameworkPublishDir>
+     <SharedFrameworkPublishSymbolsDir>$(IntermediateOutputRootPath)sharedFrameworkPublish.symbols\</SharedFrameworkPublishSymbolsDir>
++    <SharedFrameworkIntermediatePackagesDir>$(IntermediateOutputRootPath)sharedFrameworkPublish\packages\</SharedFrameworkIntermediatePackagesDir>
+     <SharedFrameworkNameAndVersionRoot>$(SharedFrameworkPublishDir)shared\$(SharedFrameworkName)\$(SharedFrameworkNugetVersion)</SharedFrameworkNameAndVersionRoot>
+   </PropertyGroup>
+ 
+@@ -430,4 +431,4 @@
+   <!-- Use Roslyn Compilers to build -->
+   <Import Project="$(RoslynPropsFile)" Condition="'$(OsEnvironment)'!='Windows_NT' and Exists('$(RoslynPropsFile)') and '$(UseRoslynCompilers)'!='false'" />
+   <Import Project="$(RoslynPropsFile)" Condition="'$(OsEnvironment)'=='Windows_NT' and Exists('$(RoslynPropsFile)')" />
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/sharedFramework/framework/framework.csproj b/src/sharedFramework/framework/framework.csproj
+index 52e6553..d4bcf1d 100644
+--- a/src/sharedFramework/framework/framework.csproj
++++ b/src/sharedFramework/framework/framework.csproj
+@@ -4,4 +4,8 @@
+     <OutputType>Exe</OutputType>
+   </PropertyGroup>
+ 
++  <ItemGroup>
++    <PackageReference Include="Microsoft.NETCore.Platforms" Version="2.0.0" />
++  </ItemGroup>
++
+ </Project>
+diff --git a/src/sharedFramework/lockedhost/lockedhost.csproj b/src/sharedFramework/lockedhost/lockedhost.csproj
+index aaf2c49..8080dd0 100644
+--- a/src/sharedFramework/lockedhost/lockedhost.csproj
++++ b/src/sharedFramework/lockedhost/lockedhost.csproj
+@@ -3,6 +3,9 @@
+   <PropertyGroup>
+     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
++    <CopyBuildOutputToPublishDirectory>false</CopyBuildOutputToPublishDirectory>
++    <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
++    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-- 
+1.8.3.1
+

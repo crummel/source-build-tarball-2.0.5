@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.Net.Compilers.netcore</id>
+    <version>2.6.0-beta1-62126-01</version>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>http://go.microsoft.com/fwlink/?LinkId=529444</licenseUrl>
+    <projectUrl>http://msdn.com/roslyn</projectUrl>
+    <description>CoreCLR-compatible versions of the C# and VB compilers.
+
+      More details at https://aka.ms/roslyn-packages
+
+      This package was built from the source at https://github.com/dotnet/roslyn/commit/1758d50b72dff3276a3c38aaf81b2d6dc7180a3d</description>
+    <summary>CoreCLR-compatible versions of the C# and VB compilers.</summary>
+    <language>en-US</language>
+    <tags>Roslyn CodeAnalysis Compiler CSharp VB VisualBasic Parser Scanner Lexer Emit CodeGeneration Metadata IL Compilation Scripting Syntax Semantics</tags>
+    <serviceable>true</serviceable>
+    <dependencies>
+      <group targetFramework=".NETCoreApp2.0">
+        <dependency id="Microsoft.CodeAnalysis.Compilers" version="[2.6.0-beta1-62126-01]" />
+        <dependency id="System.AppContext" version="4.3.0" />
+        <dependency id="System.Diagnostics.Process" version="4.3.0" />
+        <dependency id="System.Console" version="4.3.0" />
+        <dependency id="System.IO" version="4.3.0" />
+        <dependency id="System.IO.FileSystem" version="4.3.0" />
+        <dependency id="System.Net.Sockets" version="4.3.0" />
+        <dependency id="System.Runtime.Loader" version="4.3.0" />
+        <dependency id="System.Threading.Thread" version="4.3.0" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

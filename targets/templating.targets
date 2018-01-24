@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="Build">
+    <Message Importance="High" Text="Building '$(RepositoryName)'" />
+    <Exec Command="$(DotNetCommand) msbuild /t:BuildForCli @(MSBuildProperties->'/p:%(Identity)', ' ') $(ProjectDirectory)/build.proj"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+
+   <!-- The templates are built to a different folder than the packages, copy them into the packages folder. -->
+    <ItemGroup>
+      <AdditionalTemplatePackages Include="$(ProjectDirectory)/artifacts/templates/*.nupkg" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(AdditionalTemplatePackages)"
+          DestinationFolder="$(PackagesOutput)" />
+  </Target>
+
+  <Target Name="FixLines" BeforeTargets="ApplyPatches">
+    <ItemGroup>
+       <ProjectsToFix Include="$(ProjectDirectory)Version.props"/>
+       <ProjectsToFix Include="$(ProjectDirectory)build.proj"/>
+       <ProjectsToFix Include="$(ProjectDirectory)src/Microsoft.TemplateEngine.Cli/Microsoft.TemplateEngine.Cli.csproj"/>
+    </ItemGroup>
+    <Exec Command="tr -d '\15\32' &lt; %(ProjectsToFix.FullPath) &gt; temp; rm %(ProjectsToFix.FullPath); mv temp %(ProjectsToFix.FullPath)" WorkingDirectory="$(ProjectDirectory)" />
+  </Target>
+
+ 
+</Project>
