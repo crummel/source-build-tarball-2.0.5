@@ -133,11 +133,11 @@
       <TrimPkgsFromDeps Include="microsoft.netcore.dotnethostresolver" />
     </ItemGroup>
     
- <!--   <ProcessSharedFrameworkDeps AssetsFilePath="$(SharedFrameworkAssetsFile)"
+    <ProcessSharedFrameworkDeps AssetsFilePath="$(SharedFrameworkAssetsFile)"
                                 DepsFilePath="$(SharedFrameworkDepsFile)"
                                 PackagesToRemove="@(TrimPkgsFromDeps)"
                                 Runtime="$(RuntimeGraphGeneratorRuntime)"
-                                BuildToolsTaskDir="$(BuildToolsTaskDir)" /> -->
+                                BuildToolsTaskDir="$(BuildToolsTaskDir)" />
   </Target>
 
   <Target Name="RestoreLockedCoreHost">
