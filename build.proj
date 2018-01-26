@@ -159,6 +159,8 @@
       <DummyPackage Include="runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.1" />
       <DummyPackage Include="runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" />
       <DummyPackage Include="runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.1" />
+      <DummyPackage Include="runtime.linux-x64.Microsoft.NETCore.App" Version="2.0.0-preview2-25310-02" />
+      <DummyPackage Include="runtime.linux-x64.Microsoft.NETCore.App" Version="2.0.0" />
       <DummyPackage Include="runtime.linux-x64.Microsoft.NETCore.DotNetAppHost" Version="2.0.0-preview2-25310-02" />
       <DummyPackage Include="runtime.linux-x64.Microsoft.NETCore.DotNetHost" Version="2.0.0-preview2-25310-02" />
       <DummyPackage Include="runtime.linux-x64.Microsoft.NETCore.DotNetHostPolicy" Version="2.0.0-preview2-25310-02" />
@@ -181,9 +183,16 @@
       <DummyPackage Include="runtime.opensuse.13.2-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.1" />
       <DummyPackage Include="runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" />
       <DummyPackage Include="runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.1" />
+      <DummyPackage Include="runtime.osx-x64.Microsoft.NETCore.App" Version="2.0.0" />
       <DummyPackage Include="runtime.osx.10.10-x64.Microsoft.NETCore.DotNetHost" Version="1.1.0" />
+      <DummyPackage Include="runtime.osx-x64.Microsoft.NETCore.DotNetAppHost" Version="2.0.0" />
       <DummyPackage Include="runtime.osx.10.10-x64.Microsoft.NETCore.DotNetHostPolicy" Version="1.1.0" />
+      <DummyPackage Include="runtime.osx.10.10-x64.Microsoft.NETCore.DotNetHostPolicy" Version="2.0.0" />
+      <DummyPackage Include="runtime.osx-x64.Microsoft.NETCore.DotNetHostPolicy" Version="1.1.0" />
+      <DummyPackage Include="runtime.osx-x64.Microsoft.NETCore.DotNetHostPolicy" Version="2.0.0" />
       <DummyPackage Include="runtime.osx.10.10-x64.Microsoft.NETCore.DotNetHostResolver" Version="1.1.0" />
+      <DummyPackage Include="runtime.osx.10.10-x64.Microsoft.NETCore.DotNetHostResolver" Version="2.0.0" />
+      <DummyPackage Include="runtime.osx-x64.Microsoft.NETCore.DotNetHostResolver" Version="2.0.0" />
       <DummyPackage Include="runtime.osx.10.10-x64.Microsoft.NETCore.Jit" Version="1.1.0" />
       <DummyPackage Include="runtime.osx.10.10-x64.Microsoft.NETCore.Runtime.CoreCLR" Version="1.1.0" />
       <DummyPackage Include="runtime.osx.10.10-x64.runtime.native.System" Version="4.3.0" />
@@ -259,10 +268,12 @@
       <DummyPackage Include="runtime.win7.System.Private.Uri" Version="4.3.0" />
       <DummyPackage Include="xunit" Version="2.2.0" />
       <DummyPackage Include="xunit.abstractions" Version="2.0.1" />
+      <DummyPackage Include="xunit.analyzers" Version="2.0.1" />
       <DummyPackage Include="xunit.assert" Version="2.2.0" />
       <DummyPackage Include="xunit.core" Version="2.2.0" />
       <DummyPackage Include="xunit.extensibility.core" Version="2.2.0" />
       <DummyPackage Include="xunit.extensibility.execution" Version="2.2.0" />
+      <DummyPackage Include="xunit.runner.console" Version="2.2.0" />
       <DummyPackage Include="xunit.runner.visualstudio" Version="2.2.0" />
     </ItemGroup>
 

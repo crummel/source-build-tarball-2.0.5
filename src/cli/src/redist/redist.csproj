@@ -87,17 +87,17 @@
       <ReplacementPattern>"version": ".*"</ReplacementPattern>
       <ReplacementString>"version": "$(MicrosoftNETCoreAppPackageVersion)"</ReplacementString>
     </PropertyGroup>
-   <!-- <ReplaceFileContents
+    <ReplaceFileContents
       InputFile="%(RoslynRuntimeConfigs.Identity)"
       DestinationFile="%(RoslynRuntimeConfigs.Identity)"
       ReplacementPatterns="$(ReplacementPattern)"
-      ReplacementStrings="$(ReplacementString)" /> -->
+      ReplacementStrings="$(ReplacementString)" />
     <DotNetPublish
       ToolPath="$(Stage0Directory)"
       Configuration="$(Configuration)"
       ProjectPath="$(SrcDirectory)/tool_roslyn_satellites/tool_roslyn_satellites.csproj"
       MSBuildArgs="/p:Rid=$(Rid)" />
-    <!--<AddToDeps TargetDeps="@(RoslynDeps)" AdditionalDeps="@(RoslynSatelliteDeps)" />-->
+    <AddToDeps TargetDeps="@(RoslynDeps)" AdditionalDeps="@(RoslynSatelliteDeps)" />
     <Delete Files="@(RoslynSatelliteDeps)" />
   </Target>
 

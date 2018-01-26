@@ -25,6 +25,7 @@
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="corefx" />
     <RepositoryReference Include="newtonsoft-json" />
+    <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="standard" />
     <RepositoryReference Include="nuget-client" />
   </ItemGroup>

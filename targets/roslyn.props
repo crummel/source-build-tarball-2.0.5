@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="DOTNET_RUNTIME_ID=$(TargetRid)" />
+    <EnvironmentVariables Include="DOTNET_RUNTIME_ID=rhel.7.4-x64" />
     <EnvironmentVariables Include="COMMIT_SHA=$(CommitHash)" />
     <EnvironmentVariables Include="NUGET_PACKAGE_VERSION=$(NuGetPackageVersion)" />
   </ItemGroup>
