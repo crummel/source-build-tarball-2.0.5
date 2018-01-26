@@ -109,18 +109,15 @@
       <DummyPackage Include="NuGet.CommandLine" Version="3.4.3" />
       <DummyPackage Include="NuGet.Common" Version="4.0.0-rc-2129" />
       <DummyPackage Include="NuGet.Common" Version="4.0.0-rtm-2283" />
-      <DummyPackage Include="NuGet.Common" Version="4.3.0-preview2-4095" />
       <DummyPackage Include="NuGet.Common" Version="4.3.0-preview3-4106" />
       <DummyPackage Include="NuGet.Configuration" Version="4.3.0-preview3-4106" />
       <DummyPackage Include="NuGet.DependencyResolver.Core" Version="4.3.0-preview3-4106" />
       <DummyPackage Include="NuGet.Frameworks" Version="4.0.0-rc-2129" />
       <DummyPackage Include="NuGet.Frameworks" Version="4.0.0-rtm-2283" />
-      <DummyPackage Include="NuGet.Frameworks" Version="4.3.0-preview2-4095" />
       <DummyPackage Include="NuGet.Frameworks" Version="4.3.0-preview3-4106" />
       <DummyPackage Include="NuGet.LibraryModel" Version="4.3.0-preview3-4106" />
       <DummyPackage Include="NuGet.Packaging" Version="4.0.0-rc-2129" />
       <DummyPackage Include="NuGet.Packaging" Version="4.0.0-rtm-2283" />
-      <DummyPackage Include="NuGet.Packaging" Version="4.3.0-preview2-4095" />
       <DummyPackage Include="NuGet.Packaging" Version="4.3.0-preview3-4106" />
       <DummyPackage Include="NuGet.Packaging.Core" Version="4.0.0-rc-2129" />
       <DummyPackage Include="NuGet.Packaging.Core" Version="4.3.0-preview2-4095" />
@@ -128,7 +125,6 @@
       <DummyPackage Include="NuGet.Protocol" Version="4.3.0-preview3-4106" />
       <DummyPackage Include="NuGet.Versioning" Version="4.0.0-rc-2129" />
       <DummyPackage Include="NuGet.Versioning" Version="4.0.0-rtm-2283" />
-      <DummyPackage Include="NuGet.Versioning" Version="4.3.0-preview2-4095" />
       <DummyPackage Include="NuGet.Versioning" Version="4.3.0-preview3-4106" />
       <DummyPackage Include="RoslynTools.Microsoft.LocateVS" Version="0.2.4-beta" />
       <DummyPackage Include="RoslynTools.Microsoft.SignTool" Version="0.3.3-beta" />
