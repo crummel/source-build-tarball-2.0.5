@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.TemplateEngine.Abstractions;
 using Microsoft.TemplateEngine.Core.Contracts;
 using Microsoft.TemplateEngine.Orchestrator.RunnableProjects.Macros.Config;
@@ -39,7 +39,7 @@ namespace Microsoft.TemplateEngine.Orchestrator.RunnableProjects.Macros
                 fallbackVariableName = fallbackVariableNameToken.ToString();
             }
 
-            IMacroConfig realConfig = new CoalesceMacroConfig(deferredConfig.VariableName, sourceVariableName, defaultValue, fallbackVariableName);
+            IMacroConfig realConfig = new CoalesceMacroConfig(deferredConfig.VariableName, deferredConfig.DataType, sourceVariableName, defaultValue, fallbackVariableName);
             return realConfig;
         }
 
@@ -53,10 +53,16 @@ namespace Microsoft.TemplateEngine.Orchestrator.RunnableProjects.Macros
             }
 
             object targetValue = null;
+            string datatype = realConfig.DataType;
 
             if (vars.TryGetValue(realConfig.SourceVariableName, out object currentSourceValue) && !Equals(currentSourceValue ?? string.Empty, realConfig.DefaultValue ?? string.Empty))
             {
                 targetValue = currentSourceValue;
+
+                if (parameters.TryGetParameterDefinition(realConfig.SourceVariableName, out ITemplateParameter sourceParameter))
+                {
+                    datatype = sourceParameter.DataType;
+                }
             }
             else
             {
@@ -65,16 +71,39 @@ namespace Microsoft.TemplateEngine.Orchestrator.RunnableProjects.Macros
                     environmentSettings.Host.LogDiagnosticMessage("Unable to find a variable to fall back to called " + realConfig.FallbackVariableName, "Authoring", realConfig.SourceVariableName, realConfig.DefaultValue);
                     targetValue = realConfig.DefaultValue;
                 }
+                else if (parameters.TryGetParameterDefinition(realConfig.FallbackVariableName, out ITemplateParameter sourceParameter))
+                {
+                    datatype = sourceParameter.DataType;
+                }
             }
 
-            Parameter pd = new Parameter
+            Parameter p;
+
+            if (parameters.TryGetParameterDefinition(config.VariableName, out ITemplateParameter existingParam))
             {
-                IsVariable = true,
-                Name = config.VariableName
-            };
+                // If there is an existing parameter with this name, it must be reused so it can be referenced by name
+                // for other processing, for example: if the parameter had value forms defined for creating variants.
+                // When the param already exists, use its definition, but set IsVariable = true for consistency.
+                p = (Parameter)existingParam;
+                p.IsVariable = true;
+
+                if (string.IsNullOrEmpty(p.DataType))
+                {
+                    p.DataType = datatype;
+                }
+            }
+            else
+            {
+                p = new Parameter
+                {
+                    IsVariable = true,
+                    Name = config.VariableName,
+                    DataType = datatype
+                };
+            }
 
             vars[config.VariableName] = targetValue?.ToString();
-            setter(pd, targetValue?.ToString());
+            setter(p, targetValue?.ToString());
         }
     }
 }

@@ -215,23 +215,29 @@ namespace Microsoft.TemplateEngine.Orchestrator.RunnableProjects
                     {
                         foreach (KeyValuePair<string, ISymbolModel> symbol in Symbols)
                         {
-                            if (string.Equals(symbol.Value.Type, ParameterSymbol.TypeName, StringComparison.Ordinal))
+                            if (string.Equals(symbol.Value.Type, ParameterSymbol.TypeName, StringComparison.Ordinal) ||
+                                    string.Equals(symbol.Value.Type, DerivedSymbol.TypeName, StringComparison.Ordinal))
                             {
-                                ParameterSymbol param = (ParameterSymbol)symbol.Value;
-                                bool isName = param.Binding == NameSymbolName;
+                                BaseValueSymbol baseSymbol = (BaseValueSymbol)symbol.Value;
+                                bool isName = baseSymbol.Binding == NameSymbolName;
+
                                 parameters[symbol.Key] = new Parameter
                                 {
-                                    DefaultValue = param.DefaultValue ?? (!param.IsRequired ? param.Replaces : null),
-                                    Description = param.Description,
+                                    DefaultValue = baseSymbol.DefaultValue ?? (!baseSymbol.IsRequired ? baseSymbol.Replaces : null),
+                                    Description = baseSymbol.Description,
                                     IsName = isName,
                                     IsVariable = true,
                                     Name = symbol.Key,
-                                    FileRename = param.FileRename,
-                                    Requirement = param.IsRequired ? TemplateParameterPriority.Required : isName ? TemplateParameterPriority.Implicit : TemplateParameterPriority.Optional,
-                                    Type = param.Type,
-                                    DataType = param.DataType,
-                                    Choices = param.Choices
+                                    FileRename = baseSymbol.FileRename,
+                                    Requirement = baseSymbol.IsRequired ? TemplateParameterPriority.Required : isName ? TemplateParameterPriority.Implicit : TemplateParameterPriority.Optional,
+                                    Type = baseSymbol.Type,
+                                    DataType = baseSymbol.DataType
                                 };
+
+                                if (string.Equals(symbol.Value.Type, ParameterSymbol.TypeName, StringComparison.Ordinal))
+                                {
+                                    parameters[symbol.Key].Choices = ((ParameterSymbol)symbol.Value).Choices;
+                                }
                             }
                         }
                     }
@@ -526,6 +532,14 @@ namespace Microsoft.TemplateEngine.Orchestrator.RunnableProjects
             {
                 foreach (KeyValuePair<string, ISymbolModel> symbol in Symbols)
                 {
+                    if (symbol.Value is DerivedSymbol derivedSymbol)
+                    {
+                        if (generateMacros)
+                        {
+                            macros.Add(new ProcessValueFormMacroConfig(derivedSymbol.ValueSource, symbol.Key, derivedSymbol.DataType, derivedSymbol.ValueTransform, Forms));
+                        }
+                    }
+
                     if (symbol.Value.Replaces != null)
                     {
                         string sourceVariable = null;
@@ -551,17 +565,24 @@ namespace Microsoft.TemplateEngine.Orchestrator.RunnableProjects
 
                         if (sourceVariable != null)
                         {
-                            if (symbol.Value is ParameterSymbol p)
+                            if (symbol.Value is BaseValueSymbol p)
                             {
-                                foreach (string form in p.Forms.GlobalForms)
+                                foreach (string formName in p.Forms.GlobalForms)
                                 {
-                                    string symbolName = symbol.Key + "{-VALUE-FORMS-}" + form;
-                                    string processedReplacement = Forms[form].Process(Forms, p.Replaces);
-                                    GenerateReplacementsForParameter(symbol, processedReplacement, symbolName, macroGeneratedReplacements);
-
-                                    if (generateMacros)
+                                    if (Forms.TryGetValue(formName, out IValueForm valueForm))
                                     {
-                                        macros.Add(new ProcessValueFormMacroConfig(symbol.Key, symbolName, form, Forms));
+                                        string symbolName = symbol.Key + "{-VALUE-FORMS-}" + formName;
+                                        string processedReplacement = valueForm.Process(Forms, p.Replaces);
+                                        GenerateReplacementsForParameter(symbol, processedReplacement, symbolName, macroGeneratedReplacements);
+
+                                        if (generateMacros)
+                                        {
+                                            macros.Add(new ProcessValueFormMacroConfig(symbol.Key, symbolName, "string", formName, Forms));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        EnvironmentSettings.Host.LogDiagnosticMessage($"Unable to find a form called '{formName}'", "Authoring");
                                     }
                                 }
                             }
@@ -657,7 +678,7 @@ namespace Microsoft.TemplateEngine.Orchestrator.RunnableProjects
                 {
                     int id = guidCount++;
                     string replacementId = "guid" + id;
-                    generatedMacroConfigs.Add(new GuidMacroConfig(replacementId, null));
+                    generatedMacroConfigs.Add(new GuidMacroConfig(replacementId, "string", null));
                     _guidToGuidPrefixMap[guid] = replacementId;
                 }
             }
@@ -668,9 +689,11 @@ namespace Microsoft.TemplateEngine.Orchestrator.RunnableProjects
                 {
                     if (string.Equals(symbol.Value.Type, ComputedSymbol.TypeName, StringComparison.Ordinal))
                     {
-                        string value = ((ComputedSymbol)symbol.Value).Value;
-                        string evaluator = ((ComputedSymbol)symbol.Value).Evaluator;
-                        computedMacroConfigs.Add(new EvaluateMacroConfig(symbol.Key, value, evaluator));
+                        ComputedSymbol computed = (ComputedSymbol) symbol.Value;
+                        string value = computed.Value;
+                        string evaluator = computed.Evaluator;
+                        string dataType = computed.DataType;
+                        computedMacroConfigs.Add(new EvaluateMacroConfig(symbol.Key, dataType, value, evaluator));
                     }
                     else if (string.Equals(symbol.Value.Type, GeneratedSymbol.TypeName, StringComparison.Ordinal))
                     {
@@ -684,7 +707,14 @@ namespace Microsoft.TemplateEngine.Orchestrator.RunnableProjects
                             configParams.Add(parameter.Key, parameter.Value);
                         }
 
-                        generatedMacroConfigs.Add(new GeneratedSymbolDeferredMacroConfig(type, variableName, configParams));
+                        string dataType = symbolInfo.DataType;
+
+                        if (string.Equals(dataType, "choice", StringComparison.OrdinalIgnoreCase))
+                        {
+                            dataType = "string";
+                        }
+
+                        generatedMacroConfigs.Add(new GeneratedSymbolDeferredMacroConfig(type, dataType, variableName, configParams));
                     }
                 }
             }
@@ -864,59 +894,7 @@ namespace Microsoft.TemplateEngine.Orchestrator.RunnableProjects
 
         private void AugmentRenames(IFileSystemInfo configFile, string sourceDirectory, ref string targetDirectory, object resolvedNameParamValue, IParameterSet parameters, Dictionary<string, string> fileRenames)
         {
-            List<KeyValuePair<string, string>> fileRenameMappings = new List<KeyValuePair<string, string>>();
-            Dictionary<string, string> coreRenames = new Dictionary<string, string>(fileRenames);
-
-            // setup the rename of the base directory to the output "name" param directory
-            if (resolvedNameParamValue != null && SourceName != null)
-            {
-                string targetName = ((string)resolvedNameParamValue).Trim();
-                targetDirectory = targetDirectory.Replace(SourceName, targetName);
-                fileRenameMappings.Add(new KeyValuePair<string, string>(SourceName, targetName));
-            }
-
-            // setup renames from parameters
-            foreach (IExtendedTemplateParameter p in parameters.ParameterDefinitions.OfType<IExtendedTemplateParameter>())
-            {
-                if (!string.IsNullOrEmpty(p.FileRename))
-                {
-                    if (parameters.TryGetRuntimeValue(EnvironmentSettings, p.Name, out object value) && value is string s)
-                    {
-                        fileRenameMappings.Add(new KeyValuePair<string, string>(p.FileRename, s));
-                    }
-                }
-            }
-
-            IDirectory sourceBaseDirectoryInfo = configFile.Parent.Parent.DirectoryInfo(sourceDirectory.TrimEnd('/'));
-
-            foreach (IFileSystemInfo fileSystemEntry in sourceBaseDirectoryInfo.EnumerateFileSystemInfos("*", SearchOption.AllDirectories))
-            {
-                string templateRelativePath = fileSystemEntry.PathRelativeTo(sourceBaseDirectoryInfo);
-                string outputRelativePath = templateRelativePath;
-
-                foreach (KeyValuePair<string, string> rename in coreRenames)
-                {
-                    outputRelativePath = outputRelativePath.Replace(rename.Key, rename.Value);
-                    if (!string.Equals(outputRelativePath, templateRelativePath, StringComparison.Ordinal))
-                    {
-                        break;
-                    }
-                }
-
-                foreach (KeyValuePair<string, string> rename in fileRenameMappings)
-                {
-                    outputRelativePath = outputRelativePath.Replace(rename.Key, rename.Value);
-                    if (!string.Equals(outputRelativePath, templateRelativePath, StringComparison.Ordinal))
-                    {
-                        break;
-                    }
-                }
-
-                if (!string.Equals(outputRelativePath, templateRelativePath, StringComparison.Ordinal))
-                {
-                    fileRenames[templateRelativePath] = outputRelativePath;
-                }
-            }
+            FileRenameGenerator.AugmentFileRenames(EnvironmentSettings, SourceName, configFile, sourceDirectory, ref targetDirectory, resolvedNameParamValue, parameters, fileRenames);
         }
 
         private static ISymbolModel SetupDefaultNameSymbol(string sourceName)
@@ -955,17 +933,11 @@ namespace Microsoft.TemplateEngine.Orchestrator.RunnableProjects
         {
             Dictionary<string, IValueForm> formMap = new Dictionary<string, IValueForm>(StringComparer.Ordinal);
 
-            // setup the built-in default forms - these are all used by the default "name" symbol setup.
-            IValueForm identityForm = new IdentityValueForm();
-            formMap[identityForm.Identifier] = identityForm;
-            IValueForm safeNameForm = new DefaultSafeNameValueFormModel();
-            formMap[safeNameForm.Identifier] = safeNameForm;
-            IValueForm lowerSafeNameForm = new DefaultLowerSafeNameValueFormModel();
-            formMap[lowerSafeNameForm.Identifier] = lowerSafeNameForm;
-            IValueForm safeNamespaceForm = new DefaultSafeNamespaceValueFormModel();
-            formMap[safeNamespaceForm.Identifier] = safeNamespaceForm;
-            IValueForm lowerSafeNamespaceForm = new DefaultLowerSafeNamespaceValueFormModel();
-            formMap[lowerSafeNamespaceForm.Identifier] = lowerSafeNamespaceForm;
+            // setup all the built-in default forms.
+            foreach (KeyValuePair<string, IValueForm> builtInForm in ValueFormRegistry.AllForms)
+            {
+                formMap[builtInForm.Key] = builtInForm.Value;
+            }
 
             // setup the forms defined by the template configuration.
             // if any have the same name as a default, the default is overridden.

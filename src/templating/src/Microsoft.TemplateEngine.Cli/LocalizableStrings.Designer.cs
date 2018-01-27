@@ -401,11 +401,29 @@ namespace Microsoft.TemplateEngine.Cli {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Apply updates ([A]ll|[N]one|[P]rompt)?.
+        /// </summary>
+        public static string AllUpdatesApplyPrompt {
+            get {
+                return ResourceManager.GetString("AllUpdatesApplyPrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to determine the desired template from the input template name: {0}..
         /// </summary>
         public static string AmbiguousInputTemplateName {
             get {
                 return ResourceManager.GetString("AmbiguousInputTemplateName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid choice....
+        /// </summary>
+        public static string ApplyUpdatesInvalidChoiceResponse {
+            get {
+                return ResourceManager.GetString("ApplyUpdatesInvalidChoiceResponse", resourceCulture);
             }
         }
         
@@ -515,6 +533,15 @@ namespace Microsoft.TemplateEngine.Cli {
         public static string CommandSucceeded {
             get {
                 return ResourceManager.GetString("CommandSucceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  Commit Hash: {0}.
+        /// </summary>
+        public static string CommitHash {
+            get {
+                return ResourceManager.GetString("CommitHash", resourceCulture);
             }
         }
         
@@ -715,6 +742,15 @@ namespace Microsoft.TemplateEngine.Cli {
         public static string Id {
             get {
                 return ResourceManager.GetString("Id", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Currently installed items:.
+        /// </summary>
+        public static string InstalledItems {
+            get {
+                return ResourceManager.GetString("InstalledItems", resourceCulture);
             }
         }
         
@@ -938,6 +974,15 @@ namespace Microsoft.TemplateEngine.Cli {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No updates found..
+        /// </summary>
+        public static string NoUpdatesFound {
+            get {
+                return ResourceManager.GetString("NoUpdatesFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Options:.
         /// </summary>
         public static string Options {
@@ -1015,6 +1060,15 @@ namespace Microsoft.TemplateEngine.Cli {
         public static string Parent {
             get {
                 return ResourceManager.GetString("Parent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Some partially matched templates may not support these input switches:.
+        /// </summary>
+        public static string PartialTemplateMatchSwitchesNotValidForAllMatches {
+            get {
+                return ResourceManager.GetString("PartialTemplateMatchSwitchesNotValidForAllMatches", resourceCulture);
             }
         }
         
@@ -1155,6 +1209,15 @@ namespace Microsoft.TemplateEngine.Cli {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error reading the installed configuration, file may be corrupted. If this problem persists, try resetting with the `--debug:reinit&apos; flag.
+        /// </summary>
+        public static string SettingsReadError {
+            get {
+                return ResourceManager.GetString("SettingsReadError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Short Name.
         /// </summary>
         public static string ShortName {
@@ -1187,6 +1250,24 @@ namespace Microsoft.TemplateEngine.Cli {
         public static string ShowsFilteredTemplates {
             get {
                 return ResourceManager.GetString("ShowsFilteredTemplates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following parameter(s) or their value(s) are not valid in combination with other supplied parameters or their values:.
+        /// </summary>
+        public static string SingleTemplateGroupPartialMatchSwitchesNotValidForAllMatches {
+            get {
+                return ResourceManager.GetString("SingleTemplateGroupPartialMatchSwitchesNotValidForAllMatches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} : update ([Y]es|[N]o)?.
+        /// </summary>
+        public static string SingleUpdateApplyPrompt {
+            get {
+                return ResourceManager.GetString("SingleUpdateApplyPrompt", resourceCulture);
             }
         }
         
@@ -1245,6 +1326,15 @@ namespace Microsoft.TemplateEngine.Cli {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occured updating templates for: {0}.
+        /// </summary>
+        public static string TemplateUpdateError {
+            get {
+                return ResourceManager.GetString("TemplateUpdateError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This template contains technologies from parties other than Microsoft, see {0} for details..
         /// </summary>
         public static string ThirdPartyNotices {
@@ -1299,6 +1389,24 @@ namespace Microsoft.TemplateEngine.Cli {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No update checker(s) for the following:.
+        /// </summary>
+        public static string UpdateCheckerNotAvailable {
+            get {
+                return ResourceManager.GetString("UpdateCheckerNotAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occured checking for {0} template updates..
+        /// </summary>
+        public static string UpdateCheckError {
+            get {
+                return ResourceManager.GetString("UpdateCheckError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Update matching templates..
         /// </summary>
         public static string UpdateHelp {
@@ -1308,11 +1416,29 @@ namespace Microsoft.TemplateEngine.Cli {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Updates are available for the following:.
+        /// </summary>
+        public static string UpdatesAvailableListHeader {
+            get {
+                return ResourceManager.GetString("UpdatesAvailableListHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value specified for valueless parameter: {0}..
         /// </summary>
         public static string ValueSpecifiedForValuelessParameter {
             get {
                 return ResourceManager.GetString("ValueSpecifiedForValuelessParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  Version:     {0}.
+        /// </summary>
+        public static string Version {
+            get {
+                return ResourceManager.GetString("Version", resourceCulture);
             }
         }
         

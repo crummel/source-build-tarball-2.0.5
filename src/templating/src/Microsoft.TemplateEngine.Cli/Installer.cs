@@ -24,6 +24,11 @@ namespace Microsoft.TemplateEngine.Cli
             _paths = new Paths(environmentSettings);
         }
 
+        public void AddInstallDescriptorForLocation(Guid mountPointId)
+        {
+            ((SettingsLoader)(_environmentSettings.SettingsLoader)).InstallUnitDescriptorCache.TryAddDescriptorForLocation(mountPointId);
+        }
+
         public void InstallPackages(IEnumerable<string> installationRequests)
         {
             List<string> localSources = new List<string>();
@@ -36,7 +41,7 @@ namespace Microsoft.TemplateEngine.Cli
                 //If the request string doesn't have any wild cards or probable path indicators,
                 //  and doesn't have a "::" delimiter either, try to convert it to "latest package"
                 //  form
-                if (req.IndexOfAny(new[] { '*', '?', '/', '\\' }) < 0 && req.IndexOf("::", StringComparison.Ordinal) < 0)
+                if (OriginalRequestIsImplicitPackageVersionSyntax(request))
                 {
                     req += "::*";
                 }
@@ -62,6 +67,27 @@ namespace Microsoft.TemplateEngine.Cli
             }
 
             _environmentSettings.SettingsLoader.Save();
+        }
+
+        private bool OriginalRequestIsImplicitPackageVersionSyntax(string req)
+        {
+            if (req.IndexOfAny(new[] { '*', '?', '/', '\\' }) < 0 && req.IndexOf("::", StringComparison.Ordinal) < 0)
+            {
+                bool localFileSystemEntryExists = false;
+
+                try
+                {
+                    localFileSystemEntryExists = _environmentSettings.Host.FileSystem.FileExists(req)
+                                                 || _environmentSettings.Host.FileSystem.DirectoryExists(req);
+                }
+                catch
+                {
+                }
+
+                return !localFileSystemEntryExists;
+            }
+
+            return false;
         }
 
         public IEnumerable<string> Uninstall(IEnumerable<string> uninstallRequests)
@@ -127,6 +153,7 @@ namespace Microsoft.TemplateEngine.Cli
 
                 //Find all of the things that refer to any of the mount points we've got
                 _environmentSettings.SettingsLoader.RemoveMountPoints(mountPoints);
+                ((SettingsLoader)(_environmentSettings.SettingsLoader)).InstallUnitDescriptorCache.RemoveDescriptorsForLocationList(mountPoints);
                 _environmentSettings.SettingsLoader.Save();
 
                 foreach (MountPointInfo mountPoint in rootMountPoints)
@@ -209,8 +236,11 @@ namespace Microsoft.TemplateEngine.Cli
                 if (wildcardIndex > -1)
                 {
                     int lastSlashBeforeWildcard = pkg.LastIndexOfAny(new[] { '\\', '/' });
-                    pattern = pkg.Substring(lastSlashBeforeWildcard + 1);
-                    pkg = pkg.Substring(0, lastSlashBeforeWildcard);
+                    if (lastSlashBeforeWildcard >= 0)
+                    {
+                        pattern = pkg.Substring(lastSlashBeforeWildcard + 1);
+                        pkg = pkg.Substring(0, lastSlashBeforeWildcard);
+                    }
                 }
 
                 try
@@ -219,12 +249,22 @@ namespace Microsoft.TemplateEngine.Cli
                     {
                         string fullDirectory = new DirectoryInfo(pkg).FullName;
                         string fullPathGlob = Path.Combine(fullDirectory, pattern);
-                        ((SettingsLoader)(_environmentSettings.SettingsLoader)).UserTemplateCache.Scan(fullPathGlob);
+                        ((SettingsLoader)(_environmentSettings.SettingsLoader)).UserTemplateCache.Scan(fullPathGlob, out IReadOnlyList<Guid> contentMountPointIds);
+
+                        foreach (Guid mountPointId in contentMountPointIds)
+                        {
+                            AddInstallDescriptorForLocation(mountPointId);
+                        }
                     }
                     else if (_environmentSettings.Host.FileSystem.DirectoryExists(pkg) || _environmentSettings.Host.FileSystem.FileExists(pkg))
                     {
                         string packageLocation = new DirectoryInfo(pkg).FullName;
-                        ((SettingsLoader)(_environmentSettings.SettingsLoader)).UserTemplateCache.Scan(packageLocation);
+                        ((SettingsLoader)(_environmentSettings.SettingsLoader)).UserTemplateCache.Scan(packageLocation, out IReadOnlyList<Guid> contentMountPointIds);
+
+                        foreach (Guid mountPointId in contentMountPointIds)
+                        {
+                            AddInstallDescriptorForLocation(mountPointId);
+                        }
                     }
                     else
                     {

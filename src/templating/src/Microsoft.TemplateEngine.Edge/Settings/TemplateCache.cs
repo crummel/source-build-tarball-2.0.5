@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -47,36 +47,11 @@ namespace Microsoft.TemplateEngine.Edge.Settings
         [JsonProperty]
         public IReadOnlyList<TemplateInfo> TemplateInfo { get; set; }
 
+        // This method is getting obsolted soon. It's getting replaced by TemplateListFilter.FilterTemplates, which does the same thing,
+        // except that the template list to act on is passed in.
         public IReadOnlyCollection<IFilteredTemplateInfo> List(bool exactMatchesOnly, params Func<ITemplateInfo, MatchInfo?>[] filters)
         {
-            HashSet<IFilteredTemplateInfo> matchingTemplates = new HashSet<IFilteredTemplateInfo>(FilteredTemplateEqualityComparer.Default);
-
-            foreach (ITemplateInfo template in TemplateInfo)
-            {
-                List<MatchInfo> matchInformation = new List<MatchInfo>();
-
-                foreach (Func<ITemplateInfo, MatchInfo?> filter in filters)
-                {
-                    MatchInfo? result = filter(template);
-
-                    if (result.HasValue)
-                    {
-                        matchInformation.Add(result.Value);
-                    }
-                }
-
-                FilteredTemplateInfo info = new FilteredTemplateInfo(template, matchInformation);
-                if (info.IsMatch || (!exactMatchesOnly && info.IsPartialMatch))
-                {
-                    matchingTemplates.Add(info);
-                }
-            }
-
-#if !NET45
-            return matchingTemplates;
-#else
-            return matchingTemplates.ToList();
-#endif
+            return TemplateListFilter.FilterTemplates(TemplateInfo, exactMatchesOnly, filters);
         }
 
         public void Scan(IReadOnlyList<string> templateRoots)
@@ -87,17 +62,20 @@ namespace Microsoft.TemplateEngine.Edge.Settings
             }
         }
 
-        // reads all the templates and langpacks for the current dir.
-        // stores info about them in members.
-        // can't correctly write locale cache(s) until all of both are read.
         public void Scan(string templateDir)
         {
-            if(templateDir[templateDir.Length - 1] == '/' || templateDir[templateDir.Length - 1] == '\\')
+            Scan(templateDir, out IReadOnlyList<Guid> mountPointIds);
+        }
+
+        public void Scan(string templateDir, out IReadOnlyList<Guid> mountPointIds)
+        {
+            if (templateDir[templateDir.Length - 1] == '/' || templateDir[templateDir.Length - 1] == '\\')
             {
                 templateDir = templateDir.Substring(0, templateDir.Length - 1);
             }
 
             string searchTarget = Path.Combine(_environmentSettings.Host.FileSystem.GetCurrentDirectory(), templateDir.Trim());
+
             List<string> matches = _environmentSettings.Host.FileSystem.EnumerateFileSystemEntries(Path.GetDirectoryName(searchTarget), Path.GetFileName(searchTarget), SearchOption.TopDirectoryOnly).ToList();
 
             if (matches.Count == 1)
@@ -106,18 +84,27 @@ namespace Microsoft.TemplateEngine.Edge.Settings
             }
             else
             {
+                List<Guid> storageLocations = new List<Guid>();
+
                 foreach(string match in matches)
                 {
-                    Scan(match);
+                    Scan(match, out IReadOnlyList<Guid> locationsForThisContent);
+                    storageLocations.AddRange(locationsForThisContent);
                 }
 
+                mountPointIds = storageLocations;
                 return;
             }
 
             if (_environmentSettings.SettingsLoader.TryGetMountPointFromPlace(templateDir, out IMountPoint existingMountPoint))
             {
                 ScanMountPointForTemplatesAndLangpacks(existingMountPoint, templateDir);
+                mountPointIds = new Guid[]
+                {
+                    existingMountPoint.Info.MountPointId
+                };
                 _environmentSettings.SettingsLoader.ReleaseMountPoint(existingMountPoint);
+                return;
             }
             else
             {
@@ -173,16 +160,23 @@ namespace Microsoft.TemplateEngine.Edge.Settings
                             }
                         }
 
+                        mountPointIds = new Guid[]
+                        {
+                            mountPoint.Info.MountPointId
+                        };
+
                         _environmentSettings.SettingsLoader.ReleaseMountPoint(mountPoint);
+                        return;
                     }
                 }
             }
+
+            mountPointIds = new Guid[] { };
         }
 
         private bool ScanMountPointForTemplatesAndLangpacks(IMountPoint mountPoint, string templateDir)
         {
             bool anythingFound = ScanForComponents(mountPoint, templateDir);
-
             foreach (IGenerator generator in _environmentSettings.SettingsLoader.Components.OfType<IGenerator>())
             {
                 IList<ITemplate> templateList = generator.GetTemplatesAndLangpacksFromDir(mountPoint, out IList<ILocalizationLocator> localizationInfo);
@@ -247,15 +241,13 @@ namespace Microsoft.TemplateEngine.Edge.Settings
                 {
                     try
                     {
-                        foreach (Type type in asm.Value.GetTypes())
-                        {
-                            _environmentSettings.SettingsLoader.Components.Register(type);
-                            anythingFound = true;
-                        }
+                        IReadOnlyList<Type> typeList = asm.Value.GetTypes();
 
-                        if (anythingFound)
+                        if (typeList.Count > 0)
                         {
+                            _environmentSettings.SettingsLoader.Components.RegisterMany(typeList);
                             _environmentSettings.SettingsLoader.AddProbingPath(Path.GetDirectoryName(asm.Key));
+                            anythingFound = true;
                         }
                     }
                     catch
@@ -263,7 +255,7 @@ namespace Microsoft.TemplateEngine.Edge.Settings
                     }
                 }
 
-                if (!anythingFound)
+                if (!anythingFound && !isInOriginalInstallLocation)
                 {
                     try
                     {
@@ -401,11 +393,13 @@ namespace Microsoft.TemplateEngine.Edge.Settings
         {
             IReadOnlyList<TemplateInfo> existingTemplatesForLocale = GetTemplatesForLocale(locale, existingCacheVersion);
             IDictionary<string, ILocalizationLocator> existingLocatorsForLocale;
+            bool hasContentChanges = false;
 
             if (existingTemplatesForLocale.Count == 0)
             {   // the cache for this locale didn't exist previously. Start with the neutral locale as if it were the existing (no locales)
                 existingTemplatesForLocale = GetTemplatesForLocale(null, existingCacheVersion);
                 existingLocatorsForLocale = new Dictionary<string, ILocalizationLocator>();
+                hasContentChanges = true;
             }
             else
             {
@@ -421,6 +415,10 @@ namespace Microsoft.TemplateEngine.Edge.Settings
             {
                 newLocatorsForLocale = new Dictionary<string, ILocalizationLocator>();
             }
+            else
+            {
+                hasContentChanges = true;   // there are new langpacks for this locale
+            }
 
             foreach (ITemplate newTemplate in _templateMemoryCache.Values)
             {
@@ -428,6 +426,8 @@ namespace Microsoft.TemplateEngine.Edge.Settings
                 TemplateInfo localizedTemplate = LocalizeTemplate(newTemplate, locatorForTemplate);
                 mergedTemplateList.Add(localizedTemplate);
                 foundTemplates.Add(newTemplate.Identity);
+
+                hasContentChanges = true;   // new template
             }
 
             foreach (TemplateInfo existingTemplate in existingTemplatesForLocale)
@@ -441,7 +441,7 @@ namespace Microsoft.TemplateEngine.Edge.Settings
                 }
             }
 
-            _environmentSettings.SettingsLoader.WriteTemplateCache(mergedTemplateList, locale);
+            _environmentSettings.SettingsLoader.WriteTemplateCache(mergedTemplateList, locale, hasContentChanges);
         }
 
         // find the best locator (if any). New is preferred over old
