@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation and contributors. All rights reserved.
+// Copyright (c) .NET Foundation and contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -55,10 +55,7 @@ namespace Microsoft.TemplateEngine.IDE
 
         public void Register(Assembly assembly)
         {
-            foreach (Type type in assembly.GetTypes())
-            {
-                EnvironmentSettings.SettingsLoader.Components.Register(type);
-            }
+            EnvironmentSettings.SettingsLoader.Components.RegisterMany(assembly.GetTypes());
         }
 
         public void Install(string path)
@@ -82,7 +79,7 @@ namespace Microsoft.TemplateEngine.IDE
         public IReadOnlyCollection<IFilteredTemplateInfo> ListTemplates(bool exactMatchesOnly, params Func<ITemplateInfo, MatchInfo?>[] filters)
         {
             EnsureInitialized();
-            return ((SettingsLoader)EnvironmentSettings.SettingsLoader).UserTemplateCache.List(exactMatchesOnly, filters);
+            return TemplateListFilter.FilterTemplates(((SettingsLoader)EnvironmentSettings.SettingsLoader).UserTemplateCache.TemplateInfo, exactMatchesOnly, filters);
         }
 
         public async Task<ICreationResult> CreateAsync(ITemplateInfo info, string name, string outputPath, IReadOnlyDictionary<string, string> parameters, bool skipUpdateCheck, string baselineName)

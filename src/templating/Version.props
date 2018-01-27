@@ -3,11 +3,10 @@
     <PackageReleaseVersion>1.0.0</PackageReleaseVersion>
     <PackageBuildQuality>$(BUILD_QUALITY)</PackageBuildQuality>
     <PackageBuildQuality Condition=" '$(PackageBuildQuality)' == '' ">beta1</PackageBuildQuality>
-    <PackageDateTime Condition="'$(PackageDateTime)' == ''">$([System.DateTime]::Now.ToString("yyyyMMdd"))</PackageDateTime>
     <PackageVersion>$(PackageReleaseVersion)-$(PackageBuildQuality)</PackageVersion>
     <BUILD_NUMBER Condition="'$(BUILD_NUMBER)' == ''">0</BUILD_NUMBER>
     <AssemblyReleaseVersion>$(PackageReleaseVersion).$(BUILD_NUMBER)</AssemblyReleaseVersion>
-    <PackageVersion Condition="'$(NO_TIMESTAMP)' != 'true'">$(PackageVersion)-$(PackageDateTime)-$(BUILD_NUMBER)</PackageVersion>
+    <PackageVersion Condition="'$(NO_TIMESTAMP)' != 'true'">$(PackageVersion)-$([System.DateTime]::Now.ToString("yyyyMMdd"))-$(BUILD_NUMBER)</PackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Authors>Microsoft</Authors>
@@ -68,6 +67,7 @@ namespace Microsoft.TemplateEngine
 {
     internal static class GitInfo
     {
+        public static string PackageVersion { get%3B } = "$(PackageVersion)"%3B
         public static string CommitCount { get%3B } = "$(GitInfoCommitCount)"%3B
         public static string CommitHash { get%3B } = "$(GitInfoCommitHash)"%3B
     }

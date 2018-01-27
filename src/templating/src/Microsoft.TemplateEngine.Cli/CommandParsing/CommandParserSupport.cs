@@ -44,6 +44,23 @@ namespace Microsoft.TemplateEngine.Cli.CommandParsing
                            combinedArgs);
         }
 
+        public static HashSet<string> ArgsForBuiltInCommands
+        {
+            get
+            {
+                if (_argsForBuiltInCommands == null)
+                {
+                    Option[] allBuiltInArgs = ArrayExtensions.CombineArrays(NewCommandVisibleArgs, NewCommandHiddenArgs, NewCommandReservedArgs, DebuggingCommandArgs);
+
+                    _argsForBuiltInCommands = VariantsForOptions(allBuiltInArgs);
+                }
+
+                // return a copy so the original doesn't get modified.
+                return new HashSet<string>(_argsForBuiltInCommands);
+            }
+        }
+        private static HashSet<string> _argsForBuiltInCommands = null;
+
         // Creates a command setup with the args for "new", plus args for the input template parameters.
         public static Command CreateNewCommandWithArgsForTemplate(string commandName, string templateName,
                     IReadOnlyList<ITemplateParameter> parameterDefinitions,
@@ -52,9 +69,8 @@ namespace Microsoft.TemplateEngine.Cli.CommandParsing
                     out IReadOnlyDictionary<string, IReadOnlyList<string>> templateParamMap)
         {
             IList<Option> paramOptionList = new List<Option>();
-            Option[] allBuiltInArgs = ArrayExtensions.CombineArrays(NewCommandVisibleArgs, NewCommandHiddenArgs, NewCommandReservedArgs, DebuggingCommandArgs);
+            HashSet<string> initiallyTakenAliases = ArgsForBuiltInCommands;
 
-            HashSet<string> initiallyTakenAliases = VariantsForOptions(allBuiltInArgs);
             Dictionary<string, IReadOnlyList<string>> canonicalToVariantMap = new Dictionary<string, IReadOnlyList<string>>();
             AliasAssignmentCoordinator assignmentCoordinator = new AliasAssignmentCoordinator(parameterDefinitions, longNameOverrides, shortNameOverrides, initiallyTakenAliases);
 
@@ -82,9 +98,10 @@ namespace Microsoft.TemplateEngine.Cli.CommandParsing
                 if (string.Equals(parameter.DataType, "choice", StringComparison.OrdinalIgnoreCase))
                 {
                     option = Create.Option(string.Join("|", aliasesForParam), parameter.Documentation,
-                                            Accept.ExactlyOneArgument()
+                                            Accept.ExactlyOneArgument());
                                                 //.WithSuggestionsFrom(parameter.Choices.Keys.ToArray())
-                                                .With(defaultValue: () => parameter.DefaultValue));
+                                                // Don't give this a default value, otherwise the switch without a value is valid (gets set to the default)
+                                                // User should have to give a value, or not specify the switch - which causes the default to be applied.
                 }
                 else if (string.Equals(parameter.DataType, "bool", StringComparison.OrdinalIgnoreCase))
                 {
@@ -118,14 +135,13 @@ namespace Microsoft.TemplateEngine.Cli.CommandParsing
                     Create.Option("-n|--name", LocalizableStrings.NameOfOutput, Accept.ExactlyOneArgument()),
                     Create.Option("-o|--output", LocalizableStrings.OutputPath, Accept.ExactlyOneArgument()),
                     Create.Option("-i|--install", LocalizableStrings.InstallHelp, Accept.OneOrMoreArguments()),
-                    Create.Option("-u|--uninstall", LocalizableStrings.UninstallHelp, Accept.OneOrMoreArguments()),
+                    Create.Option("-u|--uninstall", LocalizableStrings.UninstallHelp, Accept.ZeroOrMoreArguments()),
                     Create.Option("--type", LocalizableStrings.ShowsFilteredTemplates, Accept.ExactlyOneArgument()),
                     Create.Option("--force", LocalizableStrings.ForcesTemplateCreation, Accept.NoArguments()),
                     Create.Option("-lang|--language", LocalizableStrings.LanguageParameter,
-                                    // TODO: dynamically get the language set for all installed templates.
                                     Accept.ExactlyOneArgument()
-                                        .WithSuggestionsFrom("C#", "F#")
-                                        .With(defaultValue: () => "C#")),
+                                        .WithSuggestionsFrom("C#", "F#")),
+                                        // don't give this a default, otherwise 'new -lang' is valid and assigns the default. User should have to explicitly give the value.
                 };
             }
         }
@@ -147,6 +163,8 @@ namespace Microsoft.TemplateEngine.Cli.CommandParsing
                     Create.Option("-all|--show-all", string.Empty, Accept.NoArguments()),
                     Create.Option("--allow-scripts", string.Empty, Accept.ZeroOrOneArgument()),
                     Create.Option("--baseline", string.Empty, Accept.ExactlyOneArgument()),
+                    Create.Option("--update", string.Empty, Accept.NoArguments()),
+                    Create.Option("--update-no-prompt", string.Empty, Accept.NoArguments()),
                 };
             }
         }
@@ -157,7 +175,6 @@ namespace Microsoft.TemplateEngine.Cli.CommandParsing
             {
                 return new[]
                 {
-                    Create.Option("-up|--update", string.Empty, Accept.ZeroOrOneArgument()),
                     Create.Option("--skip-update-check", string.Empty, Accept.NoArguments()),
                 };
             }
@@ -176,6 +193,12 @@ namespace Microsoft.TemplateEngine.Cli.CommandParsing
                     Create.Option("--debug:reset-config", string.Empty, Accept.NoArguments()),
                     Create.Option("--debug:showconfig", string.Empty, Accept.NoArguments()),
                     Create.Option("--debug:emit-timings", string.Empty, Accept.NoArguments()),
+                    Create.Option("--debug:emit-telemetry", string.Empty, Accept.NoArguments()),
+                    Create.Option("--debug:custom-hive", string.Empty, Accept.ExactlyOneArgument()),
+                    Create.Option("--debug:version", string.Empty, Accept.NoArguments()),
+
+                    Create.Option("--trace:authoring", string.Empty, Accept.NoArguments()),
+                    Create.Option("--trace:install", string.Empty, Accept.NoArguments()),
                 };
             }
         }
