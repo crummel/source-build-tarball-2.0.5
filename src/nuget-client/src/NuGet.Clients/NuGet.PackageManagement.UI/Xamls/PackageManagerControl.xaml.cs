@@ -19,6 +19,7 @@ using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
+using NuGet.Versioning;
 using NuGet.VisualStudio;
 using Resx = NuGet.PackageManagement.UI;
 using VSThreadHelper = Microsoft.VisualStudio.Shell.ThreadHelper;
@@ -40,8 +41,6 @@ namespace NuGet.PackageManagement.UI
         // list in response to PackageSourcesChanged event.
         private bool _dontStartNewSearch;
 
-        private PackagesErrorBar _errorBar;
-
         private PackageRestoreBar _restoreBar;
 
         private RestartRequestBar _restartBar;
@@ -49,7 +48,7 @@ namespace NuGet.PackageManagement.UI
         private readonly IVsWindowSearchHost _windowSearchHost;
         private readonly IVsWindowSearchHostFactory _windowSearchHostFactory;
 
-        private readonly DetailControlModel _detailModel;
+        internal readonly DetailControlModel _detailModel;
 
         private readonly Dispatcher _uiDispatcher;
 
@@ -61,7 +60,11 @@ namespace NuGet.PackageManagement.UI
 
         public Configuration.ISettings Settings { get; }
 
-        private PackageSourceMoniker SelectedSource
+        internal ItemFilter ActiveFilter { get => _topPanel.Filter; set => _topPanel.SelectFilter(value); }
+
+        internal InfiniteScrollList PackageList { get => _packageList; }
+
+        internal PackageSourceMoniker SelectedSource
         {
             get
             {
@@ -73,11 +76,15 @@ namespace NuGet.PackageManagement.UI
             }
         }
 
-        private IEnumerable<PackageSourceMoniker> PackageSources => _topPanel.SourceRepoList.Items.OfType<PackageSourceMoniker>();
+        internal IEnumerable<PackageSourceMoniker> PackageSources => _topPanel.SourceRepoList.Items.OfType<PackageSourceMoniker>();
 
         internal IEnumerable<SourceRepository> ActiveSources => SelectedSource?.SourceRepositories ?? Enumerable.Empty<SourceRepository>();
 
+        internal event EventHandler _actionCompleted;
+
         public bool IncludePrerelease => _topPanel.CheckboxPrerelease.IsChecked == true;
+
+
 
         public PackageManagerControl(
             PackageManagerModel model,
@@ -116,8 +123,6 @@ namespace NuGet.PackageManagement.UI
             AddRestoreBar();
 
             AddRestartRequestBar(vsShell);
-
-            AddPackagesErrorBar();
 
             _packageDetail.Control = this;
             _packageDetail.Visibility = Visibility.Hidden;
@@ -168,15 +173,6 @@ namespace NuGet.PackageManagement.UI
 
         private void PackagesErrorBar_RefreshUI(object sender, EventArgs e)
         {
-            Refresh();
-        }
-
-        private void PackagesErrorBar_InitializationCompleted(object sender, EventArgs e)
-        {
-            _detailModel.CreateProjectLists();
-
-            Model.Context.Projects = _detailModel.NuGetProjects;
-
             Refresh();
         }
 
@@ -435,29 +431,6 @@ namespace NuGet.PackageManagement.UI
             }
 
             return settings;
-        }
-
-        private void AddPackagesErrorBar()
-        {
-            _errorBar = new PackagesErrorBar(Model.Context.SolutionManager);
-            DockPanel.SetDock(_errorBar, Dock.Top);
-
-            // attach to RefreshUI event of PackagesErrorBar
-            _errorBar.RefreshUI += PackagesErrorBar_RefreshUI;
-
-            _errorBar.InitializationCompleted += PackagesErrorBar_InitializationCompleted;
-
-            _root.Children.Insert(0, _errorBar);
-        }
-
-        private void RemovePackagesConfigErrorBar()
-        {
-            if (_errorBar != null)
-            {
-                _errorBar.RefreshUI -= PackagesErrorBar_RefreshUI;
-                _errorBar.InitializationCompleted -= PackagesErrorBar_InitializationCompleted;
-                _errorBar.CleanUp();
-            }
         }
 
         private void AddRestoreBar()
@@ -730,7 +703,7 @@ namespace NuGet.PackageManagement.UI
         /// <summary>
         /// Updates the detail pane based on the selected package
         /// </summary>
-        private async Task UpdateDetailPaneAsync()
+        internal async Task UpdateDetailPaneAsync()
         {
             var selectedPackage = _packageList.SelectedItem;
             if (selectedPackage == null)
@@ -743,7 +716,7 @@ namespace NuGet.PackageManagement.UI
                 _packageDetail.Visibility = Visibility.Visible;
                 _packageDetail.DataContext = _detailModel;
 
-                await _detailModel.SetCurrentPackage(selectedPackage, _topPanel.Filter, ()=>_packageList.SelectedItem);
+                await _detailModel.SetCurrentPackage(selectedPackage, _topPanel.Filter, () => _packageList.SelectedItem);
 
                 _packageDetail.ScrollToHome();
 
@@ -987,7 +960,6 @@ namespace NuGet.PackageManagement.UI
             _windowSearchHost.TerminateSearch();
             RemoveRestoreBar();
             RemoveRestartBar();
-            RemovePackagesConfigErrorBar();
 
             var solutionManager = Model.Context.SolutionManager;
             solutionManager.NuGetProjectAdded -= SolutionManager_ProjectsChanged;
@@ -1049,6 +1021,7 @@ namespace NuGet.PackageManagement.UI
                 }
                 finally
                 {
+                    _actionCompleted?.Invoke(this, EventArgs.Empty);
                     NuGetEventTrigger.Instance.TriggerEvent(NuGetEvent.PackageOperationEnd);
                     IsEnabled = true;
                 }
@@ -1065,18 +1038,7 @@ namespace NuGet.PackageManagement.UI
                 return;
             }
 
-            var action = UserAction.CreateUnInstallAction(package.Id);
-
-            ExecuteAction(
-                () =>
-                {
-                    return Model.Context.UIActionEngine.PerformActionAsync(
-                        Model.UIController,
-                        action,
-                        CancellationToken.None);
-                },
-
-                nugetUi => SetOptions(nugetUi, NuGetActionType.Uninstall));
+            UninstallPackage(package.Id);
         }
 
         private void SetOptions(NuGetUI nugetUi, NuGetActionType actionType)
@@ -1103,7 +1065,27 @@ namespace NuGet.PackageManagement.UI
             }
 
             var versionToInstall = package.LatestVersion ?? package.Version;
-            var action = UserAction.CreateInstallAction(package.Id, versionToInstall);
+            InstallPackage(package.Id, versionToInstall);
+        }
+
+        private void PackageList_UpdateButtonClicked(PackageItemListViewModel[] selectedPackages)
+        {
+            var packagesToUpdate = selectedPackages
+                .Select(package => new PackageIdentity(package.Id, package.Version))
+                .ToList();
+
+            UpdatePackage(packagesToUpdate);
+        }
+
+        private void ExecuteRestartSearchCommand(object sender, ExecutedRoutedEventArgs e)
+        {
+            SearchPackagesAndRefreshUpdateCount(_windowSearchHost.SearchQuery.SearchString, useCache: false);
+            RefreshConsolidatablePackagesCount();
+        }
+
+        internal void InstallPackage(string packageId, NuGetVersion version)
+        {
+            var action = UserAction.CreateInstallAction(packageId, version);
 
             ExecuteAction(
                 () =>
@@ -1117,13 +1099,25 @@ namespace NuGet.PackageManagement.UI
                 nugetUi => SetOptions(nugetUi, NuGetActionType.Install));
         }
 
-        private void PackageList_UpdateButtonClicked(PackageItemListViewModel[] selectedPackages)
+        internal void UninstallPackage(string packageId)
         {
-            var packagesToUpdate = selectedPackages
-                .Select(package => new PackageIdentity(package.Id, package.Version))
-                .ToList();
+            var action = UserAction.CreateUnInstallAction(packageId);
 
-            if (packagesToUpdate.Count == 0)
+            ExecuteAction(
+                () =>
+                {
+                    return Model.Context.UIActionEngine.PerformActionAsync(
+                        Model.UIController,
+                        action,
+                        CancellationToken.None);
+                },
+
+                nugetUi => SetOptions(nugetUi, NuGetActionType.Uninstall));
+        }
+
+        internal void UpdatePackage(List<PackageIdentity> packages)
+        {
+            if (packages.Count == 0)
             {
                 return;
             }
@@ -1133,16 +1127,10 @@ namespace NuGet.PackageManagement.UI
                 {
                     return Model.Context.UIActionEngine.PerformUpdateAsync(
                         Model.UIController,
-                        packagesToUpdate,
+                        packages,
                         CancellationToken.None);
                 },
                nugetUi => SetOptions(nugetUi, NuGetActionType.Update));
-        }
-
-        private void ExecuteRestartSearchCommand(object sender, ExecutedRoutedEventArgs e)
-        {
-            SearchPackagesAndRefreshUpdateCount(_windowSearchHost.SearchQuery.SearchString, useCache: false);
-            RefreshConsolidatablePackagesCount();
         }
     }
 }
