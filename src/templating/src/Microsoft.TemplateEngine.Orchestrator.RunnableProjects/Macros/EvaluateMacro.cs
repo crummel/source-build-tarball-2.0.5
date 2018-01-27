@@ -34,11 +34,30 @@ namespace Microsoft.TemplateEngine.Orchestrator.RunnableProjects.Macros
             IProcessorState state = new GlobalRunSpec.ProcessorState(environmentSettings, vars, data, Encoding.UTF8);
             bool result = evaluator(state, ref len, ref pos, out bool faulted);
 
-            Parameter p = new Parameter
+            Parameter p;
+
+            if (parameters.TryGetParameterDefinition(config.VariableName, out ITemplateParameter existingParam))
             {
-                IsVariable = true,
-                Name = config.VariableName
-            };
+                // If there is an existing parameter with this name, it must be reused so it can be referenced by name
+                // for other processing, for example: if the parameter had value forms defined for creating variants.
+                // When the param already exists, use its definition, but set IsVariable = true for consistency.
+                p = (Parameter)existingParam;
+                p.IsVariable = true;
+
+                if (string.IsNullOrEmpty(p.DataType))
+                {
+                    p.DataType = config.DataType;
+                }
+            }
+            else
+            {
+                p = new Parameter
+                {
+                    IsVariable = true,
+                    Name = config.VariableName,
+                    DataType = config.DataType
+                };
+            }
 
             vars[config.VariableName] = result.ToString();
             setter(p, result.ToString());
