@@ -2,11 +2,11 @@
 <Project ToolsVersion="15.0">
   <!-- Version -->
   <PropertyGroup>
-    <SemanticVersion Condition=" '$(SemanticVersion)' == '' ">4.4.0</SemanticVersion>
+    <SemanticVersion Condition=" '$(SemanticVersion)' == '' ">4.5.0</SemanticVersion>
     <!-- We need to update this netcoreassembly build number with every milestone to workaround any breaking api
     changes we might have made-->
-    <NetCoreAssemblyBuildNumber Condition=" '$(NetCoreAssemblyBuildNumber)' == '' ">3</NetCoreAssemblyBuildNumber>
-    <ReleaseLabel Condition=" '$(ReleaseLabel)' == '' ">preview$(NetCoreAssemblyBuildNumber)</ReleaseLabel>
+    <NetCoreAssemblyBuildNumber Condition=" '$(NetCoreAssemblyBuildNumber)' == '' ">4</NetCoreAssemblyBuildNumber>
+    <ReleaseLabel Condition=" '$(ReleaseLabel)' == '' ">rtm</ReleaseLabel>
   </PropertyGroup>
 
   <!-- Dependency versions -->
@@ -18,7 +18,7 @@
     <TestSDKVersion>15.0.0</TestSDKVersion>
     <MoqVersion>4.7.63</MoqVersion>
     <FluentAssertionsVersion>4.19.2</FluentAssertionsVersion>
-    <MicrosoftBuildPackageVersion>15.1.1012</MicrosoftBuildPackageVersion>
+    <MicrosoftBuildPackageVersion>0.1.0-preview-00038-160914</MicrosoftBuildPackageVersion>
   </PropertyGroup>
 
   <!-- Config -->

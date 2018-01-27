@@ -13,7 +13,7 @@ function Get-VSVersion
     return $version
 }
 
-function New-UwpClassLibrary
+function New-UwpClassLibraryProjectJson
 {
     param(
         [string]$ProjectName,
@@ -22,7 +22,7 @@ function New-UwpClassLibrary
 
     if ((Get-VSVersion) -ge '15.0')
     {
-        New-Project UwpClassLibrary $ProjectName $SolutionFolder
+        New-Project UwpClassLibraryProjectJson $ProjectName $SolutionFolder
     }
     else
     {
@@ -68,7 +68,7 @@ function Wait-OnNetCoreRestoreCompletion{
      param(
         [parameter(Mandatory = $true)]
         $Project,
-        [int]$TimoutSeconds = 20
+        [int]$TimoutSeconds = 30
     )
 
     $NetCoreLockFilePath = Get-NetCoreLockFilePath $Project
@@ -99,6 +99,45 @@ function New-NetCoreConsoleApp
     if ((Get-VSVersion) -ge '15.0')
     {
         $project = New-Project NetCoreConsoleApp $ProjectName $SolutionFolder
+        Wait-OnNetCoreRestoreCompletion $project
+        return $project
+    }
+    else
+    {
+        throw "SKIP: $($_)"
+    }
+}
+
+function New-NetCoreConsoleTargetFrameworksApp
+{
+    param(
+        [string]$ProjectName,
+        [string]$SolutionFolder
+    )
+
+    if ((Get-VSVersion) -ge '15.0')
+    {
+        $project = New-Project NetCoreConsoleTargetFrameworksApp $ProjectName $SolutionFolder
+        Wait-OnNetCoreRestoreCompletion $project
+        return $project
+    }
+    else
+    {
+        throw "SKIP: $($_)"
+    }
+}
+
+
+function New-NetCoreConsoleMultipleTargetFrameworksApp
+{
+    param(
+        [string]$ProjectName,
+        [string]$SolutionFolder
+    )
+
+    if ((Get-VSVersion) -ge '15.0')
+    {
+        $project = New-Project NetCoreConsoleMultipleTargetFrameworksApp $ProjectName $SolutionFolder
         Wait-OnNetCoreRestoreCompletion $project
         return $project
     }
@@ -312,15 +351,6 @@ function New-ClassLibraryNET46 {
     New-Project ClassLibrary46 $ProjectName $SolutionFolderName
 }
 
-function New-LightSwitchApplication
-{
-    param(
-        [string]$ProjectName,
-        [string]$SolutionFolder
-    )
-
-    New-Project JScriptVisualBasicLightSwitchProjectTemplate $ProjectName $SolutionFolder
-}
 
 function New-PortableLibrary
 {
@@ -924,4 +954,34 @@ function UnadviseSolutionEvents {
 
 function WaitUntilRebuildCompleted {
     [API.Test.VSSolutionHelper]::WaitUntilRebuildCompleted()
+}
+
+function Get-VSFolderPath
+{
+    $ProgramFilesPath = ${env:ProgramFiles}
+    if (Test-Path ${env:ProgramFiles(x86)})
+    {
+        $ProgramFilesPath = ${env:ProgramFiles(x86)}
+    }
+
+    $VS15PreviewRelativePath = "Microsoft Visual Studio\Preview\Enterprise"
+    $VS15StableRelativePath = "Microsoft Visual Studio\2017\Enterprise"
+
+    # Give preference to preview installation of VS2017
+    if (Test-Path (Join-Path $ProgramFilesPath $VS15PreviewRelativePath))
+    {
+        $VSFolderPath = Join-Path $ProgramFilesPath $VS15PreviewRelativePath
+    }
+    elseif (Test-Path (Join-Path $ProgramFilesPath $VS15StableRelativePath))
+    {
+        $VSFolderPath = Join-Path $ProgramFilesPath $VS15StableRelativePath
+    }
+    
+    return $VSFolderPath
+}
+
+function Get-MSBuildExe {
+    
+    $MSBuildRoot = Get-VSFolderPath
+    Join-Path $MSBuildRoot "MsBuild\15.0\bin\msbuild.exe"
 }
