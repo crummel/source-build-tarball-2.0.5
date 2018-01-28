@@ -1,0 +1,24 @@
+From ced124a56fea334d5eefbfe672b069b9cfef9280 Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Mon, 16 Oct 2017 02:50:39 -0400
+Subject: [PATCH 1/1] Add CoreSetupChannel to BundledRuntimes.props
+
+---
+ build/BundledRuntimes.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/build/BundledRuntimes.props b/build/BundledRuntimes.props
+index ca91414..1eddf0b 100644
+--- a/build/BundledRuntimes.props
++++ b/build/BundledRuntimes.props
+@@ -28,6 +28,7 @@
+ 
+   <PropertyGroup>
+     <CoreSetupBlobRootUrl Condition="'$(CoreSetupBlobRootUrl)' == ''">https://dotnetcli.azureedge.net/dotnet/</CoreSetupBlobRootUrl>
++    <CoreSetupChannel>release/2.0.0</CoreSetupChannel>
+     <CoreSetupBlobAccessTokenParam Condition=" '$(CoreSetupBlobAccessToken)' != '' ">?$(CoreSetupBlobAccessToken)</CoreSetupBlobAccessTokenParam>
+     <CoreSetupRootUrl>$(CoreSetupBlobRootUrl)Runtime/</CoreSetupRootUrl>
+     <CoreSetupDownloadDirectory>$(IntermediateDirectory)/coreSetupDownload/$(SharedFrameworkVersion)</CoreSetupDownloadDirectory>
+-- 
+1.8.3.1
+

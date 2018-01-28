@@ -30,13 +30,14 @@ if [ -z "${DOTNET_INSTALL_DIR:-}" ]; then
    export DOTNET_INSTALL_DIR=$REPO_ROOT/.dotnet_stage0/x64
 fi
 
-if [ ! -d "$DOTNET_INSTALL_DIR" ]; then
-    mkdir -p $DOTNET_INSTALL_DIR
+# Install a stage 0
+echo "Installing .NET Core CLI Stage 0"
+$REPO_ROOT/scripts/obtain/dotnet-install.sh -Channel master -Architecture x64
+
+if [ $? -ne 0 ]; then
+    echo "Failed to install stage 0"
+    exit 1
 fi
-
-cp -r $DOTNET_TOOL_DIR/* $DOTNET_INSTALL_DIR/
-
-ln -s $DOTNET_INSTALL_DIR/shared/Microsoft.NETCore.App/2.0.0-preview1-002111-00 $DOTNET_INSTALL_DIR/shared/Microsoft.NETCore.App/2.0.0-preview2-002066-00
 
 # Put the stage 0 on the path
 export PATH=$DOTNET_INSTALL_DIR:$PATH

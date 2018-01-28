@@ -20,7 +20,7 @@
           DependsOnTargets="MSBuildWorkaroundTarget;
                             RestoreDotnetCliBuildFramework">
 
-    <Exec Command="$(DotnetStage0) publish -o $(DotnetCliBuildDirectory)/bin --framework netcoreapp2.0 /p:GeneratePropsFile=$(GeneratePropsFile)" 
+    <Exec Command="$(DotnetStage0) publish --no-restore -o $(DotnetCliBuildDirectory)/bin --framework netcoreapp2.0 /p:GeneratePropsFile=$(GeneratePropsFile)" 
           WorkingDirectory="$(DotnetCliBuildDirectory)"/>
   </Target>
   
@@ -29,11 +29,10 @@
     <RestoreDotnetCliBuildFrameworkOutputs Include="$(DotnetCliBuildDirectory)/obj/dotnet-cli-build.csproj.nuget.g.props" />
     <RestoreDotnetCliBuildFrameworkOutputs Include="$(DotnetCliBuildDirectory)/obj/dotnet-cli-build.csproj.nuget.g.targets" />
   </ItemGroup>
-
+  
   <Target Name="RestoreDotnetCliBuildFramework"
           Inputs="$(DotnetCliBuildDirectory)/dotnet-cli-build.csproj"
-          Outputs="@(RestoreDotnetCliBuildFrameworkOutputs)"
-          DependsOnTargets="WriteNugetConfigFile">
+          Outputs="@(RestoreDotnetCliBuildFrameworkOutputs)">
 
     <PropertyGroup>
       <ExtraRestoreArgs>$(ExtraRestoreArgs) /p:GeneratePropsFile=$(GeneratePropsFile)</ExtraRestoreArgs>
@@ -46,11 +45,9 @@
 
   <Target Name="BuildTheWholeCli" DependsOnTargets="$(CLITargets)" />
 
-  <Import Project="build/NugetConfigFile.targets" />
   <Import Project="build/GitCommitInfo.targets" />
   <Import Project="build/HostInfo.targets" />
   <Import Project="build/BuildInfo.targets" />
-  <Import Project="build/DownloadPackageVersions.targets" />
   <Import Project="build/Prepare.targets" />
   <Import Project="build/Compile.targets" />
   <Import Project="build/Package.targets" />

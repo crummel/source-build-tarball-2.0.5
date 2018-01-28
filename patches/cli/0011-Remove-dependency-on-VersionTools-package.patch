@@ -41,9 +41,8 @@ index 007319a..2bc689d 100644
 +++ b/build_projects/dotnet-cli-build/dotnet-cli-build.csproj
 @@ -21,6 +21,5 @@
      <PackageReference Include="System.Xml.XmlSerializer" Version="4.0.11" />
-     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.4.8" />
-     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.0" />
-
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(CLI_MSBuild_Version)" />
+     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="$(PlatformAbstractionsVersion)" />
 -    <PackageReference Include="Microsoft.DotNet.VersionTools" Version="$(VersionToolsVersion)" />
     <PackageReference Include="Microsoft.DotNet.Build.Tasks.Feed" Version="$(BuildTasksFeedToolVersion)" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.0.0" />

@@ -12,8 +12,8 @@ index aa3ef16..f728197 100644
 --- a/build/DependencyVersions.props
 +++ b/build/DependencyVersions.props
 @@ -32,7 +32,7 @@
-    <SharedHostVersion>$(MicrosoftNETCoreAppPackageVersion)</SharedHostVersion>
-    <HostFxrVersion>$(MicrosoftNETCoreAppPackageVersion)</HostFxrVersion>
+    <MicroBuildVersion>0.2.0</MicroBuildVersion>
+    <XliffTasksVersion>0.2.0-beta-000042</XliffTasksVersion>
  
 -    <AspNetCoreTemplatePackageVersion>2.0.5</AspNetCoreTemplatePackageVersion>
 +    <AspNetCoreTemplatePackageVersion>1.0.0-beta2-20170810-304</AspNetCoreTemplatePackageVersion>

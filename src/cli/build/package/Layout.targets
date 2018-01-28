@@ -20,7 +20,6 @@
 
       <MSBuildExtensionsInput Include="$(MSBuildExtensionsLayoutDirectory)/msbuildExtensions/**/*" />
       <MSBuildExtensionsVerInput Include="$(MSBuildExtensionsLayoutDirectory)/msbuildExtensions-ver/**/*" />
-      <MSBuildExtensionsVerInput Include="/home/chris/2.0.5/dotnet/src/sdk/bin/Release/Sdks/Microsoft.NET.Build.Extensions/msbuildExtensions-ver/**/*" />
       <CombinedMSBuildExtensionsInput Include="@(MSBuildExtensionsInput)" />
       <CombinedMSBuildExtensionsInput Include="@(MSBuildExtensionsVerInput)" />
     </ItemGroup>

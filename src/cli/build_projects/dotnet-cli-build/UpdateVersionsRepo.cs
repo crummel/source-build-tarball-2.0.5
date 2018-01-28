@@ -3,6 +3,7 @@
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Microsoft.DotNet.VersionTools.Automation;
 using System.IO;
 
 namespace Microsoft.DotNet.Cli.Build
@@ -20,6 +21,14 @@ namespace Microsoft.DotNet.Cli.Build
 
         public override bool Execute()
         {
+            string versionsRepoPath = $"build-info/dotnet/cli/{BranchName}";
+
+            GitHubAuth auth = new GitHubAuth(GitHubPassword);
+            GitHubVersionsRepoUpdater repoUpdater = new GitHubVersionsRepoUpdater(auth);
+            repoUpdater.UpdateBuildInfoAsync(
+                Directory.GetFiles(PackagesDirectory, "*.nupkg"),
+                versionsRepoPath).Wait();
+
             return true;
         }
     }
