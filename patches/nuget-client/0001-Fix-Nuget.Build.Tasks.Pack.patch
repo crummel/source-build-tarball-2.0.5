@@ -1,0 +1,78 @@
+From 35e34235d6d281362527f38bef819f9f2e1158d0 Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Sun, 15 Oct 2017 21:00:03 -0400
+Subject: [PATCH 1/1] Fix Nuget.Build.Tasks.Pack
+
+---
+ .../NuGet.Build.Tasks.Pack.csproj                  | 48 ----------------------
+ 1 file changed, 48 deletions(-)
+
+diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
+index f8680b3..f947f8c 100644
+--- a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
++++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
+@@ -9,9 +9,6 @@
+     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(NetStandardPackageVersion)</NetStandardImplicitPackageVersion>
+     <Shipping>true</Shipping>
+     <PackProject>true</PackProject>
+-    <NoBuild>true</NoBuild>
+-    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+-    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
+     <PreserveCompilationContext>true</PreserveCompilationContext>
+   </PropertyGroup>
+ 
+@@ -53,51 +50,6 @@
+     </EmbeddedResource>
+   </ItemGroup>
+ 
+-  <Target Name="PublishAndMergePackNupkg" AfterTargets="AfterBuild" Condition="'$(TargetFramework)' != '' AND '$(IsXPlat)' == 'false' AND '$(BuildingInsideVisualStudio)' != 'true'">
+-    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Publish;ILMergeNuGetPack" />
+-  </Target>
+-
+-  <Target Name="ILMergeNuGetPackResourcesPerCulture" DependsOnTargets="Publish">
+-    <ItemGroup>
+-      <_PackResourceDlls Include="$(OutputPath)**\$(AssemblyName).resources.dll" />
+-    </ItemGroup>
+-    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="ILMergeNuGetPackResources" Properties="CurrentCulture=%(_PackResourceDlls.RecursiveDir);&#xD;&#xA;                  BuildProjectReferences=false">
+-    </MSBuild>
+-  </Target>
+-
+-  <Target Name="ILMergeNuGetPack" Condition="'$(TargetFramework)' != ''">
+-    <PropertyGroup>
+-      <ILMergeResultDir>$(OutputPath)ilmerge</ILMergeResultDir>
+-    </PropertyGroup>
+-    <MakeDir Directories="$(ILMergeResultDir)" />
+-    <ItemGroup>
+-      <BuildArtifacts Include="$(OutputPath)*.dll" Exclude="$(OutputPath)*Pack.dll" />
+-    </ItemGroup>
+-    <PropertyGroup>
+-      <PathToMergedNuGetPack>$(ILMergeResultDir)\NuGet.Build.Tasks.Pack.dll</PathToMergedNuGetPack>
+-      <DotnetSharedDirectoryArg Condition="'$(IsCore)' == 'true'">/lib:$(DotnetSharedSDKDirectory)</DotnetSharedDirectoryArg>
+-      <IlmergeCommand>$(ILMergeExePath) $(OutputPath)NuGet.Build.Tasks.Pack.dll @(BuildArtifacts, ' ') /out:$(PathToMergedNuGetPack) $(DotnetSharedDirectoryArg) /lib:$(OutputPath)$(RuntimeIdentifier)\publish /internalize /xmldocs /log:$(ILMergeResultDir)\IlMergeLog.txt</IlmergeCommand>
+-      <IlmergeCommand Condition="Exists($(MS_PFX_PATH))">$(IlmergeCommand) /delaysign /keyfile:$(MS_PFX_PATH)</IlmergeCommand>
+-    </PropertyGroup>
+-    <Exec Command="$(IlmergeCommand)" ContinueOnError="false" />
+-  </Target>
+-
+-  <Target Name="ILMergeNuGetPackResources" Condition="'$(TargetFramework)' != '' AND '$(CurrentCulture)' != ''">
+-    <PropertyGroup>
+-      <ILMergeResultDir>$(OutputPath)ilmerge\$(CurrentCulture)</ILMergeResultDir>
+-    </PropertyGroup>
+-    <MakeDir Directories="$(ILMergeResultDir)" />
+-    <ItemGroup>
+-      <ResourceArtifacts Include="$(OutputPath)$(CurrentCulture)NuGet*.resources.dll" Exclude="$(OutputPath)$(CurrentCulture)*Pack.resources.dll" />
+-    </ItemGroup>
+-    <PropertyGroup>
+-      <PathToMergedNuGetPackResource>$(ILMergeResultDir)NuGet.Build.Tasks.Pack.resources.dll</PathToMergedNuGetPackResource>
+-      <IlmergeCommand>$(ILMergeExePath) $(OutputPath)$(CurrentCulture)NuGet.Build.Tasks.Pack.resources.dll @(ResourceArtifacts, ' ') /out:$(PathToMergedNuGetPackResource) /lib:$(OutputPath)$(RuntimeIdentifier)\publish /internalize /xmldocs /log:$(ILMergeResultDir)IlMergeLog.txt</IlmergeCommand>
+-      <IlmergeCommand Condition="Exists($(MS_PFX_PATH))">$(IlmergeCommand) /delaysign /keyfile:$(MS_PFX_PATH)</IlmergeCommand>
+-    </PropertyGroup>
+-    <Exec Command="$(IlmergeCommand)" ContinueOnError="false" />
+-  </Target>
+-
+   <Import Project="$(BuildCommonDirectory)common.targets" />
+   
+   <PropertyGroup>
+-- 
+1.8.3.1
+
