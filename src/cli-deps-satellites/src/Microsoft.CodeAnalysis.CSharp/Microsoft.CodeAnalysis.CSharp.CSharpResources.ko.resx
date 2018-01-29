@@ -222,6 +222,9 @@
   <data name="WRN_CallerLineNumberPreferredOverCallerMemberName_Title" xml:space="preserve">
     <value>CallerMemberNameAttribute는 CallerLineNumberAttribute에 의해 재정의되므로 효과가 없습니다.</value>
   </data>
+  <data name="ERR_RefReturnReadonlyNotField2" xml:space="preserve">
+    <value>{0} '{1}'의 멤버는 읽기 전용 변수이므로 쓰기 가능 참조로 반환할 수 없습니다.</value>
+  </data>
   <data name="ERR_AbstractHasBody" xml:space="preserve">
     <value>'{0}'은(는) abstract로 표시되어 있으므로 본문을 선언할 수 없습니다.</value>
   </data>
@@ -300,10 +303,13 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
     <value>동적 개체를 분해할 수 없습니다.</value>
   </data>
   <data name="ERR_RefReturnLvalueExpected" xml:space="preserve">
-    <value>식이 참조로 반환될 수 없으므로 이 컨텍스트에서 해당 식을 사용할 수 없습니다.</value>
+    <value>식은 참조에 의해 전달되거나 반환될 수 없으므로 이 컨텍스트에서 사용할 수 없습니다.</value>
   </data>
   <data name="ERR_OneAliasPerReference" xml:space="preserve">
     <value>extern 별칭을 선언하는 /reference 옵션에는 파일 이름을 하나만 지정할 수 있습니다. 여러 별칭 또는 파일 이름을 지정하려면 /reference 옵션을 여러 개 사용하세요.</value>
+  </data>
+  <data name="ERR_StackAllocConversionNotPossible" xml:space="preserve">
+    <value>'{0}' 형식 stackalloc 식을 '{1}' 형식으로 변환할 수 없습니다.</value>
   </data>
   <data name="ERR_UnclosedExpressionHole" xml:space="preserve">
     <value>'{'로 시작하는 보간된 식의 닫는 구분 기호 '}'가 없습니다.</value>
@@ -380,6 +386,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="WRN_CLS_NoAbstractMembers_Title" xml:space="preserve">
     <value>CLS 규격 멤버만 abstract일 수 있습니다.</value>
   </data>
+  <data name="IDS_FeaturePrivateProtected" xml:space="preserve">
+    <value>private protected</value>
+  </data>
   <data name="ERR_ConflictingMachineModule" xml:space="preserve">
     <value>어셈블리 및 '{0}' 모듈은 다른 프로세서를 대상으로 할 수 없습니다.</value>
   </data>
@@ -422,9 +431,6 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="WRN_InvalidAssemblyName" xml:space="preserve">
     <value>'{0}' 어셈블리 참조가 잘못되어 확인할 수 없습니다.</value>
   </data>
-  <data name="ERR_BadOutWithThis" xml:space="preserve">
-    <value> 매개 변수 한정자 'out'은 'this'와 함께 사용할 수 없습니다. </value>
-  </data>
   <data name="ERR_DeconstructRequiresExpression" xml:space="preserve">
     <value>할당을 분해하려면 오른쪽에 형식이 있는 식이 필요합니다.</value>
   </data>
@@ -434,6 +440,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="ERR_ThisStructNotInAnonMeth" xml:space="preserve">
     <value>구조체 안의 무명 메서드, 람다 식 및 쿼리 식은 'this'의 인스턴스 멤버에 액세스할 수 없습니다. 'this'를 무명 메서드, 람다 식 또는 쿼리 식 외부에 있는 지역 변수에 복사한 다음 이 지역 변수를 대신 사용하세요.</value>
   </data>
+  <data name="ERR_AssignReadonlyNotField2" xml:space="preserve">
+    <value>읽기 전용 변수이므로 {0} '{1}'의 멤버에 할당할 수 없습니다.</value>
+  </data>
   <data name="ERR_InterfaceImplementedByConditional" xml:space="preserve">
     <value>'{0}' 조건부 멤버는 '{2}' 형식으로 '{1}' 인터페이스 멤버를 구현할 수 없습니다.</value>
   </data>
@@ -441,7 +450,7 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
     <value>정적 클래스 '{0}'은(는) '{1}' 형식에서 파생될 수 없습니다. 정적 클래스는 개체에서 파생되어야 합니다.</value>
   </data>
   <data name="ERR_RefReturnReadonlyStatic2" xml:space="preserve">
-    <value>정적 읽기 전용 필드 '{0}'의 필드는 참조로 반환될 수 없습니다.</value>
+    <value>정적 읽기 전용 필드 '{0}'의 필드는 쓰기 가능 참조로 반환될 수 없습니다.</value>
   </data>
   <data name="ERR_ForwardedTypeInThisAssembly" xml:space="preserve">
     <value>'{0}' 형식이 이 어셈블리에 정의되었지만 형식 전달자가 지정되었습니다.</value>
@@ -468,7 +477,7 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
     <value>'{0}'이(가) '{1}' 패턴을 구현하지 않습니다. '{2}'이(가) '{3}'에서 모호합니다.</value>
   </data>
   <data name="ERR_BadCompatMode" xml:space="preserve">
-    <value>/langversion에 대한 '{0}' 옵션이 잘못되었습니다. ISO-1, ISO-2, Default, Latest 또는 1에서 7.1 사이의 유효한 버전이어야 합니다.</value>
+    <value>'{0}'은(는) /langversion의 유효한 옵션이 아닙니다. '/ langversion:?'를 사용하여 지원되는 값을 나열하세요.</value>
   </data>
   <data name="ERR_AliasQualifiedNameNotAnExpression" xml:space="preserve">
     <value>정규화된 별칭 이름은 식이 아닙니다.</value>
@@ -713,11 +722,17 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="ERR_FloatOverflow" xml:space="preserve">
     <value>부동 소수점 상수가 '{0}' 형식 범위 밖에 있습니다.</value>
   </data>
+  <data name="ERR_InvalidDebugInfo" xml:space="preserve">
+    <value>'{2}' 어셈블리에서 '{0}' 메서드(토큰 0x{1:X8})의 디버그 정보를 읽을 수 없습니다.</value>
+  </data>
   <data name="ERR_EncodinglessSyntaxTree" xml:space="preserve">
     <value>인코딩하지 않고 원본 텍스트에 대한 디버그 정보를 생성할 수 없습니다.</value>
   </data>
   <data name="ERR_BadResourceVis" xml:space="preserve">
     <value>잘못된 '{0}' 옵션입니다. 리소스 표시 유형은 'public' 또는 'private'이어야 합니다.</value>
+  </data>
+  <data name="ERR_ExplicitReservedAttr" xml:space="preserve">
+    <value>'{0}'을(를) 사용하지 마세요. 컴파일러 사용을 위해 예약되어 있습니다.</value>
   </data>
   <data name="WRN_BadRestoreNumber_Title" xml:space="preserve">
     <value>전역으로 사용하지 않도록 설정되었기 때문에 경고를 복원할 수 없습니다.</value>
@@ -733,6 +748,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   </data>
   <data name="XML_EndTagExpected" xml:space="preserve">
     <value>'{0}' 요소에 대한 끝 태그가 필요합니다.</value>
+  </data>
+  <data name="IDS_FeatureLeadingDigitSeparator" xml:space="preserve">
+    <value>선행 숫자 구분 기호</value>
   </data>
   <data name="ERR_UnexpectedBoundGenericName" xml:space="preserve">
     <value>nameof 연산자에서는 형식 인수가 허용되지 않습니다.</value>
@@ -851,6 +869,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="ERR_BadVisReturnType" xml:space="preserve">
     <value>일관성 없는 액세스 가능성: '{1}' 반환 형식이 '{0}' 메서드보다 액세스하기 어렵습니다.</value>
   </data>
+  <data name="ERR_FieldsInRoStruct" xml:space="preserve">
+    <value>읽기 전용 구조체의 인스턴스 필드는 읽기 전용이어야 합니다.</value>
+  </data>
   <data name="UseLiteralForTokens" xml:space="preserve">
     <value>Microsoft.CodeAnalysis.CSharp.SyntaxFactory.Literal을 사용하여 문자 리터럴 토큰을 만듭니다.</value>
   </data>
@@ -872,11 +893,14 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="ERR_GenericsUsedAcrossAssemblies" xml:space="preserve">
     <value>'{1}' 어셈블리의 '{0}' 형식에 포함된 interop 형식인 제네릭 형식 인수가 있기 때문에 이 형식을 다른 어셈블리에서 사용할 수 없습니다.</value>
   </data>
+  <data name="WRN_UnreferencedLocalFunction" xml:space="preserve">
+    <value>로컬 함수 '{0}'이(가) 선언되었지만 사용되지 않았습니다.</value>
+  </data>
   <data name="ERR_AsMustHaveReferenceType" xml:space="preserve">
     <value>as 연산자는 참조 형식 또는 null 허용 형식과 함께 사용해야 합니다. '{0}'은(는) null을 허용하지 않는 값 형식입니다.</value>
   </data>
   <data name="ERR_AbstractNotVirtual" xml:space="preserve">
-    <value>'{0}' 추상 메서드는 virtual로 표시할 수 없습니다.</value>
+    <value>추상 {0} '{1}'은(는) virtual로 표시할 수 없습니다.</value>
   </data>
   <data name="ERR_OperatorInStaticClass" xml:space="preserve">
     <value>'{0}': 정적 클래스는 사용자 정의 연산자를 포함할 수 없습니다.</value>
@@ -1019,6 +1043,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="ERR_BadAwaitWithoutAsyncLambda" xml:space="preserve">
     <value>'await' 연산자는 비동기 {0} 내에서만 사용할 수 있습니다. 'async' 한정자로 이 {0}을(를) 표시하세요.</value>
   </data>
+  <data name="ERR_RefExtensionMustBeValueTypeOrConstrainedToOne" xml:space="preserve">
+    <value>'ref' 확장 메서드 '{0}'의 첫 번째 매개 변수는 값 형식이거나 구조체의 제약을 받는 제네릭 형식이어야 합니다.</value>
+  </data>
   <data name="ChainingSpeculativeModelIsNotSupported" xml:space="preserve">
     <value>이론적 의미 체계 모델 연결은 지원되지 않습니다. 비이론적 ParentModel에서 이론적 모델을 만들어야 합니다.</value>
   </data>
@@ -1027,6 +1054,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   </data>
   <data name="WRN_FilterIsConstant" xml:space="preserve">
     <value>필터 식이 상수이므로 필터에서 제거하세요.</value>
+  </data>
+  <data name="ERR_FeatureNotAvailableInVersion7_2" xml:space="preserve">
+    <value>'{0}' 기능은 C# 7.2에서 사용할 수 없습니다. {1} 이상의 언어 버전을 사용하세요.</value>
   </data>
   <data name="ERR_FeatureNotAvailableInVersion7_1" xml:space="preserve">
     <value>'{0}' 기능은 C# 7.1에서 사용할 수 없습니다. {1} 이상의 언어 버전을 사용하세요.</value>
@@ -1109,6 +1139,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="WRN_NewNotRequired" xml:space="preserve">
     <value>'{0}' 멤버는 액세스 가능한 멤버를 숨기지 않으므로 new 키워드가 필요하지 않습니다.</value>
   </data>
+  <data name="ERR_NamedArgumentSpecificationBeforeFixedArgumentInDynamicInvocation" xml:space="preserve">
+    <value>명명된 인수 사양은 동적 호출에서 모든 고정 인수를 지정한 다음에 와야 합니다.</value>
+  </data>
   <data name="WRN_BadWarningNumber_Description" xml:space="preserve">
     <value>#pragma 경고 전처리기 지시문에 전달된 번호는 올바른 경고 번호가 아닙니다. 번호가 오류가 아닌 경고를 나타내는지 확인하세요.</value>
   </data>
@@ -1127,11 +1160,14 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="ERR_ReferenceDirectiveOnlyAllowedInScripts" xml:space="preserve">
     <value>#r은 스크립트에서만 허용됩니다.</value>
   </data>
+  <data name="ERR_DynamicLocalFunctionTypeParameter" xml:space="preserve">
+    <value>유추된 형식 인수가 있는 제네릭 로컬 함수 '{0}'에 동적 형식의 인수를 전달할 수 없습니다.</value>
+  </data>
   <data name="SyntaxTreeAlreadyPresent" xml:space="preserve">
     <value>구문 트리가 이미 있습니다.</value>
   </data>
-  <data name="ERR_BadRefWithThis" xml:space="preserve">
-    <value> 매개 변수 한정자 'ref'는 'this'와 함께 사용할 수 없습니다. </value>
+  <data name="ERR_BadParameterModifiersOrder" xml:space="preserve">
+    <value>매개 변수 한정자 '{0}'을(를) '{1}' 한정자 뒤에 사용할 수 없습니다.</value>
   </data>
   <data name="ERR_InvalidOutputName" xml:space="preserve">
     <value>잘못된 출력 이름: {0}</value>
@@ -1220,6 +1256,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="ERR_ExternHasConstructorInitializer" xml:space="preserve">
     <value>'{0}'은(는) extern일 수 없으며 생성자 이니셜라이저가 있으면 안 됩니다.</value>
   </data>
+  <data name="IDS_StackAllocExpression" xml:space="preserve">
+    <value>stackalloc {0}[{1}]</value>
+  </data>
   <data name="ERR_AutoPropertyCannotBeRefReturning" xml:space="preserve">
     <value>자동 구현 속성은 참조로 반환할 수 없습니다.</value>
   </data>
@@ -1280,6 +1319,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="ERR_BadTypeforThis" xml:space="preserve">
     <value>확장 메서드의 첫 번째 매개 변수는 '{0}' 형식이 될 수 없습니다.</value>
   </data>
+  <data name="IDS_FeatureReadOnlyReferences" xml:space="preserve">
+    <value>읽기 전용 참조</value>
+  </data>
   <data name="ERR_BadSKunknown" xml:space="preserve">
     <value>'{0}'은(는) 지정한 컨텍스트에서 유효하지 않은 {1}입니다.</value>
   </data>
@@ -1322,8 +1364,14 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="ERR_AliasMissingFile" xml:space="preserve">
     <value>잘못된 참조 별칭 옵션입니다. '{0}=' -- 파일 이름이 없습니다.</value>
   </data>
+  <data name="ERR_FieldAutoPropCantBeByRefLike" xml:space="preserve">
+    <value>필드 또는 자동 구현 속성은 ref struct의 인스턴스 멤버인 경우 외에는 '{0}' 형식일 수 없습니다.</value>
+  </data>
+  <data name="ERR_BadNonTrailingNamedArgument" xml:space="preserve">
+    <value>명명된 인수 '{0}'은(는) 잘못된 위치에 사용되었지만 뒤에 명명되지 않은 인수가 옵니다.</value>
+  </data>
   <data name="ERR_RefReturnReadonly2" xml:space="preserve">
-    <value>읽기 전용 필드 '{0}'의 멤버는 참조로 반환될 수 없습니다.</value>
+    <value>읽기 전용 필드 '{0}'의 멤버는 쓰기 가능 참조로 반환될 수 없습니다.</value>
   </data>
   <data name="ERR_BadDynamicMethodArg" xml:space="preserve">
     <value>'{0}' 형식의 식을 동적으로 디스패치된 작업의 인수로 사용할 수 없습니다.</value>
@@ -1347,7 +1395,7 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
     <value>Windows Runtime 이벤트를 out 또는 ref 매개 변수로 전달할 수 없습니다.</value>
   </data>
   <data name="ERR_SpecialByRefInLambda" xml:space="preserve">
-    <value>'{0}' 형식의 인스턴스는 익명 함수, 쿼리 식, 반복기 블록 또는 비동기 메서드 내에서 사용할 수 없습니다.</value>
+    <value>'{0}' 형식의 인스턴스는 중첩된 함수, 쿼리 식, 반복기 블록 또는 비동기 메서드 내에서 사용할 수 없습니다.</value>
   </data>
   <data name="ERR_CloseUnimplementedInterfaceMemberWrongReturnType" xml:space="preserve">
     <value>'{0}'은(는) '{1}' 인터페이스 멤버를 구현하지 않습니다. '{2}'에 일치하는 반환 형식 '{3}'이(가) 없으므로 '{1}'을(를) 구현할 수 없습니다.</value>
@@ -1421,6 +1469,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="WRN_RefCultureMismatch_Title" xml:space="preserve">
     <value>참조된 어셈블리의 문화권 설정이 다릅니다.</value>
   </data>
+  <data name="ERR_InExtensionMustBeValueType" xml:space="preserve">
+    <value>'in' 확장 메서드 '{0}'의 첫 번째 매개 변수는 값 형식이어야 합니다.</value>
+  </data>
   <data name="ERR_NoConversionForNubDefaultParam" xml:space="preserve">
     <value>'{0}'이(가) 단순 형식이 아니기 때문에 null 허용 매개 변수 '{1}'에 형식이 '{0}'인 값을 기본 매개 변수로 사용할 수 없습니다.</value>
   </data>
@@ -1492,6 +1543,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   </data>
   <data name="ThisMethodCanOnlyBeUsedToCreateTokens" xml:space="preserve">
     <value>이 메서드는 토큰을 만드는 데만 사용할 수 있습니다. {0}은(는) 토큰 종류가 아닙니다.</value>
+  </data>
+  <data name="ERR_OverloadRefKind" xml:space="preserve">
+    <value>'{0}'은(는) 매개 변수 한정자 '{2}' 및 '{3}'만 다른 오버로드된 {1}을(를) 정의할 수 없습니다.</value>
   </data>
   <data name="ERR_NameNotInContextPossibleMissingReference" xml:space="preserve">
     <value>'{0}' 이름이 현재 컨텍스트에 없습니다. '{1}' 어셈블리에 참조가 있는지 확인하세요.</value>
@@ -1686,9 +1740,6 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="ERR_IntegralTypeValueExpected" xml:space="preserve">
     <value>정수 계열 형식 값이 필요합니다.</value>
   </data>
-  <data name="ERR_MultiParamMod" xml:space="preserve">
-    <value>지정된 한정자를 매개 변수에 모두 사용할 수 없습니다. 매개 변수에 한정자가 너무 많습니다.</value>
-  </data>
   <data name="ERR_NotYetImplementedInRoslyn" xml:space="preserve">
     <value>이 언어 기능('{0}')은 아직 구현되지 않았습니다.</value>
   </data>
@@ -1788,6 +1839,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="ERR_ClassDoesntImplementInterface" xml:space="preserve">
     <value>'{0}': 포함하는 형식이 '{1}' 인터페이스를 구현하지 않습니다.</value>
   </data>
+  <data name="ERR_RefStructInterfaceImpl" xml:space="preserve">
+    <value>'{0}': ref struct에서 인터페이스를 구현할 수 없습니다.</value>
+  </data>
   <data name="ERR_QueryNoProviderStandard" xml:space="preserve">
     <value>소스 형식 '{0}'에 대해 구현된 쿼리 패턴을 찾을 수 없습니다. '{1}'을(를) 찾을 수 없습니다. 'System.Core.dll'에 대한 참조 또는 'System.Linq'에 대한 using 지시문이 있는지 확인하세요.</value>
   </data>
@@ -1812,6 +1866,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="WRN_TooManyLinesForDebugger_Title" xml:space="preserve">
     <value>소스 파일의 줄 수가 PDB에 표시할 수 있는 16,707,565줄을 초과했습니다. 디버그 정보가 올바르지 않을 수 있습니다.</value>
   </data>
+  <data name="IDS_FeatureRefStructs" xml:space="preserve">
+    <value>ref struct</value>
+  </data>
   <data name="ERR_AutoPropertyInitializerInInterface" xml:space="preserve">
     <value>인터페이스 내부에서 자동 구현 속성은 이니셜라이저를 사용할 수 없습니다.</value>
   </data>
@@ -1828,7 +1885,7 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
     <value>증가 연산자 또는 감소 연산자의 피연산자는 변수, 속성 또는 인덱서여야 합니다.</value>
   </data>
   <data name="ERR_CannotEmbedWithoutPdb" xml:space="preserve">
-    <value>/embed 스위치는 이식 가능한 PDB를 내보낼 때만 지원됩니다(/debug:portable 또는 /debug:embedded).</value>
+    <value>/embed 스위치는 PDB를 내보낼 때만 지원됩니다.</value>
   </data>
   <data name="ERR_AbstractAndExtern" xml:space="preserve">
     <value>'{0}'은(는) extern 및 abstract일 수 없습니다.</value>
@@ -1865,6 +1922,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   </data>
   <data name="ERR_MustHaveRefReturn" xml:space="preserve">
     <value>By-value 반환은 값으로 반환하는 메서드에서만 사용할 수 있습니다.</value>
+  </data>
+  <data name="ERR_EscapeStackAlloc" xml:space="preserve">
+    <value>'{0}' 형식 stackalloc 식의 결과는 포함하는 메서드 외부에 노출되는 있으므로 이 컨텍스트에서 사용할 수 없습니다.</value>
   </data>
   <data name="ERR_InvalidFwdType" xml:space="preserve">
     <value>TypeForwardedTo 특성의 인수로 잘못된 형식이 지정되었습니다.</value>
@@ -2053,7 +2113,7 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
     <value>클래스 형식 제약 조건 '{0}'은(는) 다른 모든 제약 조건보다 앞에 와야 합니다.</value>
   </data>
   <data name="ERR_CantChangeRefReturnOnOverride" xml:space="preserve">
-    <value>재정의된 '{1}' 멤버와 일치하려면 '{0}'이(가) {2}참조로 반환해야 합니다.</value>
+    <value>'{0}'은(는) 재정의된 멤버 '{1}'의 참조에 의한 반환과 일치해야 합니다.</value>
   </data>
   <data name="WRN_CallerLineNumberPreferredOverCallerFilePath_Title" xml:space="preserve">
     <value>CallerFilePathAttribute는 CallerLineNumberAttribute에 의해 재정의되므로 효과가 없습니다.</value>
@@ -2070,6 +2130,12 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="ERR_TypeArgsNotAllowed" xml:space="preserve">
     <value>{1} '{0}'은(는) 형식 인수와 함께 사용할 수 없습니다.</value>
   </data>
+  <data name="ERR_EscapeLocal" xml:space="preserve">
+    <value>로컬 '{0}'은(는) 선언 범위 외부의 참조 변수를 노출할 수 있으므로 이 컨텍스트에서 사용할 수 없습니다.</value>
+  </data>
+  <data name="ERR_EscapeOther" xml:space="preserve">
+    <value>식은 선언 범위 외부의 변수를 간접적으로 노출할 수 있으므로 이 컨텍스트에서 사용할 수 없습니다.</value>
+  </data>
   <data name="ERR_PartialMethodOnlyOneLatent" xml:space="preserve">
     <value>부분 메서드(Partial Method)에는 하나의 정의 선언만 사용할 수 있습니다.</value>
   </data>
@@ -2081,6 +2147,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   </data>
   <data name="ERR_BadAwaitArg" xml:space="preserve">
     <value>'await'의 경우 {0} 형식에 적합한 GetAwaiter 메서드가 있어야 합니다.</value>
+  </data>
+  <data name="ERR_EscapeCall2" xml:space="preserve">
+    <value>'{0}' 결과의 멤버는 선언 범위 외부의 '{1}' 매개 변수에서 참조하는 변수를 노출할 수 있으므로 이 컨텍스트에서 사용할 수 없습니다.</value>
   </data>
   <data name="ERR_MemberReserved" xml:space="preserve">
     <value>'{1}' 형식에서 매개 변수 형식이 같은 '{0}' 멤버를 이미 예약했습니다.</value>
@@ -2178,6 +2247,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="WRN_NonObsoleteOverridingObsolete_Title" xml:space="preserve">
     <value>멤버가 사용되지 않는 멤버를 재정의합니다.</value>
   </data>
+  <data name="ERR_AssignReadonlyNotField" xml:space="preserve">
+    <value>읽기 전용 변수이므로 {0} '{1}'에 할당할 수 없습니다.</value>
+  </data>
   <data name="ERR_BadAsyncLocalType" xml:space="preserve">
     <value>비동기 메서드에 by-reference 지역을 사용할 수 없습니다.</value>
   </data>
@@ -2211,6 +2283,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="ERR_PatternIsSubsumed" xml:space="preserve">
     <value>Switch case가 이전 case에서 이미 처리되었습니다.</value>
   </data>
+  <data name="ERR_EscapeCall" xml:space="preserve">
+    <value>'{0}'의 결과는 선언 범위 외부의 '{1}' 매개 변수에서 참조하는 변수를 노출할 수 있으므로 이 컨텍스트에서 사용할 수 없습니다.</value>
+  </data>
   <data name="ERR_ForwardedTypeIsNested" xml:space="preserve">
     <value>'{0}' 형식은 '{1}'의 중첩 형식이므로 전달할 수 없습니다.</value>
   </data>
@@ -2234,6 +2309,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   </data>
   <data name="ERR_CantOverrideBogusMethod" xml:space="preserve">
     <value>'{0}': '{1}'은(는) 해당 언어에서 지원되지 않으므로 재정의할 수 없습니다.</value>
+  </data>
+  <data name="ERR_BadParameterModifiers" xml:space="preserve">
+    <value> 매개 변수 한정자 '{0}'을(를) '{1}'과(와) 함께 사용할 수 없습니다.</value>
   </data>
   <data name="ERR_NonInvocableMemberCalled" xml:space="preserve">
     <value>호출할 수 없는 멤버인 '{0}'은(는) 메서드처럼 사용할 수 없습니다.</value>
@@ -2367,6 +2445,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="ERR_BadEmptyThrow" xml:space="preserve">
     <value>인수가 없는 Throw 문은 Catch 절 외부에서 사용할 수 없습니다.</value>
   </data>
+  <data name="ERR_BadSpecialByRefIterator" xml:space="preserve">
+    <value>'{0}'은(는) ref struct이므로 비동기 또는 반복기 메서드의 '{0}' 형식 열거자에서 foreach 문을 수행할 수 없습니다.</value>
+  </data>
   <data name="WRN_UnreferencedEvent" xml:space="preserve">
     <value>'{0}' 이벤트가 사용되지 않았습니다.</value>
   </data>
@@ -2424,6 +2505,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="ERR_InvalidSpecifier" xml:space="preserve">
     <value>'{0}'은(는) 유효한 서식 지정자가 아닙니다.</value>
   </data>
+  <data name="ERR_RefConditionalAndAwait" xml:space="preserve">
+    <value>ref 조건 연산자를 포함하는 식에는 'await'를 사용할 수 없습니다.</value>
+  </data>
   <data name="ERR_DuplicateImportSimple" xml:space="preserve">
     <value>단순한 이름 '{0}'이(가) 같은 어셈블리를 이미 가져왔습니다. 참조 중 하나(예: '{1}')를 제거하거나 side-by-side를 사용할 수 있도록 서명하세요.</value>
   </data>
@@ -2466,6 +2550,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   <data name="ERR_ExternAliasNotAllowed" xml:space="preserve">
     <value>이 컨텍스트에서는 'extern 별칭'이 유효하지 않습니다.</value>
   </data>
+  <data name="ERR_RefConditionalNeedsTwoRefs" xml:space="preserve">
+    <value>조건 연산자 값은 모두 ref 값이거나 모두 ref 값이 아니어야 합니다.</value>
+  </data>
   <data name="ERR_NoPIANestedType" xml:space="preserve">
     <value>'{0}' 형식은 중첩 형식이기 때문에 해당 형식을 포함할 수 없습니다. 'Interop 형식 포함' 속성을 false로 설정하세요.</value>
   </data>
@@ -2483,9 +2570,6 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   </data>
   <data name="IDS_XMLNOINCLUDE" xml:space="preserve">
     <value> 다음 include 태그와 짝이 맞는 요소를 찾을 수 없습니다. </value>
-  </data>
-  <data name="ERR_FeatureIsExperimental" xml:space="preserve">
-    <value>'{0}' 기능은 실험적이며 지원되지 않습니다. 사용하도록 설정하려면 '/features:{1}'을(를) 사용하세요.</value>
   </data>
   <data name="WRN_EqualsWithoutGetHashCode_Title" xml:space="preserve">
     <value>형식은 Object.Equals(object o)를 재정의하지만 Object.GetHashCode()를 재정의하지 않습니다.</value>
@@ -2558,6 +2642,9 @@ catch (System.Exception e) 블록 뒤의 catch() 블록은 RuntimeCompatibilityA
   </data>
   <data name="WRN_AttributeIgnoredWhenPublicSigning_Title" xml:space="preserve">
     <value>공개 서명이 지정된 경우 특성이 무시됩니다.</value>
+  </data>
+  <data name="ERR_TypeReserved" xml:space="preserve">
+    <value>형식 이름 '{0}'은(는) 컴파일러에서 사용하도록 예약되어 있습니다.</value>
   </data>
   <data name="ERR_QueryInnerKey" xml:space="preserve">
     <value>이름 '{0}'은(는) 'equals'의 오른쪽에 올 수 있는 범위에 속하지 않습니다. 'equals'의 양쪽에 있는 식을 서로 바꾸세요.</value>
@@ -2740,6 +2827,9 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   <data name="ERR_BadAttributeArgument" xml:space="preserve">
     <value>특성 인수는 특성 매개 변수 형식의 배열 생성 식, 상수 식 또는 typeof 식이어야 합니다.</value>
   </data>
+  <data name="IDS_FeatureReadOnlyStructs" xml:space="preserve">
+    <value>읽기 전용 구조체</value>
+  </data>
   <data name="IDS_ThrowExpression" xml:space="preserve">
     <value>&lt;Throw 식&gt;</value>
   </data>
@@ -2884,6 +2974,9 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   <data name="ERR_ReadonlyValueTypeInObjectInitializer" xml:space="preserve">
     <value>형식이 '{1}'인 읽기 전용 필드 '{0}'의 멤버는 값 형식이므로 개체 이니셜라이저를 사용하여 할당할 수 없습니다.</value>
   </data>
+  <data name="ERR_FieldlikeEventsInRoStruct" xml:space="preserve">
+    <value>읽기 전용 구조체에는 필드와 유사한 이벤트를 사용할 수 없습니다.</value>
+  </data>
   <data name="ERR_BadAsyncLacksBody" xml:space="preserve">
     <value>'async' 한정자는 본문이 있는 메서드에서만 사용할 수 있습니다.</value>
   </data>
@@ -2930,7 +3023,7 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
     <value>길이가 '{0}'인 배열 이니셜라이저가 필요합니다</value>
   </data>
   <data name="ERR_RefReturnReadonly" xml:space="preserve">
-    <value>읽기 전용 필드는 참조로 반환될 수 없습니다.</value>
+    <value>읽기 전용 필드는 쓰기 가능 참조로 반환될 수 없습니다.</value>
   </data>
   <data name="ERR_V6SwitchGoverningTypeValueExpected" xml:space="preserve">
     <value>C# 6 이전 버전에서 switch 식 또는 case 레이블은 bool, char, string, integral, enum 또는 해당하는 nullable 형식이어야 합니다.</value>
@@ -2964,9 +3057,6 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   </data>
   <data name="ERR_AnonymousTypePropertyAssignedBadValue" xml:space="preserve">
     <value>무명 형식 속성에 {0}을(를) 할당할 수 없습니다.</value>
-  </data>
-  <data name="ERR_OverloadRefOutCtor" xml:space="preserve">
-    <value>오버로드된 생성자 '{0}'은(는) ref 및 out만 다른 생성자와 다르므로 해당 생성자를 정의할 수 없습니다.</value>
   </data>
   <data name="ERR_CantOpenFileWrite" xml:space="preserve">
     <value>'{0}'을(를) 쓰기용으로 열 수 없습니다. '{1}'</value>
@@ -3021,9 +3111,6 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   </data>
   <data name="ERR_ConstValueRequired" xml:space="preserve">
     <value>const 필드에 값을 입력해야 합니다.</value>
-  </data>
-  <data name="ERR_RefReturnReceiver" xml:space="preserve">
-    <value>'{0}'은(는) 해당 수신기가 참조로 반환될 수 없으므로 참조로 반환할 수 없습니다.</value>
   </data>
   <data name="WRN_BadRestoreNumber" xml:space="preserve">
     <value>전역으로 사용하지 않도록 설정되었기 때문에 'CS{0}' 경고를 복원할 수 없습니다.</value>
@@ -3111,8 +3198,8 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   <data name="ERR_AmbigMember" xml:space="preserve">
     <value>'{0}'과(와) '{1}' 사이에 모호성이 있습니다.</value>
   </data>
-  <data name="ERR_PartialMethodOnlyMethods" xml:space="preserve">
-    <value>메서드, 클래스, 구조체 또는 인터페이스만 partial일 수 있습니다.</value>
+  <data name="WRN_UnreferencedLocalFunction_Title" xml:space="preserve">
+    <value>로컬 함수가 선언되었지만 사용되지 않음</value>
   </data>
   <data name="ERR_MissingGuidForOption" xml:space="preserve">
     <value>명령줄 구문 오류: '{1}' 옵션에 대한 Guid가 없습니다.</value>
@@ -3194,35 +3281,35 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
                               Visual C# 컴파일러 옵션
 
                         - 출력 파일 -
- /out:&lt;file&gt;                   출력 파일 이름을 지정합니다(기본값: 주 클래스가 
+ /out:&lt;file&gt;                   출력 파일 이름을 지정합니다(기본값: 주 클래스가
                                있는 파일 또는 첫째 파일의 기본 이름).
- /target:exe                   콘솔 실행 파일을 빌드합니다(기본값). (약식
-                               : /t:exe)
- /target:winexe                Windows 실행 파일을 빌드합니다. (약식: 
+ /target:exe                   콘솔 실행 파일을 빌드합니다(기본값). (약식:
+                               /t:exe)
+ /target:winexe                Windows 실행 파일을 빌드합니다. (약식:
                                /t:winexe)
  /target:library               라이브러리를 빌드합니다. (약식: /t:library)
- /target:module                다른 어셈블리에 추가될 수 있는 모듈을 
+ /target:module                다른 어셈블리에 추가될 수 있는 모듈을
                                빌드합니다. (약식: /t:module)
- /target:appcontainerexe       Appcontainer 실행 파일을 빌드합니다. (약식: 
+ /target:appcontainerexe       Appcontainer 실행 파일을 빌드합니다. (약식:
                                /t:appcontainerexe)
- /target:winmdobj              WinMDExp에서 사용되는 Windows 런타임 중간 
+ /target:winmdobj              WinMDExp에서 사용되는 Windows 런타임 중간
                                파일을 빌드합니다. (약식: /t:winmdobj)
  /doc:&lt;file&gt;                   생성할 XML 문서 파일
  /refout:&lt;file&gt;                생성할 참조 어셈블리 출력
  /platform:&lt;string&gt;            이 코드를 실행할 수 있는 플랫폼을 x86,
-                               Itanium, x64, arm, anycpu32bitpreferred 또는 
+                               Itanium, x64, arm, anycpu32bitpreferred 또는
                                anycpu로 제한합니다. 기본값은 anycpu입니다.
 
                         - 입력 파일 -
- /recurse:&lt;wildcard&gt;           와일드카드 지정에 따라 현재 디렉터리와 
-                               하위 디렉터리에 있는 모든 파일을 
+ /recurse:&lt;wildcard&gt;           와일드카드 지정에 따라 현재 디렉터리와
+                               하위 디렉터리에 있는 모든 파일을
                                포함합니다.
- /reference:&lt;alias&gt;=&lt;file&gt;     지정한 어셈블리 파일에서 해당 별칭을 사용하여 
+ /reference:&lt;alias&gt;=&lt;file&gt;     지정한 어셈블리 파일에서 해당 별칭을 사용하여
                                메타데이터를 참조합니다. (약식: /r)
- /reference:&lt;file list&gt;        지정한 어셈블리 파일에서 메타데이터를 
+ /reference:&lt;file list&gt;        지정한 어셈블리 파일에서 메타데이터를
                                참조합니다. (약식: /r)
- /addmodule:&lt;file list&gt;        지정한 모듈을 이 어셈블리에 링크합니다.
- /link:&lt;file list&gt;             지정된 interop 어셈블리 파일의 메타데이터를 
+ /addmodule:&lt;file list&gt;        지정한 모듈을 이 어셈블리에 연결합니다.
+ /link:&lt;file list&gt;             지정된 interop 어셈블리 파일의 메타데이터를
                                포함합니다. (약식: /l)
  /analyzer:&lt;file list&gt;         이 어셈블리에서 분석기를 실행합니다.
                                (약식: /a)
@@ -3238,24 +3325,24 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
  /win32manifest:&lt;file&gt;         Win32 매니페스트 파일(.xml)을 지정합니다.
  /nowin32manifest              기본 Win32 매니페스트는 포함하지 않습니다.
  /resource:&lt;resinfo&gt;           지정된 리소스를 포함합니다. (약식: /res)
- /linkresource:&lt;resinfo&gt;       지정한 리소스를 이 어셈블리에 링크합니다. 
-                               (약식: /linkres) resinfo 형식이 
-                              &lt;file&gt;[,&lt;string name&gt;[,public|private]]인 경우
+ /linkresource:&lt;resinfo&gt;       지정한 리소스를 이 어셈블리에 연결합니다.
+                               (약식: /linkres) 여기서 resinfo 형식은
+                               &lt;file&gt;[,&lt;string name&gt;[,public|private]]입니다.
 
                         - 코드 생성 -
  /debug[+|-]                   디버깅 정보를 내보냅니다.
  /debug:{full|pdbonly|portable|embedded}
-                               디버깅 형식을 지정합니다. ('full'이 기본값이고, 
+                               디버깅 형식을 지정합니다. ('full'이 기본값이고,
                                'portable'은 크로스 플랫폼 형식이고,
-                               'embedded'는 대상 .dll 또는 .exe에 포함되는 
-                               크로스 플랫폼 형식입니다.)
+                               'embedded'는 대상 .dll 또는 .exe에 포함되는
+                               플랫폼 간 형식입니다.)
  /optimize[+|-]                최적화를 사용합니다. (약식: /o)
- /deterministic                결정적 어셈블리를 생성합니다.
-                               (모듈 버전 GUID 및 타임스탬프 포함)
- /refonly                      주 출력 대신 참조 어셈블리 생성
- /instrument:TestCoverage           검사 정보를 수집하기 위해 계측한
+ /deterministic                결정적 어셈블리를 생성합니다
+                               (모듈 버전 GUID 및 타임스탬프 포함).
+ /refonly                      주 출력 대신 참조 어셈블리를 생성합니다.
+ /instrument:TestCoverage      검사 정보를 수집하기 위해 계측한
                                어셈블리를 생성합니다.
- /sourcelink:&lt;file&gt;            이식 가능한 PDB에 포함할 소스 링크 정보입니다.
+ /sourcelink:&lt;file&gt;            PDB에 포함할 소스 링크 정보입니다.
 
                         - 오류 및 경고 -
  /warnaserror[+|-]             모든 경고를 오류로 보고합니다.
@@ -3268,17 +3355,20 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
                                지정합니다.
  /reportanalyzer               추가 분석기 정보(예: 실행 시간)를
                                보고합니다.
- 
+
                         - 언어 -
  /checked[+|-]                 오버플로 검사를 생성합니다.
  /unsafe[+|-]                  'unsafe' 코드를 사용할 수 있습니다.
- /define:&lt;symbol list&gt;         조건부 컴파일 기호를 정의합니다. (약식 
-                               : /d)
- /langversion:&lt;string&gt;         언어 버전 모드를 ISO-1, ISO-2, 3, 
-                               4, 5, 6, 7, 7.1, Default 또는 Latest로 지정합니다.
+ /define:&lt;symbol list&gt;         조건부 컴파일 기호를 정의합니다. (약식:
+                               /d)
+ /langversion:?                언어 버전에 허용되는 값을 표시합니다.
+ /langversion:&lt;string&gt;         언어 버전을
+                               `default`(최신 주 버전),
+                               `latest`(최신 버전, 부 버전 포함),
+                               `6` 또는 `7.1` 같은 특정 버전 등으로 지정합니다.
 
                         - 보안 -
- /delaysign[+|-]               강력한 이름 키의 공개 부분만 사용하여 
+ /delaysign[+|-]               강력한 이름 키의 공개 부분만 사용하여
                                어셈블리 서명을 연기합니다.
  /publicsign[+|-]              강력한 이름 키의 공개 부분만 사용하여 어셈블리를
                                공개 서명합니다.
@@ -3287,45 +3377,45 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
  /highentropyva[+|-]           높은 엔트로피 ASLR을 사용합니다.
 
                         - 기타 -
- @&lt;file&gt;                       추가 옵션에 대한 지시 파일을 읽습니다.
+ @&lt;file&gt;                       추가 옵션을 위해 지시 파일을 읽습니다.
  /help                         사용법 메시지를 표시합니다. (약식: /?)
  /nologo                       컴파일러 저작권 메시지를 표시하지 않습니다.
  /noconfig                     CSC.RSP 파일을 자동으로 포함하지 않습니다.
- /parallel[+|-]                동시 빌드.
- /version                      컴파일러 버전 번호를 표시하고 종료합니다. 
+ /parallel[+|-]                동시 빌드입니다.
+ /version                      컴파일러 버전 번호를 표시하고 종료합니다.
 
                         - 고급 -
- /baseaddress:&lt;address&gt;        빌드할 라이브러리의 기준 주소
- /checksumalgorithm:&lt;alg&gt;      PDB에 저장된 소스 파일 체크섬을 
+ /baseaddress:&lt;address&gt;        빌드할 라이브러리의 기준 주소입니다.
+ /checksumalgorithm:&lt;alg&gt;      PDB에 저장된 소스 파일 체크섬을
                                계산하기 위한 알고리즘을 지정합니다. 지원되는 값은
                                SHA1(기본값) 또는 SHA256입니다.
- /codepage:&lt;n&gt;                 소스 파일을 열 때 사용할 코드 페이지를 
+ /codepage:&lt;n&gt;                 소스 파일을 열 때 사용할 코드 페이지를
                                지정합니다.
  /utf8output                   컴파일러 메시지를 UTF-8 인코딩으로 출력합니다.
- /main:&lt;type&gt;                  진입점을 포함하는 형식을 지정합니다. 
-                               다른 모든 가능한 진입점은 무시합니다. (약식 
-                               : /m)
+ /main:&lt;type&gt;                  진입점을 포함하는 형식을 지정합니다.
+                               다른 모든 가능한 진입점은 무시합니다. (약식:
+                               /m)
  /fullpaths                    컴파일러가 정규화된 경로를 생성합니다.
- /filealign:&lt;n&gt;                출력 파일 섹션에 사용되는 맞춤을 
+ /filealign:&lt;n&gt;                출력 파일 섹션에 사용되는 맞춤을
                                지정합니다.
  /pathmap:&lt;K1&gt;=&lt;V1&gt;,&lt;K2&gt;=&lt;V2&gt;,...
                                컴파일러에서 소스 경로 이름 출력에 대한
                                매핑을 지정합니다.
- /pdb:&lt;file&gt;                   디버그 정보 파일 이름을 지정합니다(기본값: 
+ /pdb:&lt;file&gt;                   디버그 정보 파일 이름을 지정합니다(기본값:
                                확장명이 .pdb인 출력 파일 이름).
- /errorendlocation             각 오류의 끝 위치에 해당하는 줄과 
-                               열 출력
+ /errorendlocation             각 오류의 끝 위치에 해당하는 줄과
+                               열을 출력합니다.
  /preferreduilang              기본 출력 언어 이름을 지정합니다.
  /nostdlib[+|-]                표준 라이브러리(mscorlib.dll)를 참조하지 않습니다.
  /subsystemversion:&lt;string&gt;    이 어셈블리의 하위 시스템 버전을 지정합니다.
- /lib:&lt;file list&gt;              참조를 검색할 추가 디렉터리를 
+ /lib:&lt;file list&gt;              참조를 검색할 추가 디렉터리를
                                지정합니다.
- /errorreport:&lt;string&gt;         내부 컴파일러 오류를 처리하는 방법을 지정합니다. 
+ /errorreport:&lt;string&gt;         내부 컴파일러 오류를 처리하는 방법을 지정합니다.
                                prompt, send, queue 또는 none 중에서 선택할 수 있으며 기본값은
                                queue입니다.
- /appconfig:&lt;file&gt;             어셈블리 바인딩 설정을 포함하는 
+ /appconfig:&lt;file&gt;             어셈블리 바인딩 설정을 포함하는
                                응용 프로그램 구성 파일을 지정합니다.
- /moduleassemblyname:&lt;string&gt;  이 모듈이 속할 어셈블리의 
+ /moduleassemblyname:&lt;string&gt;  이 모듈이 속할 어셈블리의
                                이름입니다.
  /modulename:&lt;string&gt;          소스 모듈의 이름을 지정합니다.
 </value>
@@ -3345,9 +3435,6 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   <data name="ERR_InvalidSignaturePublicKey" xml:space="preserve">
     <value>AssemblySignatureKeyAttribute에 잘못된 시그니처 공개 키가 지정되었습니다.</value>
   </data>
-  <data name="ERR_OverloadRefOut" xml:space="preserve">
-    <value>'{0}'은(는) ref 및 out만 다른 오버로드된 메서드를 정의할 수 없습니다.</value>
-  </data>
   <data name="WRN_TupleLiteralNameMismatch" xml:space="preserve">
     <value>튜플 요소 이름 '{0}'은(는) 대상 형식 '{1}'에서 다른 이름이 지정되었거나 이름이 지정되지 않았기 때문에 무시됩니다.</value>
   </data>
@@ -3362,9 +3449,6 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   </data>
   <data name="ERR_AmbigContext" xml:space="preserve">
     <value>'{0}'은(는) '{1}' 및 '{2}' 사이에 모호한 참조입니다.</value>
-  </data>
-  <data name="ERR_ParamsCantBeRefOut" xml:space="preserve">
-    <value>params 매개 변수는 ref 또는 out로 선언될 수 없습니다.</value>
   </data>
   <data name="WRN_CmdOptionConflictsSource_Title" xml:space="preserve">
     <value>옵션은 원본 파일 또는 추가된 모듈에 지정된 특성을 재정의합니다.</value>
@@ -3426,9 +3510,6 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   <data name="ERR_NoDynamicPhantomOnBaseCtor" xml:space="preserve">
     <value>생성자 호출을 동적으로 디스패치해야 하지만 해당 호출이 생성자 이니셜라이저의 일부이므로 동적으로 디스패치할 수 없습니다. 동적 인수를 캐스팅하십시오.</value>
   </data>
-  <data name="ERR_RefReturnCall2" xml:space="preserve">
-    <value>'{1}' 매개 변수에 전달된 인수는 참조로 반환될 수 없으므로 '{0}'의 결과 멤버를 참조로 반환할 수 없습니다.</value>
-  </data>
   <data name="ERR_TypeInferenceFailedForImplicitlyTypedOutVariable" xml:space="preserve">
     <value>암시적으로 형식화된 출력 변수 '{0}'의 형식을 유추할 수 없습니다.</value>
   </data>
@@ -3440,6 +3521,9 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   </data>
   <data name="ERR_ImplicitlyTypedVariableMultipleDeclarator" xml:space="preserve">
     <value>암시적으로 형식화된 변수에는 선언자를 여러 개 사용할 수 없습니다.</value>
+  </data>
+  <data name="ERR_RefReturnReadonlyNotField" xml:space="preserve">
+    <value>{0} '{1}'은(는) 읽기 전용 변수이므로 쓰기 가능 참조로 반환할 수 없습니다.</value>
   </data>
   <data name="ERR_NamespaceUnexpected" xml:space="preserve">
     <value>네임스페이스는 필드나 메서드와 같은 멤버를 직접 포함할 수 없습니다.</value>
@@ -3603,9 +3687,6 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   <data name="ERR_InvalidAssemblyCulture" xml:space="preserve">
     <value>어셈블리 문화권 문자열에는 포함된 NUL 문자가 포함되지 않을 수 있습니다.</value>
   </data>
-  <data name="ERR_AddrOnReadOnlyLocal" xml:space="preserve">
-    <value>읽기 전용 지역 변수의 주소를 가져올 수 없습니다.</value>
-  </data>
   <data name="ERR_PatternNullableType" xml:space="preserve">
     <value>패턴에 nullable 형식 '{0}'을(를) 사용하는 것은 올바르지 않습니다. 대신 기본 형식 '{1}'을(를) 사용하세요.</value>
   </data>
@@ -3660,8 +3741,8 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   <data name="WRN_InvalidSearchPathDir_Title" xml:space="preserve">
     <value>지정한 검색 경로가 잘못되었습니다.</value>
   </data>
-  <data name="ERR_RefReturnCall" xml:space="preserve">
-    <value>'{1}' 매개 변수에 전달된 인수는 참조로 반환될 수 없으므로 '{0}'의 결과를 참조로 반환할 수 없습니다.</value>
+  <data name="ERR_RefReturnThis" xml:space="preserve">
+    <value>'this'를 참조로 반환할 수 없습니다.</value>
   </data>
   <data name="ERR_NoCanonicalView" xml:space="preserve">
     <value>포함된 interop 형식 '{0}'과(와) 일치하는 interop 형식을 찾을 수 없습니다. 어셈블리 참조가 있는지 확인하세요.</value>
@@ -3682,7 +3763,7 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
     <value>'{0}' 매개 변수는 ref 또는 out 매개 변수가 아니므로 참조로 반환할 수 없습니다.</value>
   </data>
   <data name="ERR_NoNamespacePrivate" xml:space="preserve">
-    <value>네임스페이스에 정의된 요소는 명시적으로 private, protected 또는 protected internal로 선언할 수 없습니다.</value>
+    <value>네임스페이스에 정의된 요소는 명시적으로 private, protected, protected internal 또는 private protected로 선언할 수 없습니다.</value>
   </data>
   <data name="ERR_AssemblyNameOnNonModule" xml:space="preserve">
     <value>/moduleassemblyname 옵션은 빌드하는 대상 형식이 'module'인 경우에만 지정할 수 있습니다.</value>
@@ -3718,7 +3799,7 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
     <value>'{0}'은(는) lock 문에 필요한 참조 형식이 아닙니다.</value>
   </data>
   <data name="ERR_RefReturnReadonlyStatic" xml:space="preserve">
-    <value>정적 읽기 전용 필드는 참조로 반환될 수 없습니다.</value>
+    <value>정적 읽기 전용 필드는 쓰기 가능 참조로 반환될 수 없습니다.</value>
   </data>
   <data name="WRN_CLS_BadInterfaceMember_Title" xml:space="preserve">
     <value>CLS 규격 인터페이스는 CLS 규격 멤버만 포함할 수 있습니다.</value>
@@ -3782,6 +3863,9 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   </data>
   <data name="ERR_PropertyLacksGet" xml:space="preserve">
     <value>'{0}' 속성 또는 인덱서는 get 접근자가 없으므로 이 컨텍스트에서 사용할 수 없습니다.</value>
+  </data>
+  <data name="ERR_AutoPropsInRoStruct" xml:space="preserve">
+    <value>읽기 전용 구조체에서 자동으로 구현된 인스턴스 속성은 읽기 전용이어야 합니다.</value>
   </data>
   <data name="ERR_LanguageVersionCannotHaveLeadingZeroes" xml:space="preserve">
     <value>지정된 언어 버전 '{0}'에는 앞에 오는 0을 사용할 수 없습니다.</value>
@@ -3852,6 +3936,9 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   <data name="WRN_EqualityOpWithoutGetHashCode" xml:space="preserve">
     <value>'{0}'은(는) == 연산자 또는 != 연산자를 정의하지만 Object.GetHashCode()를 재정의하지 않습니다.</value>
   </data>
+  <data name="IDS_LangVersions" xml:space="preserve">
+    <value>지원되는 언어 버전:</value>
+  </data>
   <data name="ERR_BadBinaryOperatorSignature" xml:space="preserve">
     <value>이항 연산자의 매개 변수 중 하나는 포함하는 형식이어야 합니다.</value>
   </data>
@@ -3917,6 +4004,9 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   </data>
   <data name="ERR_UnexpectedSemicolon" xml:space="preserve">
     <value>메서드 또는 접근자 블록 뒤의 세미콜론이 잘못되었습니다.</value>
+  </data>
+  <data name="ERR_RefReadonlyNotField2" xml:space="preserve">
+    <value>{0} '{1}'의 멤버는 읽기 전용 변수이므로 ref 또는 out 값으로 사용할 수 없습니다.</value>
   </data>
   <data name="ERR_LocalTypeNameClash" xml:space="preserve">
     <value>'{1}' 어셈블리의 interop 형식 '{0}'을(를) 포함하면 현재 어셈블리에서 이름 충돌이 발생합니다. 'Interop 형식 포함' 속성을 false로 설정하세요.</value>
@@ -4020,6 +4110,9 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   <data name="ERR_ArrayOfStaticClass" xml:space="preserve">
     <value>'{0}': 배열 요소는 정적 형식일 수 없습니다.</value>
   </data>
+  <data name="IDS_SK_CONSTRUCTOR" xml:space="preserve">
+    <value>생성자</value>
+  </data>
   <data name="ERR_InvalidQM" xml:space="preserve">
     <value>'{0}'과(와) '{1}' 사이에 암시적 변환이 없으므로 조건식의 형식을 확인할 수 없습니다.</value>
   </data>
@@ -4031,6 +4124,9 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   </data>
   <data name="ERR_InaccessibleSetter" xml:space="preserve">
     <value>set 접근자에 액세스할 수 없으므로 '{0}' 속성 또는 인덱서는 이 컨텍스트에서 사용할 수 없습니다.</value>
+  </data>
+  <data name="IConversionExpressionIsNotCSharpConversion" xml:space="preserve">
+    <value>{0}은(는) 유효한 C# 변환 식이 아닙니다.</value>
   </data>
   <data name="ERR_NamedArgumentUsedInPositional" xml:space="preserve">
     <value>명명된 인수 '{0}'은(는) 위치 인수가 이미 지정된 매개 변수를 지정합니다.</value>
@@ -4174,7 +4270,7 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
     <value>'{0}' 개체는 여러 번 삭제할 수 있습니다.</value>
   </data>
   <data name="ERR_CloseUnimplementedInterfaceMemberWrongRefReturn" xml:space="preserve">
-    <value>'{0}'은(는) 인터페이스 멤버 '{1}'을(를) 구현하지 않습니다. '{2}'은(는) {3}(으)로 반환하지 않으므로 '{1}'을(를) 구현할 수 없습니다.</value>
+    <value>{0}'은(는) 인터페이스 멤버 '{1}'을(를) 구현하지 않습니다. '{2}'은(는) 참조에 의한 일치되는 반환 값이 없으므로 '{1}'을(를) 구현할 수 없습니다.</value>
   </data>
   <data name="ERR_FixedNeedsLvalue" xml:space="preserve">
     <value>고정 크기 버퍼는 지역 변수 또는 필드를 통해서만 액세스할 수 있습니다.</value>
@@ -4315,7 +4411,7 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
     <value>형식 매개 변수 '{1}'에 'struct' 제약 조건이 있으므로 '{1}'은(는) '{0}'에 대한 제약 조건으로 사용할 수 없습니다.</value>
   </data>
   <data name="ERR_PredefinedValueTupleTypeNotFound" xml:space="preserve">
-    <value>미리 정의된 형식 '{0}'을(를) 정의하지 않았거나 가져오지 않았습니다.</value>
+    <value>미리 정의된 형식 '{0}'을(를) 정의하지 않았거나 가져오지 않았습니다. 또는 이 형식이 여러 참조된 어셈블리에서 선언되었습니다.</value>
   </data>
   <data name="TypeArgumentCannotBeNull" xml:space="preserve">
     <value>형식 인수는 null일 수 없습니다.</value>
@@ -4376,6 +4472,9 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   </data>
   <data name="ERR_BadCastInFixed" xml:space="preserve">
     <value>fixed 문의 오른쪽에는 캐스트 식을 할당할 수 없습니다.</value>
+  </data>
+  <data name="IDS_FeatureRefExtensionMethods" xml:space="preserve">
+    <value>ref 확장 메서드</value>
   </data>
   <data name="ERR_AssgReadonly2" xml:space="preserve">
     <value>읽기 전용 필드 '{0}'의 멤버는 수정할 수 없습니다. 단 생성자 또는 변수 이니셜라이저에서는 예외입니다.</value>
@@ -4473,6 +4572,9 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   <data name="ERR_ComRefCallInExpressionTree" xml:space="preserve">
     <value>람다 식 트리에는 인수에서 ref가 생략된 COM 호출을 포함할 수 없습니다.</value>
   </data>
+  <data name="ERR_ParamsCantBeWithModifier" xml:space="preserve">
+    <value>params 매개 변수는 {0}(으)로 선언될 수 없습니다.</value>
+  </data>
   <data name="ERR_BadForeachDecl" xml:space="preserve">
     <value>foreach 문에는 형식과 식별자가 모두 필요합니다.</value>
   </data>
@@ -4480,7 +4582,7 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
     <value>{0} 인수: '{1}'에서 '{2}'(으)로 변환할 수 없습니다.</value>
   </data>
   <data name="ERR_NamedArgumentSpecificationBeforeFixedArgument" xml:space="preserve">
-    <value>명명된 인수 사양은 모든 고정 인수를 지정한 다음에 와야 합니다.</value>
+    <value>명명된 인수 사양은 모든 고정 인수를 지정한 다음에 와야 합니다. 뒤에 오지 않는 명명된 인수를 허용하려면 {0} 이상의 언어 버전을 사용하세요.</value>
   </data>
   <data name="ERR_ImplBadConstraints" xml:space="preserve">
     <value>'{1}' 메서드의 '{0}' 형식 매개 변수에 대한 제약 조건이 '{3}' 인터페이스 메서드의 '{2}' 형식 매개 변수에 대한 제약 조건과 일치해야 합니다. 명시적 인터페이스 구현을 대신 사용하세요.</value>
@@ -4502,6 +4604,9 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   </data>
   <data name="ERR_UnexpectedToken" xml:space="preserve">
     <value>예기치 않은 토큰 '{0}'</value>
+  </data>
+  <data name="ERR_RefConditionalDifferentTypes" xml:space="preserve">
+    <value>대체 ref 값과 일치하려면 식이 '{0}' 형식이어야 합니다.</value>
   </data>
   <data name="ERR_CantDeriveFromSealedType" xml:space="preserve">
     <value>'{0}': sealed 형식 '{1}'에서 파생될 수 없습니다.</value>
@@ -4590,6 +4695,9 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   <data name="ERR_IllegalFixedType" xml:space="preserve">
     <value>고정 크기 버퍼는 bool, byte, short, int, long, char, sbyte, ushort, uint, ulong, float 또는 double 형식 중 하나여야 합니다.</value>
   </data>
+  <data name="ERR_CallArgMixing" xml:space="preserve">
+    <value>'{0}'에 대한 이 인수 조합은 선언 범위 외부의 '{1}' 매개 변수에서 참조하는 변수를 노출할 수 있으므로 사용할 수 없습니다.</value>
+  </data>
   <data name="ERR_ConstOutOfRange" xml:space="preserve">
     <value>'{0}' 상수 값을 '{1}'(으)로 변환할 수 없습니다.</value>
   </data>
@@ -4642,7 +4750,7 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
     <value>'{0}' 기능은 C# 6에서 사용할 수 없습니다. {1} 이상의 언어 버전을 사용하세요.</value>
   </data>
   <data name="ERR_FeatureNotAvailableInVersion7" xml:space="preserve">
-    <value>'{0}' 기능은 C# 7에서 사용할 수 없습니다. {1} 이상의 언어 버전을 사용하세요.</value>
+    <value>'{0}' 기능은 C# 7.0에서 사용할 수 없습니다. 언어 버전 {1} 이상을 사용하세요.</value>
   </data>
   <data name="ERR_FeatureNotAvailableInVersion4" xml:space="preserve">
     <value>'{0}' 기능은 C# 4에서 사용할 수 없습니다. {1} 이상의 언어 버전을 사용하세요.</value>
@@ -4730,6 +4838,9 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   </data>
   <data name="ERR_SubexpressionNotInNameof" xml:space="preserve">
     <value>부분식은 nameof에 대한 인수에서 사용할 수 없습니다.</value>
+  </data>
+  <data name="ERR_MismatchedRefEscapeInTernary" xml:space="preserve">
+    <value>참조 3항 연산자의 분기는 호환되지 않는 선언 범위의 변수를 참조할 수 없습니다.</value>
   </data>
   <data name="ERR_FixedDimsRequired" xml:space="preserve">
     <value>고정 크기 버퍼 필드에는 필드 이름 뒤에 배열 크기 지정자를 사용해야 합니다.</value>
@@ -4883,6 +4994,9 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   </data>
   <data name="ERR_PatternDynamicType" xml:space="preserve">
     <value>패턴에 'dynamic' 형식을 사용할 수 없습니다.</value>
+  </data>
+  <data name="ERR_RefReadonlyNotField" xml:space="preserve">
+    <value>{0} '{1}'은(는) 읽기 전용 변수이므로 ref 또는 out 값으로 사용할 수 없습니다.</value>
   </data>
   <data name="ERR_CallingFinalizeDeprecated" xml:space="preserve">
     <value>소멸자 및 object.Finalize는 직접 호출할 수 없습니다. 가능한 경우 IDisposable.Dispose를 호출하세요.</value>
@@ -5060,6 +5174,9 @@ C#에서는 out과 ref를 구분하지만 CLR에서는 동일한 것으로 간�
   </data>
   <data name="IDS_FeatureExpressionBodiedIndexer" xml:space="preserve">
     <value>식 본문 인덱서</value>
+  </data>
+  <data name="ERR_LocalFunctionMissingBody" xml:space="preserve">
+    <value>'{0}'은(는) 로컬 함수이므로 항상 본문이 있어야 합니다.</value>
   </data>
   <data name="ERR_DeriveFromDynamic" xml:space="preserve">
     <value>'{0}': 동적 유형에서 파생될 수 없습니다.</value>

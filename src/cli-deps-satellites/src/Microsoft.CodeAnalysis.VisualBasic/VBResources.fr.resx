@@ -231,6 +231,9 @@
   <data name="ERR_GotoIntoFor" xml:space="preserve">
     <value>'GoTo {0}' n'est pas valide, car '{0}' se trouve à l'intérieur d'une instruction 'For' ou 'For Each' qui ne contient pas cette instruction.</value>
   </data>
+  <data name="IArgumentIsNotVisualBasicArgument" xml:space="preserve">
+    <value>{0} n'est pas un argument Visual Basic valide</value>
+  </data>
   <data name="WRN_DefAsgUseNullRefStr_Title" xml:space="preserve">
     <value>La variable est utilisée avant de se voir attribuer une valeur</value>
   </data>
@@ -447,7 +450,7 @@
     <value>La référence d'assembly '{0}' n'est pas valide et ne peut pas être résolue.</value>
   </data>
   <data name="ERR_DuplicateAccessCategoryUsed" xml:space="preserve">
-    <value>Vous pouvez spécifier uniquement une instance de type 'Public', 'Private', 'Protected', 'Friend' ou 'Protected Friend'.</value>
+    <value>Vous pouvez spécifier uniquement une instance de type 'Public', 'Private', 'Protected', 'Friend', 'Protected Friend' ou 'Private Protected'.</value>
   </data>
   <data name="WRN_LambdaPassedToRemoveHandler_Title" xml:space="preserve">
     <value>L’expression lambda ne sera pas supprimée de ce gestionnaire d’événements</value>
@@ -717,6 +720,9 @@
   <data name="ERR_PropertyNameConflictInMyCollection" xml:space="preserve">
     <value>'{0}' porte le même nom qu'un autre membre utilisé pour le type '{1}' exposé dans un groupe 'My'. Renommez le type ou son espace de noms englobant.</value>
   </data>
+  <data name="ERR_ExpectedNamedArgumentInAttributeList" xml:space="preserve">
+    <value>Argument nommé attendu.</value>
+  </data>
   <data name="ERR_NameNotEvent2" xml:space="preserve">
     <value>'{0}' n'est pas un événement de '{1}'.</value>
   </data>
@@ -752,6 +758,9 @@
   </data>
   <data name="ERR_VarianceOutParamDisallowed1" xml:space="preserve">
     <value>Impossible d'utiliser le type '{0}' dans ce contexte, car '{0}' est un paramètre de type 'Out'.</value>
+  </data>
+  <data name="ERR_InvalidDebugInfo" xml:space="preserve">
+    <value>Impossible de lire les informations de débogage de la méthode '{0}' (jeton 0x{1}) dans l'assembly '{2}'</value>
   </data>
   <data name="ERR_DefaultMissingFromProperty2" xml:space="preserve">
     <value>'{0}' et '{1}' ne peuvent pas se surcharger mutuellement, car seul l'un d'entre eux est déclaré 'Default'.</value>
@@ -800,6 +809,9 @@
   </data>
   <data name="ERR_QueryOperatorNotFound" xml:space="preserve">
     <value>La définition de la méthode '{0}' n'est pas accessible dans ce contexte.</value>
+  </data>
+  <data name="IConversionExpressionIsNotVisualBasicConversion" xml:space="preserve">
+    <value>{0} n'est pas une expression de conversion Visual Basic valide</value>
   </data>
   <data name="ERR_InaccessibleMember3" xml:space="preserve">
     <value>'{0}.{1}' n'est pas accessible dans ce contexte, car il est '{2}'.</value>
@@ -946,6 +958,9 @@
   </data>
   <data name="WRN_IfTooManyTypesObjectAssumed" xml:space="preserve">
     <value>Impossible de déduire un type commun, car plusieurs types sont possibles. Type 'Object' pris par défaut.</value>
+  </data>
+  <data name="FEATURE_LeadingDigitSeparator" xml:space="preserve">
+    <value>séparateur numérique de début</value>
   </data>
   <data name="ERR_ExpectedStringLiteral" xml:space="preserve">
     <value>Constante de chaîne attendue.</value>
@@ -1446,6 +1461,9 @@
   <data name="ERR_RedimNoSizes" xml:space="preserve">
     <value>Les instructions 'ReDim' requièrent une liste entre parenthèses des nouvelles limites de chaque dimension du tableau.</value>
   </data>
+  <data name="ERR_BadNonTrailingNamedArgument" xml:space="preserve">
+    <value>L'argument nommé '{0}' est utilisé hors-position mais est suivi d'un argument sans nom</value>
+  </data>
   <data name="ERR_InvalidAttributeUsageOnAccessor" xml:space="preserve">
     <value>L'attribut '{0}' ne peut pas être appliqué à '{1}' de '{2}', car il n'est pas valide dans ce type de déclaration.</value>
   </data>
@@ -1912,7 +1930,7 @@
     <value>'End Set' doit être précédé d'un 'Set' correspondant.</value>
   </data>
   <data name="ERR_CannotEmbedWithoutPdb" xml:space="preserve">
-    <value>Le commutateur /embed est uniquement pris en charge durant l'émission d'un fichier PDB portable (/debug:portable ou /debug:embedded).</value>
+    <value>Le commutateur /embed est uniquement pris en charge durant l'émission d'un fichier PDB.</value>
   </data>
   <data name="WRN_VarianceDeclarationAmbiguous3" xml:space="preserve">
     <value>La présence des paramètres 'In' et 'Out' dans '{2}' crée une ambiguïté entre l'interface '{0}' et une autre interface '{1}' implémentée.</value>
@@ -2221,6 +2239,9 @@
   </data>
   <data name="ERR_InvInsideInterface" xml:space="preserve">
     <value>L'instruction ne peut pas apparaître dans le corps d'une interface.</value>
+  </data>
+  <data name="ERR_NamedArgumentSpecificationBeforeFixedArgumentInLateboundInvocation" xml:space="preserve">
+    <value>Les spécifications d'argument nommé doivent s'afficher après la spécification de tous les arguments fixes dans un appel avec liaison tardive.</value>
   </data>
   <data name="ERR_NamedParamNotFound1" xml:space="preserve">
     <value>'{0}' n'est pas un paramètre de méthode.</value>
@@ -2533,6 +2554,9 @@
   </data>
   <data name="ERR_ContinueWhileNotWithinWhile" xml:space="preserve">
     <value>'Continue While' ne peut apparaître que dans une instruction 'While'.</value>
+  </data>
+  <data name="FEATURE_PrivateProtected" xml:space="preserve">
+    <value>Private Protected</value>
   </data>
   <data name="ERR_TooManyArgs2" xml:space="preserve">
     <value>Arguments trop nombreux dans la méthode d'extension '{0}' définie dans '{1}'.</value>
@@ -3955,7 +3979,7 @@
     <value>La méthode ne peut pas comporter simultanément des paramètres ParamArray et Optional.</value>
   </data>
   <data name="ERR_StructureCantUseProtected" xml:space="preserve">
-    <value>Une méthode dans une structure ne peut pas être déclarée 'Protected' ni 'Protected Friend'.</value>
+    <value>Une méthode dans une structure ne peut pas être déclarée 'Protected', 'Protected Friend' ou 'Private Protected'.</value>
   </data>
   <data name="WRN_QueryMissingAsClauseinVarDecl" xml:space="preserve">
     <value>La variable de portée est considérée comme étant de type Object, car son type ne peut pas être déduit. Utilisez une clause 'As' pour indiquer un type différent.</value>
@@ -3965,6 +3989,9 @@
   </data>
   <data name="ERR_PartialTypeBadMustInherit1" xml:space="preserve">
     <value>'MustInherit' ne peut pas être spécifié pour le type partiel '{0}', car il ne peut pas être combiné avec 'NotInheritable' spécifié pour l'un de ses autres types partiels.</value>
+  </data>
+  <data name="IDS_LangVersions" xml:space="preserve">
+    <value>Versions de langage prises en charge :</value>
   </data>
   <data name="ERR_RemoveParamWrongForWinRT" xml:space="preserve">
     <value>Dans un événement Windows Runtime, le type du paramètre de méthode 'RemoveHandler' doit être 'EventRegistrationToken'</value>
@@ -4328,7 +4355,7 @@
     <value>                  Options du compilateur Visual Basic
 
                                   - FICHIER DE SORTIE -
-/out:&lt;fichier&gt;                Spécifie le nom du fichier de sortie.
+/out:&lt;fichier&gt;                    Spécifie le nom du fichier de sortie.
 /target:exe                       Créer une application console (par défaut). 
                                   (Forme abrégée : /t)
 /target:winexe                    Créer une application Windows.
@@ -4339,12 +4366,12 @@
                                   AppContainer.
 /target:winmdobj                  Créer un fichier intermédiaire de métadonnées Windows
 /doc[+|-]                         Génère un fichier de documentation XML.
-/doc:&lt;fichier&gt;                Génère un fichier de documentation XML dans &lt;fichier&gt;.
+/doc:&lt;fichier&gt;                    Génère un fichier de documentation XML dans &lt;fichier&gt;.
 /refout:&lt;fichier&gt;                 Référencer la sortie d'assembly à générer
 
                                   - FICHIERS D'ENTRÉE -
 /addmodule:&lt;liste_fichiers&gt;   Référencer les métadonnées à partir des modules spécifiés
-/link:&lt;liste_fichiers&gt;        Incorporer les métadonnées à partir de 
+/link:&lt;liste_fichiers&gt;            Incorporer les métadonnées à partir de 
                                   l'assembly d'interopérabilité spécifié. (Forme abrégée : /l)
 /recurse:&lt;générique&gt;              Inclure tous les fichiers dans le répertoire 
                                   et les sous-répertoires actifs en fonction des
@@ -4365,7 +4392,7 @@
 /nowin32manifest                  Le manifeste par défaut ne doit pas être incorporé 
                                   dans la section manifest du PE de sortie.
 /resource:&lt;resinfo&gt;               Ajoute le fichier spécifié en tant que 
-                                  ressource d'assembly incorporé.
+                                  ressource d'assembly incorporée.
                                   resinfo:&lt;fichier&gt;[,&lt;nom&gt;[,public|private]] 
                                   (Forme abrégée : /res)
 /win32icon:&lt;fichier&gt;              Spécifie un fichier icône Win32 (.ico) pour les 
@@ -4384,7 +4411,7 @@
 /debug:embedded                   Émettre des informations de débogage multiplateformes dans 
                                   le fichier .dll ou .exe cible.
 /deterministic                    Produire un assembly déterministe
-                                  (en incluant le GUID et l'horodateur de la version du module)
+                                  (en incluant le GUID et l'horodatage de la version du module)
 /refonly                          Produire un assembly de référence à la place de la sortie principale
 /instrument:TestCoverage          Produire un assembly instrumenté pour collecter
                                   les informations de couverture
@@ -4399,7 +4426,7 @@
                                   diagnostics spécifiques.
 /errorlog:&lt;fichier&gt;               Spécifier un fichier pour journaliser tous les diagnostics du compilateur
                                   et de l'analyseur.
-/reportanalyzer                   Indiquer des informations supplémentaires sur l'analyseur, comme
+/reportanalyzer                   Signaler des informations supplémentaires sur l'analyseur, comme
                                   la durée d'exécution.
 
                                   - LANGAGE -
@@ -4409,9 +4436,11 @@
 /imports:&lt;liste_importations&gt;     Déclarer des importations globales pour les espaces de noms dans 
                                   les fichiers de métadonnées référencés. 
                                   liste_importations:namespace,...
-/langversion:&lt;numéro&gt;             Spécifier la version du langage : 
-                                  9|9.0|10|10.0|11|11.0|12|12.0|14|14.0|15|
-                                  15.0|15.3|default|latest
+/langversion:?                    Afficher les valeurs autorisées pour la version du langage
+/langversion:&lt;chaîne&gt;             Spécifier la version du langage, par exemple
+                                  'default' (dernière version principale) ou
+                                  'latest' (dernière version, en incluant les versions mineures),
+                                  ou des versions spécifiques comme '14' ou '15.3'
 /optionexplicit[+|-]              Imposer une déclaration explicite des variables.
 /optioninfer[+|-]                 Autoriser l'inférence de type des variables.
 /rootnamespace:&lt;chaîne&gt;           Spécifie l'espace de noms racine pour toutes les 
@@ -4444,14 +4473,14 @@
                                   la partie publique de la clé de nom fort.
 /publicsign[+|-]                  Signer publiquement l'assembly en utilisant uniquement
                                   la partie publique de la clé de nom fort.
-/errorreport:&lt;chaîne&gt;             Spécifie comment gérer les erreurs internes du
+/errorreport:&lt;chaîne&gt;             Spécifie comment prendre en charge les erreurs internes du
                                   compilateur ; doit avoir la valeur prompt, send, none ou queue
                                   (par défaut).
 /filealign:&lt;numéro&gt;               Spécifier l'alignement utilisé pour les 
                                   sections du fichier de sortie.
 /highentropyva[+|-]               Activer la randomisation du format d'espace d'adresse d'entropie élevée.
 /keycontainer:&lt;chaîne&gt;            Spécifie un conteneur de clé de nom fort.
-/keyfile:&lt;fichier&gt;                Spécifier un fichier de clé de nom fort.
+/keyfile:&lt;fichier&gt;                Spécifie un fichier de clé de nom fort.
 /libpath:&lt;liste_chemins&gt;          Liste de répertoires où rechercher des 
                                   références de métadonnées. (Valeurs délimitées par des points-virgules.)
 /main:&lt;classe&gt;                    Spécifie la classe ou le module qui contient 
@@ -4493,7 +4522,7 @@
     <value>'{0}' ne peut pas se substituer à '{1}', car leurs contraintes de paramètre de type les différencient.</value>
   </data>
   <data name="ERR_ExpectedNamedArgument" xml:space="preserve">
-    <value>Argument nommé attendu.</value>
+    <value>Argument nommé attendu. Utilisez la version de langage {0} ou une version ultérieure pour permettre l'emploi d'arguments nommés non placés en position de fin.</value>
   </data>
   <data name="ERR_CircularEvaluation1" xml:space="preserve">
     <value>La constante '{0}' ne peut pas dépendre de sa propre valeur.</value>

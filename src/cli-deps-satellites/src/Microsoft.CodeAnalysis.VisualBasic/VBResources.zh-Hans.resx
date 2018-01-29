@@ -231,6 +231,9 @@
   <data name="ERR_GotoIntoFor" xml:space="preserve">
     <value>“GoTo {0}”无效，因为“{0}”位于不包含此语句的“For”或“For Each”语句中。</value>
   </data>
+  <data name="IArgumentIsNotVisualBasicArgument" xml:space="preserve">
+    <value>{0} 不是有效的 Visual Basic 参数</value>
+  </data>
   <data name="WRN_DefAsgUseNullRefStr_Title" xml:space="preserve">
     <value>在为变量赋值之前，变量已被使用</value>
   </data>
@@ -447,7 +450,7 @@
     <value>程序集引用“{0}”无效，无法解析。</value>
   </data>
   <data name="ERR_DuplicateAccessCategoryUsed" xml:space="preserve">
-    <value>只能指定 "Public"、"Private"、"Protected"、"Friend" 或 "Protected Friend" 中的一个。</value>
+    <value>只能指定 "Public"、"Private"、"Protected"、"Friend"、"Protected Friend" 或 "Private Protected" 中的一个。</value>
   </data>
   <data name="WRN_LambdaPassedToRemoveHandler_Title" xml:space="preserve">
     <value>Lambda 表达式将不会从此事件处理程序中删除</value>
@@ -717,6 +720,9 @@
   <data name="ERR_PropertyNameConflictInMyCollection" xml:space="preserve">
     <value>“{0}”与“My”组中公开的类型“{1}”所使用的成员同名。请重命名该类型或其封闭命名空间。</value>
   </data>
+  <data name="ERR_ExpectedNamedArgumentInAttributeList" xml:space="preserve">
+    <value>应为命名参数。</value>
+  </data>
   <data name="ERR_NameNotEvent2" xml:space="preserve">
     <value>“{0}”不是“{1}”的事件。</value>
   </data>
@@ -752,6 +758,9 @@
   </data>
   <data name="ERR_VarianceOutParamDisallowed1" xml:space="preserve">
     <value>类型“{0}”不能用于此上下文，因为“{0}”是“Out”类型参数。</value>
+  </data>
+  <data name="ERR_InvalidDebugInfo" xml:space="preserve">
+    <value>无法从程序集“{2}”读取方法“{0}”(令牌 0x{1})的调试信息</value>
   </data>
   <data name="ERR_DefaultMissingFromProperty2" xml:space="preserve">
     <value>“{0}”和“{1}”中只有一个声明为“Default”，因此它们无法相互重载。</value>
@@ -800,6 +809,9 @@
   </data>
   <data name="ERR_QueryOperatorNotFound" xml:space="preserve">
     <value>方法“{0}”的定义在此上下文中不可访问。</value>
+  </data>
+  <data name="IConversionExpressionIsNotVisualBasicConversion" xml:space="preserve">
+    <value>{0} 不是有效的 Visual Basic 转换表达式</value>
   </data>
   <data name="ERR_InaccessibleMember3" xml:space="preserve">
     <value>“{0}.{1}”是“{2}” ,因此它在此上下文中不可访问。</value>
@@ -946,6 +958,9 @@
   </data>
   <data name="WRN_IfTooManyTypesObjectAssumed" xml:space="preserve">
     <value>无法推断通用类型，因为可能存在多个类型；假定为 "Object"。</value>
+  </data>
+  <data name="FEATURE_LeadingDigitSeparator" xml:space="preserve">
+    <value>前导数字分隔符</value>
   </data>
   <data name="ERR_ExpectedStringLiteral" xml:space="preserve">
     <value>应为字符串常量。</value>
@@ -1446,6 +1461,9 @@
   <data name="ERR_RedimNoSizes" xml:space="preserve">
     <value>"ReDim" 语句需要一个带括号的列表，该列表列出数组每个维度的新界限。</value>
   </data>
+  <data name="ERR_BadNonTrailingNamedArgument" xml:space="preserve">
+    <value>命名参数“{0}”的使用位置不当，但后跟一个未命名参数</value>
+  </data>
   <data name="ERR_InvalidAttributeUsageOnAccessor" xml:space="preserve">
     <value>属性“{0}”不能应用于“{2}”的“{1}”，因为该属性在此声明类型中无效。</value>
   </data>
@@ -1912,7 +1930,7 @@
     <value>“End Set”前面必须是匹配的“Set”。</value>
   </data>
   <data name="ERR_CannotEmbedWithoutPdb" xml:space="preserve">
-    <value>/仅在发出可移植 PDB 时支持嵌入式开关(/debug:portable 或 /debug:embedded)。</value>
+    <value>仅在发出 PDB 时才支持 /embed 开关。</value>
   </data>
   <data name="WRN_VarianceDeclarationAmbiguous3" xml:space="preserve">
     <value>“{2}”中的“In”和“Out”参数导致接口“{0}”与另一个已实现的接口“{1}”一起使用时目的不明确。</value>
@@ -2221,6 +2239,9 @@
   </data>
   <data name="ERR_InvInsideInterface" xml:space="preserve">
     <value>语句不能出现在接口体内。</value>
+  </data>
+  <data name="ERR_NamedArgumentSpecificationBeforeFixedArgumentInLateboundInvocation" xml:space="preserve">
+    <value>命名参数规范必须出现在已在后期绑定调用中指定的所有固定参数之后。</value>
   </data>
   <data name="ERR_NamedParamNotFound1" xml:space="preserve">
     <value>“{0}”不是方法参数。</value>
@@ -2533,6 +2554,9 @@
   </data>
   <data name="ERR_ContinueWhileNotWithinWhile" xml:space="preserve">
     <value>“Continue While”只能出现在“While”语句内。</value>
+  </data>
+  <data name="FEATURE_PrivateProtected" xml:space="preserve">
+    <value>Private Protected</value>
   </data>
   <data name="ERR_TooManyArgs2" xml:space="preserve">
     <value>对“{1}”中定义的扩展方法“{0}”而言，参数太多。</value>
@@ -3955,7 +3979,7 @@
     <value>方法不能同时具有 ParamArray 和 Optional 参数。</value>
   </data>
   <data name="ERR_StructureCantUseProtected" xml:space="preserve">
-    <value>结构中的方法不能声明为 "Protected" 或 "Protected Friend"。</value>
+    <value>结构中的方法不能声明为 "Protected"、"Protected Friend" 或 "Private Protected"。</value>
   </data>
   <data name="WRN_QueryMissingAsClauseinVarDecl" xml:space="preserve">
     <value>假定范围变量属于对象类型，因为无法推断其类型。请使用“As”子句指定不同类型。</value>
@@ -3965,6 +3989,9 @@
   </data>
   <data name="ERR_PartialTypeBadMustInherit1" xml:space="preserve">
     <value>“MustInherit”不能为分部类型“{0}”指定，因为它不能与为该类型的某个其他分部类型指定的“NotInheritable”组合。。</value>
+  </data>
+  <data name="IDS_LangVersions" xml:space="preserve">
+    <value>支持的语言版本:</value>
   </data>
   <data name="ERR_RemoveParamWrongForWinRT" xml:space="preserve">
     <value>在 Windows Runtime 事件中，“RemoveHandler”方法参数的类型必须为“EventRegistrationToken”</value>
@@ -4388,7 +4415,7 @@
 /refonly                          生成引用程序集来替代主要输出
 /instrument:TestCoverage          生成对其检测以收集覆盖率信息的t
                                   程序集
-/sourcelink:&lt;file&gt;                要嵌入到可移植 PDB 中的源链接。
+/sourcelink:&lt;file&gt;                要嵌入到 PDB 中的源链接信息。
 
                                   - 错误和警告 -
 /nowarn                           禁用所有警告。
@@ -4409,10 +4436,12 @@
 /imports:&lt;import_list&gt;            为引用的元数据文件中的命名空间声明
                                   全局导入。
                                   import_list:namespace,...
-/langversion:&lt;number&gt;             指定语言版本: 
-                                  9|9.0|10|10.0|11|11.0|12|12.0|14|14.0|15|
-                                  15.0|15.3|default|latest
-/optionexplicit[+|-]              需要变量的显式声明。
+/langversion:?                    显示允许的语言版本值
+/langversion:&lt;string&gt;             指定语言版本，如
+                                  “default” (最新主要版本)、
+                                  “latest” (最新版本，包括次要版本)
+                                  或 “14”、”15.3”等特定版本
+/optionexplicit[+|-]              需要显示声明变量。
 /optioninfer[+|-]                 允许变量的类型推理。
 /rootnamespace:&lt;string&gt;           指定所有类型声明的根
                                   命名空间。
@@ -4493,7 +4522,7 @@
     <value>“{0}”无法重写“{1}”，因为它们在类型参数约束上存在差异。</value>
   </data>
   <data name="ERR_ExpectedNamedArgument" xml:space="preserve">
-    <value>应为命名参数。</value>
+    <value>需要命名参数。请使用语言版本 {0} 或更高版本，以使用非尾随命名参数。</value>
   </data>
   <data name="ERR_CircularEvaluation1" xml:space="preserve">
     <value>常量“{0}”不能依赖自身的值。</value>
