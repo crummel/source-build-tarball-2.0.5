@@ -14,4 +14,10 @@
     <projectUrl>https://github.com/aspnet/websdk</projectUrl>
     <copyright>&#169; Microsoft Corporation. All rights reserved.</copyright>
   </metadata>
+  <files>
+    <file src="$WebSdkSource$ProjectSystem\Microsoft.NET.Sdk.Web.ProjectSystem.Targets\netstandard1.0\Microsoft.NET.Sdk.Web.ProjectSystem.props" target="build\netstandard1.0\" />
+    <file src="$WebSdkSource$ProjectSystem\Microsoft.NET.Sdk.Web.ProjectSystem.Targets\netstandard1.0\Microsoft.NET.Sdk.Web.ProjectSystem.targets" target="build\netstandard1.0\" />
+    <file src="$WebSdkSource$ProjectSystem\Microsoft.NET.Sdk.Web.ProjectSystem.Targets\Sdk.props" target="Sdk\" />
+    <file src="$WebSdkSource$ProjectSystem\Microsoft.NET.Sdk.Web.ProjectSystem.Targets\Sdk.targets" target="Sdk\" />
+  </files>
 </package>

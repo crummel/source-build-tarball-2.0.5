@@ -1,0 +1,21 @@
+<Project InitialTargets="ValidateParameters">
+
+  <ItemGroup>
+    <ProjectFiles Include="src\Publish\Microsoft.NET.Sdk.Publish.Package\Microsoft.NET.Sdk.Publish.Package.DotNet.csproj" />
+    <ProjectFiles Include="src\Web\Microsoft.NET.Sdk.Web.ProjectSystem.Package\Microsoft.NET.Sdk.Web.ProjectSystem.Package.DotNet.csproj" />
+    <ProjectFiles Include="src\Web\Microsoft.NET.Sdk.Web.Package\Microsoft.NET.Sdk.Web.Package.DotNet.csproj" />
+  </ItemGroup>
+
+  <Target Name="ValidateParameters">
+    <Error Text="Configuration must be 'Debug' or 'Release'" Condition="'$(Configuration)' != 'Debug' and '$(Configuration)' != 'Release'" />
+    <Error Text="WebSdkVersion must be defined" Condition="'$(WebSdkVersion)' == ''" />
+    <Error Text="CoreSdkVersion must be defined" Condition="'$(CoreSdkVersion)' == ''" />
+  </Target>
+
+  <Target Name="Restore" />
+
+  <Target Name="Pack">
+    <MSBuild Projects="@(ProjectFiles)" Targets="Restore" BuildInParallel="true" />
+    <MSBuild Projects="@(ProjectFiles)" Targets="Pack" BuildInParallel="true" />
+  </Target>
+</Project>
