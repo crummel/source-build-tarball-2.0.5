@@ -222,6 +222,9 @@
   <data name="WRN_CallerLineNumberPreferredOverCallerMemberName_Title" xml:space="preserve">
     <value>CallerMemberNameAttribute n'aura pas d'effet ; il est remplacé par CallerLineNumberAttribute</value>
   </data>
+  <data name="ERR_RefReturnReadonlyNotField2" xml:space="preserve">
+    <value>Impossible de retourner les membres de {0} '{1}' par référence accessible en écriture, car il s'agit d'une variable en lecture seule</value>
+  </data>
   <data name="ERR_AbstractHasBody" xml:space="preserve">
     <value>'{0}' ne peut pas déclarer un corps, car il est marqué comme abstract</value>
   </data>
@@ -300,10 +303,13 @@ Un bloc catch() après un bloc catch (System.Exception e) peut intercepter des e
     <value>Impossible de déconstruire des objets dynamiques.</value>
   </data>
   <data name="ERR_RefReturnLvalueExpected" xml:space="preserve">
-    <value>Impossible d'utiliser une expression dans ce contexte, car elle ne peut pas être retournée par référence</value>
+    <value>Impossible d'utiliser une expression dans ce contexte, car elle ne peut pas être passée ou retournée par référence</value>
   </data>
   <data name="ERR_OneAliasPerReference" xml:space="preserve">
     <value>Une option /reference qui déclare un alias extern ne peut avoir qu'un seul nom de fichier. Pour spécifier plusieurs alias ou noms de fichiers, utilisez plusieurs options /reference.</value>
+  </data>
+  <data name="ERR_StackAllocConversionNotPossible" xml:space="preserve">
+    <value>La conversion d'une expression stackalloc de type '{0}' en type '{1}' n'est pas possible.</value>
   </data>
   <data name="ERR_UnclosedExpressionHole" xml:space="preserve">
     <value>Délimiteur de fin '}' manquant pour l'expression interpolée qui débute par '{'.</value>
@@ -380,6 +386,9 @@ Un bloc catch() après un bloc catch (System.Exception e) peut intercepter des e
   <data name="WRN_CLS_NoAbstractMembers_Title" xml:space="preserve">
     <value>Seuls les membres conformes CLS peuvent être abstraits</value>
   </data>
+  <data name="IDS_FeaturePrivateProtected" xml:space="preserve">
+    <value>private protected</value>
+  </data>
   <data name="ERR_ConflictingMachineModule" xml:space="preserve">
     <value>L'assembly et le module '{0}' ne peuvent pas cibler des processeurs différents.</value>
   </data>
@@ -422,9 +431,6 @@ Un bloc catch() après un bloc catch (System.Exception e) peut intercepter des e
   <data name="WRN_InvalidAssemblyName" xml:space="preserve">
     <value>La référence d'assembly '{0}' n'est pas valide et ne peut pas être résolue</value>
   </data>
-  <data name="ERR_BadOutWithThis" xml:space="preserve">
-    <value> Le modificateur de paramètre 'out' ne peut pas être utilisé avec 'this' </value>
-  </data>
   <data name="ERR_DeconstructRequiresExpression" xml:space="preserve">
     <value>L'assignation de déconstruction nécessite une expression avec un type du côté droit.</value>
   </data>
@@ -434,6 +440,9 @@ Un bloc catch() après un bloc catch (System.Exception e) peut intercepter des e
   <data name="ERR_ThisStructNotInAnonMeth" xml:space="preserve">
     <value>Les méthodes anonymes, les expressions lambda et les expressions de requête dans des structs ne peuvent pas accéder aux membres d'instance de 'this'. Copiez 'this' dans une variable locale en dehors de la méthode anonyme, de l'expression lambda ou de l'expression de requête et utilisez la variable locale à la place.</value>
   </data>
+  <data name="ERR_AssignReadonlyNotField2" xml:space="preserve">
+    <value>Impossible d'effectuer l'assignation à un membre de {0} '{1}', car il s'agit d'une variable en lecture seule</value>
+  </data>
   <data name="ERR_InterfaceImplementedByConditional" xml:space="preserve">
     <value>Le membre conditionnel '{0}' ne peut pas implémenter le membre d'interface '{1}' dans le type '{2}'</value>
   </data>
@@ -441,7 +450,7 @@ Un bloc catch() après un bloc catch (System.Exception e) peut intercepter des e
     <value>La classe static '{0}' ne peut pas dériver du type '{1}'. Les classes static doivent dériver d'un objet.</value>
   </data>
   <data name="ERR_RefReturnReadonlyStatic2" xml:space="preserve">
-    <value>Impossible de retourner les champs du champ readonly statique '{0}' par référence</value>
+    <value>Impossible de retourner les champs du champ readonly statique '{0}' par référence accessible en écriture</value>
   </data>
   <data name="ERR_ForwardedTypeInThisAssembly" xml:space="preserve">
     <value>Le type '{0}' est défini dans cet assembly, mais un redirecteur de type est spécifié pour ce type</value>
@@ -468,7 +477,7 @@ Un bloc catch() après un bloc catch (System.Exception e) peut intercepter des e
     <value>'{0}' n'implémente pas le modèle '{1}'. '{2}' est ambigu avec '{3}'.</value>
   </data>
   <data name="ERR_BadCompatMode" xml:space="preserve">
-    <value>Option non valide '{0}' pour /langversion. Valeur attendue : ISO-1, ISO-2, Default, Latest ou un numéro de version valide compris entre 1 et 7.1.</value>
+    <value>Option non valide '{0}' pour /langversion. Utilisez '/langversion:?' pour lister les valeurs prises en charge.</value>
   </data>
   <data name="ERR_AliasQualifiedNameNotAnExpression" xml:space="preserve">
     <value>Un nom qualifié d'alias n'est pas une expression.</value>
@@ -713,11 +722,17 @@ Un bloc catch() après un bloc catch (System.Exception e) peut intercepter des e
   <data name="ERR_FloatOverflow" xml:space="preserve">
     <value>La constante à virgule flottante sort de la plage du type '{0}'</value>
   </data>
+  <data name="ERR_InvalidDebugInfo" xml:space="preserve">
+    <value>Impossible de lire les informations de débogage de la méthode '{0}' (jeton 0x{1:X8}) dans l'assembly '{2}'</value>
+  </data>
   <data name="ERR_EncodinglessSyntaxTree" xml:space="preserve">
     <value>Impossible d'émettre des informations de débogage pour un texte source sans encodage.</value>
   </data>
   <data name="ERR_BadResourceVis" xml:space="preserve">
     <value>Option non valide '{0}' ; la visibilité de la ressource doit être 'public' ou 'private'</value>
+  </data>
+  <data name="ERR_ExplicitReservedAttr" xml:space="preserve">
+    <value>Ne pas utiliser '{0}'. Ceci est réservé au compilateur.</value>
   </data>
   <data name="WRN_BadRestoreNumber_Title" xml:space="preserve">
     <value>Désolé... Nous ne pouvons pas restaurer les avertissements, car ils ont été désactivés de façon globale</value>
@@ -733,6 +748,9 @@ Un bloc catch() après un bloc catch (System.Exception e) peut intercepter des e
   </data>
   <data name="XML_EndTagExpected" xml:space="preserve">
     <value>Une balise de fin était attendue pour l'élément '{0}'.</value>
+  </data>
+  <data name="IDS_FeatureLeadingDigitSeparator" xml:space="preserve">
+    <value>séparateur numérique de début</value>
   </data>
   <data name="ERR_UnexpectedBoundGenericName" xml:space="preserve">
     <value>Les arguments de type ne sont pas autorisés dans l'opérateur nameof.</value>
@@ -851,6 +869,9 @@ Un bloc catch() après un bloc catch (System.Exception e) peut intercepter des e
   <data name="ERR_BadVisReturnType" xml:space="preserve">
     <value>Accessibilité incohérente : le type de retour '{1}' est moins accessible que la méthode '{0}'</value>
   </data>
+  <data name="ERR_FieldsInRoStruct" xml:space="preserve">
+    <value>Les champs d'instance de structs en lecture seule doivent être en lecture seule.</value>
+  </data>
   <data name="UseLiteralForTokens" xml:space="preserve">
     <value>Utilisez Microsoft.CodeAnalysis.CSharp.SyntaxFactory.Literal pour créer des jetons de littéral de caractère.</value>
   </data>
@@ -872,11 +893,14 @@ Un bloc catch() après un bloc catch (System.Exception e) peut intercepter des e
   <data name="ERR_GenericsUsedAcrossAssemblies" xml:space="preserve">
     <value>Impossible d'utiliser le type '{0}' de l'assembly '{1}' au-delà des limites de l'assembly, car il a un argument de type générique qui est un type interop incorporé.</value>
   </data>
+  <data name="WRN_UnreferencedLocalFunction" xml:space="preserve">
+    <value>La fonction locale '{0}' est déclarée, mais jamais utilisée</value>
+  </data>
   <data name="ERR_AsMustHaveReferenceType" xml:space="preserve">
     <value>L'opérateur as doit être utilisé avec un type référence ou un type Nullable ('{0}' est un type valeur qui n'autorise pas les valeurs null)</value>
   </data>
   <data name="ERR_AbstractNotVirtual" xml:space="preserve">
-    <value>La méthode abstraite '{0}' ne peut pas être marquée comme virtual</value>
+    <value>La {0} abstraite '{1}' ne peut pas être marquée comme étant virtual</value>
   </data>
   <data name="ERR_OperatorInStaticClass" xml:space="preserve">
     <value>'{0}' : les classes static ne peuvent pas contenir d'opérateurs définis par l'utilisateur</value>
@@ -1019,6 +1043,9 @@ Un bloc catch() après un bloc catch (System.Exception e) peut intercepter des e
   <data name="ERR_BadAwaitWithoutAsyncLambda" xml:space="preserve">
     <value>L'opérateur 'await' ne peut être utilisé que dans un {0} asynchrone. Marquez ce {0} avec le modificateur 'async'.</value>
   </data>
+  <data name="ERR_RefExtensionMustBeValueTypeOrConstrainedToOne" xml:space="preserve">
+    <value>Le premier paramètre d'une méthode d'extension 'ref' '{0}' doit être un type valeur ou un type générique limité à struct.</value>
+  </data>
   <data name="ChainingSpeculativeModelIsNotSupported" xml:space="preserve">
     <value>Le chaînage d'un modèle sémantique spéculatif n'est pas pris en charge. Vous devez créer un modèle spéculatif à partir du ParentModel non spéculatif.</value>
   </data>
@@ -1027,6 +1054,9 @@ Un bloc catch() après un bloc catch (System.Exception e) peut intercepter des e
   </data>
   <data name="WRN_FilterIsConstant" xml:space="preserve">
     <value>L'expression de filtre est une constante ; supprimez le filtre</value>
+  </data>
+  <data name="ERR_FeatureNotAvailableInVersion7_2" xml:space="preserve">
+    <value>La fonctionnalité '{0}' n'est pas disponible en C# 7.2. Utilisez la version de langage {1} ou une version ultérieure.</value>
   </data>
   <data name="ERR_FeatureNotAvailableInVersion7_1" xml:space="preserve">
     <value>La fonctionnalité '{0}' n'est pas disponible dans C# 7.1. Utilisez la version de langage {1} ou une version ultérieure.</value>
@@ -1109,6 +1139,9 @@ Supprimez l'avertissement seulement si vous êtes sûr de ne pas vouloir attendr
   <data name="WRN_NewNotRequired" xml:space="preserve">
     <value>Le membre '{0}' ne masque pas de membre accessible. Le mot clé new n'est pas nécessaire.</value>
   </data>
+  <data name="ERR_NamedArgumentSpecificationBeforeFixedArgumentInDynamicInvocation" xml:space="preserve">
+    <value>Les spécifications d'argument nommé doivent s'afficher après la spécification de tous les arguments fixes dans un appel dynamique.</value>
+  </data>
   <data name="WRN_BadWarningNumber_Description" xml:space="preserve">
     <value>Un numéro transmis à la directive de préprocesseur d'avertissement #pragma n'est pas correct. Veuillez vérifier que ce numéro représente un avertissement et non une erreur.</value>
   </data>
@@ -1127,11 +1160,14 @@ Supprimez l'avertissement seulement si vous êtes sûr de ne pas vouloir attendr
   <data name="ERR_ReferenceDirectiveOnlyAllowedInScripts" xml:space="preserve">
     <value>#r n'est autorisé que dans les scripts</value>
   </data>
+  <data name="ERR_DynamicLocalFunctionTypeParameter" xml:space="preserve">
+    <value>Impossible de passer un argument ayant un type dynamique à une fonction locale générique '{0}' avec des arguments de type déduits.</value>
+  </data>
   <data name="SyntaxTreeAlreadyPresent" xml:space="preserve">
     <value>Arborescence de syntaxe déjà présente</value>
   </data>
-  <data name="ERR_BadRefWithThis" xml:space="preserve">
-    <value> Le modificateur de paramètre 'ref' ne peut pas être utilisé avec 'this' </value>
+  <data name="ERR_BadParameterModifiersOrder" xml:space="preserve">
+    <value>Impossible d'utiliser le modificateur de paramètre '{0}' après le modificateur '{1}'</value>
   </data>
   <data name="ERR_InvalidOutputName" xml:space="preserve">
     <value>Nom de sortie non valide : {0}</value>
@@ -1220,6 +1256,9 @@ Supprimez l'avertissement seulement si vous êtes sûr de ne pas vouloir attendr
   <data name="ERR_ExternHasConstructorInitializer" xml:space="preserve">
     <value>'{0}' ne peut pas être externe et avoir un initialiseur de constructeur</value>
   </data>
+  <data name="IDS_StackAllocExpression" xml:space="preserve">
+    <value>stackalloc {0}[{1}]</value>
+  </data>
   <data name="ERR_AutoPropertyCannotBeRefReturning" xml:space="preserve">
     <value>Les propriétés implémentées automatiquement ne peuvent pas effectuer de retour par référence</value>
   </data>
@@ -1280,6 +1319,9 @@ Supprimez l'avertissement seulement si vous êtes sûr de ne pas vouloir attendr
   <data name="ERR_BadTypeforThis" xml:space="preserve">
     <value>Le premier paramètre d'une méthode d'extension ne peut pas être de type '{0}'</value>
   </data>
+  <data name="IDS_FeatureReadOnlyReferences" xml:space="preserve">
+    <value>références en lecture seule</value>
+  </data>
   <data name="ERR_BadSKunknown" xml:space="preserve">
     <value>'{0}' est un {1}, qui n'est pas valide dans le contexte donné</value>
   </data>
@@ -1322,8 +1364,14 @@ Supprimez l'avertissement seulement si vous êtes sûr de ne pas vouloir attendr
   <data name="ERR_AliasMissingFile" xml:space="preserve">
     <value>Option d'alias de référence non valide : '{0}=' -- nom de fichier manquant</value>
   </data>
+  <data name="ERR_FieldAutoPropCantBeByRefLike" xml:space="preserve">
+    <value>Le champ ou la propriété implémentée automatiquement ne peut pas être de type '{0}', sauf s'il s'agit d'un membre d'instance d'un struct par référence.</value>
+  </data>
+  <data name="ERR_BadNonTrailingNamedArgument" xml:space="preserve">
+    <value>L'argument nommé '{0}' est utilisé hors-position mais est suivi d'un argument sans nom</value>
+  </data>
   <data name="ERR_RefReturnReadonly2" xml:space="preserve">
-    <value>Impossible de retourner les membres du champ readonly '{0}' par référence</value>
+    <value>Impossible de retourner les membres du champ readonly '{0}' par référence accessible en écriture</value>
   </data>
   <data name="ERR_BadDynamicMethodArg" xml:space="preserve">
     <value>Impossible d'utiliser une expression de type '{0}' comme argument pour une opération distribuée dynamiquement.</value>
@@ -1347,7 +1395,7 @@ Supprimez l'avertissement seulement si vous êtes sûr de ne pas vouloir attendr
     <value>Un événement Windows Runtime ne peut pas être passé comme paramètre out ou ref.</value>
   </data>
   <data name="ERR_SpecialByRefInLambda" xml:space="preserve">
-    <value>Impossible d'utiliser une instance de type '{0}' dans une fonction anonyme , une expression de requête, un bloc itérateur ou une méthode async</value>
+    <value>Impossible d'utiliser une instance de type '{0}' dans une fonction imbriquée, une expression de requête, un bloc itérateur ou une méthode async</value>
   </data>
   <data name="ERR_CloseUnimplementedInterfaceMemberWrongReturnType" xml:space="preserve">
     <value>'{0}' n'implémente pas le membre d'interface '{1}'. '{2}' ne peut pas implémenter '{1}', car il ne possède pas le type de retour correspondant '{3}'.</value>
@@ -1421,6 +1469,9 @@ Supprimez l'avertissement seulement si vous êtes sûr de ne pas vouloir attendr
   <data name="WRN_RefCultureMismatch_Title" xml:space="preserve">
     <value>L'assembly référencé a un paramètre de culture différent</value>
   </data>
+  <data name="ERR_InExtensionMustBeValueType" xml:space="preserve">
+    <value>Le premier paramètre d'une méthode d'extension 'in' '{0}' doit être un type valeur.</value>
+  </data>
   <data name="ERR_NoConversionForNubDefaultParam" xml:space="preserve">
     <value>Impossible d'utiliser une valeur de type '{0}' comme paramètre par défaut pour le paramètre Nullable '{1}', car '{0}' n'est pas un type simple</value>
   </data>
@@ -1492,6 +1543,9 @@ Supprimez l'avertissement seulement si vous êtes sûr de ne pas vouloir attendr
   </data>
   <data name="ThisMethodCanOnlyBeUsedToCreateTokens" xml:space="preserve">
     <value>Cette méthode ne peut être utilisée que pour créer des jetons - {0} n'est pas un genre de jeton.</value>
+  </data>
+  <data name="ERR_OverloadRefKind" xml:space="preserve">
+    <value>'{0}' ne peut pas définir un {1} surchargé qui se différencie uniquement par les modificateurs de paramètres '{2}' et '{3}'</value>
   </data>
   <data name="ERR_NameNotInContextPossibleMissingReference" xml:space="preserve">
     <value>Le nom '{0}' n'existe pas dans le contexte actuel (vous manque-t-il une référence à l'assembly '{1}' ?)</value>
@@ -1686,9 +1740,6 @@ Pour supprimer l'avertissement, vous pouvez utiliser la commande /reference (dé
   <data name="ERR_IntegralTypeValueExpected" xml:space="preserve">
     <value>La valeur d'un type intégral est attendue</value>
   </data>
-  <data name="ERR_MultiParamMod" xml:space="preserve">
-    <value>Un paramètre ne peut pas avoir tous les modificateurs spécifiés ; il y a trop de modificateurs dans le paramètre</value>
-  </data>
   <data name="ERR_NotYetImplementedInRoslyn" xml:space="preserve">
     <value>Cette fonctionnalité de langage ('{0}') n'est pas encore implémentée.</value>
   </data>
@@ -1788,6 +1839,9 @@ Pour supprimer l'avertissement, vous pouvez utiliser la commande /reference (dé
   <data name="ERR_ClassDoesntImplementInterface" xml:space="preserve">
     <value>'{0}' : le type conteneur n'implémente pas l'interface '{1}'</value>
   </data>
+  <data name="ERR_RefStructInterfaceImpl" xml:space="preserve">
+    <value>'{0}' : les structs par référence ne peuvent pas implémenter d'interfaces</value>
+  </data>
   <data name="ERR_QueryNoProviderStandard" xml:space="preserve">
     <value>Impossible de trouver une implémentation du modèle de requête pour le type source '{0}'. '{1}' introuvable. Vous manque-t-il une référence à 'System.Core.dll' ou une directive using pour 'System.Linq' ?</value>
   </data>
@@ -1812,6 +1866,9 @@ Pour supprimer l'avertissement, vous pouvez utiliser la commande /reference (dé
   <data name="WRN_TooManyLinesForDebugger_Title" xml:space="preserve">
     <value>Le fichier source a dépassé la limite de 16 707 565 lignes pouvant être représentées dans le PDB ; les informations de débogage seront incorrectes</value>
   </data>
+  <data name="IDS_FeatureRefStructs" xml:space="preserve">
+    <value>structs par référence</value>
+  </data>
   <data name="ERR_AutoPropertyInitializerInInterface" xml:space="preserve">
     <value>Les propriétés implémentées automatiquement dans les interfaces ne peuvent pas avoir d'initialiseurs.</value>
   </data>
@@ -1828,7 +1885,7 @@ Pour supprimer l'avertissement, vous pouvez utiliser la commande /reference (dé
     <value>L'opérande d'un opérateur d'incrémentation ou de décrémentation doit être une variable, une propriété ou un indexeur</value>
   </data>
   <data name="ERR_CannotEmbedWithoutPdb" xml:space="preserve">
-    <value>Le commutateur /embed est uniquement pris en charge durant l'émission d'un fichier PDB portable (/debug:portable ou /debug:embedded).</value>
+    <value>Le commutateur /embed est uniquement pris en charge durant l'émission d'un fichier PDB.</value>
   </data>
   <data name="ERR_AbstractAndExtern" xml:space="preserve">
     <value>'{0}' ne peut pas être à la fois extern et abstract</value>
@@ -1865,6 +1922,9 @@ Pour supprimer l'avertissement, vous pouvez utiliser la commande /reference (dé
   </data>
   <data name="ERR_MustHaveRefReturn" xml:space="preserve">
     <value>Les retours par valeur ne peuvent être utilisés que dans les méthodes qui effectuent un retour par valeur</value>
+  </data>
+  <data name="ERR_EscapeStackAlloc" xml:space="preserve">
+    <value>Impossible d'utiliser un résultat d'une expression stackalloc de type '{0}' dans ce contexte, car il peut être exposé en dehors de la méthode conteneur</value>
   </data>
   <data name="ERR_InvalidFwdType" xml:space="preserve">
     <value>Type non valide spécifié comme argument pour l'attribut TypeForwardedTo</value>
@@ -2053,7 +2113,7 @@ Pour supprimer l'avertissement, vous pouvez utiliser la commande /reference (dé
     <value>La contrainte de type classe '{0}' doit précéder toute autre contrainte</value>
   </data>
   <data name="ERR_CantChangeRefReturnOnOverride" xml:space="preserve">
-    <value>'{0}' doit {2}effectuer un retour par référence pour correspondre au membre substitué '{1}'</value>
+    <value>'{0}' doit correspondre au retour par référence du membre substitué '{1}'</value>
   </data>
   <data name="WRN_CallerLineNumberPreferredOverCallerFilePath_Title" xml:space="preserve">
     <value>CallerFilePathAttribute n'aura pas d'effet ; il est remplacé par CallerLineNumberAttribute</value>
@@ -2070,6 +2130,12 @@ Pour supprimer l'avertissement, vous pouvez utiliser la commande /reference (dé
   <data name="ERR_TypeArgsNotAllowed" xml:space="preserve">
     <value>Impossible d'utiliser le {1} '{0}' avec des arguments de type</value>
   </data>
+  <data name="ERR_EscapeLocal" xml:space="preserve">
+    <value>Impossible d'utiliser un '{0}' local dans ce contexte, car il peut exposer des variables référencées en dehors de la portée de leur déclaration</value>
+  </data>
+  <data name="ERR_EscapeOther" xml:space="preserve">
+    <value>Impossible d'utiliser l'expression dans ce contexte, car elle peut exposer indirectement des variables en dehors de la portée de leur déclaration</value>
+  </data>
   <data name="ERR_PartialMethodOnlyOneLatent" xml:space="preserve">
     <value>Une méthode partielle ne peut pas avoir plusieurs déclarations de définition</value>
   </data>
@@ -2081,6 +2147,9 @@ Pour supprimer l'avertissement, vous pouvez utiliser la commande /reference (dé
   </data>
   <data name="ERR_BadAwaitArg" xml:space="preserve">
     <value>'await' nécessite que le type {0} ait une méthode GetAwaiter appropriée</value>
+  </data>
+  <data name="ERR_EscapeCall2" xml:space="preserve">
+    <value>Impossible d'utiliser un membre du résultat de '{0}' dans ce contexte, car il peut exposer les variables référencées par le paramètre '{1}' en dehors de la portée de leur déclaration</value>
   </data>
   <data name="ERR_MemberReserved" xml:space="preserve">
     <value>Le type '{1}' réserve déjà un membre appelé '{0}' avec les mêmes types de paramètre</value>
@@ -2178,6 +2247,9 @@ Pour supprimer l'avertissement, vous pouvez utiliser la commande /reference (dé
   <data name="WRN_NonObsoleteOverridingObsolete_Title" xml:space="preserve">
     <value>Un membre se substitue au membre obsolète</value>
   </data>
+  <data name="ERR_AssignReadonlyNotField" xml:space="preserve">
+    <value>Impossible d'effectuer l'assignation à {0} '{1}', car il s'agit d'une variable en lecture seule</value>
+  </data>
   <data name="ERR_BadAsyncLocalType" xml:space="preserve">
     <value>Les méthodes async ne peuvent pas avoir de variables locales par référence</value>
   </data>
@@ -2211,6 +2283,9 @@ Pour supprimer l'avertissement, vous pouvez utiliser la commande /reference (dé
   <data name="ERR_PatternIsSubsumed" xml:space="preserve">
     <value>Le switch case a déjà été pris en charge par un case antérieur.</value>
   </data>
+  <data name="ERR_EscapeCall" xml:space="preserve">
+    <value>Impossible d'utiliser un résultat de '{0}' dans ce contexte, car il peut exposer les variables référencées par le paramètre '{1}' en dehors de la portée de leur déclaration</value>
+  </data>
   <data name="ERR_ForwardedTypeIsNested" xml:space="preserve">
     <value>Impossible de transmettre le type '{0}', car il s'agit d'un type imbriqué de '{1}'</value>
   </data>
@@ -2234,6 +2309,9 @@ Pour supprimer l'avertissement, vous pouvez utiliser la commande /reference (dé
   </data>
   <data name="ERR_CantOverrideBogusMethod" xml:space="preserve">
     <value>'{0}' : impossible de substituer '{1}', car il n'est pas pris en charge par le langage</value>
+  </data>
+  <data name="ERR_BadParameterModifiers" xml:space="preserve">
+    <value> Impossible d'utiliser le modificateur de paramètre '{0}' avec '{1}'</value>
   </data>
   <data name="ERR_NonInvocableMemberCalled" xml:space="preserve">
     <value>Impossible d'utiliser un membre '{0}' ne pouvant pas être appelé comme une méthode.</value>
@@ -2367,6 +2445,9 @@ Pour supprimer l'avertissement, vous pouvez utiliser la commande /reference (dé
   <data name="ERR_BadEmptyThrow" xml:space="preserve">
     <value>Une instruction throw sans argument n'est pas autorisée à l'extérieur d'une clause catch</value>
   </data>
+  <data name="ERR_BadSpecialByRefIterator" xml:space="preserve">
+    <value>L'instruction foreach ne peut pas fonctionner sur les énumérateurs de type '{0}' dans les méthodes asynchrones ou les méthodes d'itérateurs, car '{0}' est un struct par référence.</value>
+  </data>
   <data name="WRN_UnreferencedEvent" xml:space="preserve">
     <value>L'événement '{0}' n'est jamais utilisé</value>
   </data>
@@ -2424,6 +2505,9 @@ Pour supprimer l'avertissement, vous pouvez utiliser la commande /reference (dé
   <data name="ERR_InvalidSpecifier" xml:space="preserve">
     <value>'{0}' n'est pas un spécificateur de format valide</value>
   </data>
+  <data name="ERR_RefConditionalAndAwait" xml:space="preserve">
+    <value>'await' ne peut pas être utilisé dans une expression contenant un opérateur conditionnel ref</value>
+  </data>
   <data name="ERR_DuplicateImportSimple" xml:space="preserve">
     <value>Un assembly avec le même nom simple '{0}' a déjà été importé. Essayez de supprimer une des références (par exemple, '{1}') ou signez-les pour permettre le côte à côte.</value>
   </data>
@@ -2466,6 +2550,9 @@ Pour supprimer l'avertissement, vous pouvez utiliser la commande /reference (dé
   <data name="ERR_ExternAliasNotAllowed" xml:space="preserve">
     <value>'extern alias' n'est pas valide dans ce contexte</value>
   </data>
+  <data name="ERR_RefConditionalNeedsTwoRefs" xml:space="preserve">
+    <value>Les deux valeurs d'opérateur conditionnel doivent être des valeurs ref. Sinon, aucune d'elles ne doit être une valeur ref</value>
+  </data>
   <data name="ERR_NoPIANestedType" xml:space="preserve">
     <value>Impossible d'incorporer le type '{0}', car il s'agit d'un type imbriqué. Attribuez à la propriété 'Incorporer les types interop' la valeur false.</value>
   </data>
@@ -2483,9 +2570,6 @@ Pour supprimer l'avertissement, vous pouvez utiliser la commande /reference (dé
   </data>
   <data name="IDS_XMLNOINCLUDE" xml:space="preserve">
     <value> Aucun élément correspondant n'a été trouvé pour la balise include suivante </value>
-  </data>
-  <data name="ERR_FeatureIsExperimental" xml:space="preserve">
-    <value>La fonctionnalité '{0}' est expérimentale et non prise en charge. Utilisez '/features:{1}' pour l'activer.</value>
   </data>
   <data name="WRN_EqualsWithoutGetHashCode_Title" xml:space="preserve">
     <value>Le type se substitue à Object.Equals(object o) mais pas à Object.GetHashCode()</value>
@@ -2558,6 +2642,9 @@ Pour supprimer l'avertissement, vous pouvez utiliser la commande /reference (dé
   </data>
   <data name="WRN_AttributeIgnoredWhenPublicSigning_Title" xml:space="preserve">
     <value>L'attribut est ignoré quand une signature publique est spécifiée.</value>
+  </data>
+  <data name="ERR_TypeReserved" xml:space="preserve">
+    <value>L'utilisation du nom de type '{0}' est réservée au compilateur.</value>
   </data>
   <data name="ERR_QueryInnerKey" xml:space="preserve">
     <value>Le nom '{0}' n'est pas dans la portée à droite de 'equals'. Échangez les expressions de chaque côté de 'equals'.</value>
@@ -2740,6 +2827,9 @@ Permettez au compilateur de différencier les méthodes. Par exemple, vous pouve
   <data name="ERR_BadAttributeArgument" xml:space="preserve">
     <value>Un argument d'attribut doit être une expression constante, une expression typeof ou une expression de création de tableau d'un type de paramètre d'attribut</value>
   </data>
+  <data name="IDS_FeatureReadOnlyStructs" xml:space="preserve">
+    <value>structs en lecture seule</value>
+  </data>
   <data name="IDS_ThrowExpression" xml:space="preserve">
     <value>&lt;expression throw&gt;</value>
   </data>
@@ -2884,6 +2974,9 @@ Permettez au compilateur de différencier les méthodes. Par exemple, vous pouve
   <data name="ERR_ReadonlyValueTypeInObjectInitializer" xml:space="preserve">
     <value>Les membres du champ readonly '{0}' de type '{1}' ne peuvent pas être assignés avec un initialiseur d'objet, car il s'agit d'un type valeur</value>
   </data>
+  <data name="ERR_FieldlikeEventsInRoStruct" xml:space="preserve">
+    <value>Les événements comparables à des champs ne sont pas autorisés dans les structs en lecture seule.</value>
+  </data>
   <data name="ERR_BadAsyncLacksBody" xml:space="preserve">
     <value>Le modificateur 'async' ne peut être utilisé que dans des méthodes ayant un corps.</value>
   </data>
@@ -2930,7 +3023,7 @@ Permettez au compilateur de différencier les méthodes. Par exemple, vous pouve
     <value>Un initialiseur de tableau de longueur '{0}' est attendu</value>
   </data>
   <data name="ERR_RefReturnReadonly" xml:space="preserve">
-    <value>Impossible de retourner un champ readonly par référence</value>
+    <value>Impossible de retourner un champ readonly par référence accessible en écriture</value>
   </data>
   <data name="ERR_V6SwitchGoverningTypeValueExpected" xml:space="preserve">
     <value>Une expression switch ou une étiquette case doit être de type bool, char, string, integral, enum ou Nullable correspondant en C# 6 et dans les versions antérieures.</value>
@@ -2964,9 +3057,6 @@ Permettez au compilateur de différencier les méthodes. Par exemple, vous pouve
   </data>
   <data name="ERR_AnonymousTypePropertyAssignedBadValue" xml:space="preserve">
     <value>Impossible d'assigner '{0}' à une propriété de type anonyme</value>
-  </data>
-  <data name="ERR_OverloadRefOutCtor" xml:space="preserve">
-    <value>Impossible de définir le constructeur surchargé '{0}', car il ne se différencie d'un autre constructeur qu'au niveau des paramètres ref et out</value>
   </data>
   <data name="ERR_CantOpenFileWrite" xml:space="preserve">
     <value>Impossible d'ouvrir '{0}' en écriture -- '{1}'</value>
@@ -3021,9 +3111,6 @@ Permettez au compilateur de différencier les méthodes. Par exemple, vous pouve
   </data>
   <data name="ERR_ConstValueRequired" xml:space="preserve">
     <value>Un champ const nécessite une valeur</value>
-  </data>
-  <data name="ERR_RefReturnReceiver" xml:space="preserve">
-    <value>Impossible de retourner '{0}' par référence, car son récepteur ne peut pas être retourné par référence</value>
   </data>
   <data name="WRN_BadRestoreNumber" xml:space="preserve">
     <value>Impossible de restaurer un avertissement 'CS{0}', car il a été désactivé globalement</value>
@@ -3111,8 +3198,8 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   <data name="ERR_AmbigMember" xml:space="preserve">
     <value>Ambiguïté entre '{0}' et '{1}'</value>
   </data>
-  <data name="ERR_PartialMethodOnlyMethods" xml:space="preserve">
-    <value>Seules les méthodes, classes, structs ou interfaces peuvent être partielles</value>
+  <data name="WRN_UnreferencedLocalFunction_Title" xml:space="preserve">
+    <value>La fonction locale est déclarée mais jamais utilisée</value>
   </data>
   <data name="ERR_MissingGuidForOption" xml:space="preserve">
     <value>Erreur de syntaxe de ligne de commande : Guid manquant pour l'option '{1}'</value>
@@ -3251,7 +3338,7 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
                                le fichier .dll ou .exe cible)
  /optimize[+|-]                Activer les optimisations (forme abrégée : /o)
  /deterministic                Produire un assembly déterministe
-                               (en incluant le GUID et l'horodateur de la version du module)
+                               (en incluant le GUID et l'horodatage de la version du module)
  /refonly                      Produire un assembly de référence à la place de la sortie principale
  /instrument:TestCoverage      Produire un assembly instrumenté pour collecter
                                les informations de couverture
@@ -3266,7 +3353,7 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
                                diagnostics spécifiques.
  /errorlog:&lt;fichier&gt;           Spécifier un fichier pour journaliser tous les diagnostics du compilateur
                                et de l'analyseur.
- /reportanalyzer               Indiquer des informations supplémentaires sur l'analyseur, comme
+ /reportanalyzer               Signaler des informations supplémentaires sur l'analyseur, comme
                                la durée d'exécution.
 
                         - LANGAGE -
@@ -3274,8 +3361,11 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
  /unsafe[+|-]                  Autoriser du code 'unsafe'
  /define:&lt;liste_symboles&gt;      Définir les symboles de compilation conditionnelle (forme
                                abrégée : /d)
- /langversion:&lt;chaîne&gt;         Spécifier le mode de version de langage : ISO-1, ISO-2, 3,
-                               4, 5, 6, 7, 7.1, Default ou Latest
+ /langversion:?                Afficher les valeurs autorisées pour la version du langage
+ /langversion:&lt;chaîne&gt;         Spécifier la version du langage, par exemple
+                               'default' (dernière version principale) ou
+                               'latest' (dernière version, en incluant les versions mineures),
+                               ou des versions spécifiques comme '6' ou '7.1'
 
                         - SÉCURITÉ -
  /delaysign[+|-]               Différer la signature de l'assembly en utilisant uniquement
@@ -3318,9 +3408,9 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
  /preferreduilang              Spécifier le nom du langage de sortie préféré.
  /nostdlib[+|-]                Ne pas référencer la bibliothèque standard (mscorlib.dll)
  /subsystemversion:&lt;chaîne&gt;    Spécifier la version du sous-système de cet assembly
- /lib:&lt;liste fichiers&gt;         Spécifier des répertoires supplémentaires dans lesquels rechercher les
+ /lib:&lt;liste_fichiers&gt;         Spécifier des répertoires supplémentaires dans lesquels rechercher les
                                références
- /errorreport:&lt;chaîne&gt;         Spécifier comment gérer les erreurs internes du compilateur :
+ /errorreport:&lt;chaîne&gt;         Spécifier comment prendre en charge les erreurs internes du compilateur :
                                prompt, send, queue ou none. La valeur par défaut est
                                queue.
  /appconfig:&lt;fichier&gt;          Spécifier un fichier de configuration de l'application
@@ -3345,9 +3435,6 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   <data name="ERR_InvalidSignaturePublicKey" xml:space="preserve">
     <value>Une clé publique de signature non valide a été spécifiée dans AssemblySignatureKeyAttribute.</value>
   </data>
-  <data name="ERR_OverloadRefOut" xml:space="preserve">
-    <value>'{0}' ne peut pas définir de méthodes surchargées qui se différencient uniquement au niveau des paramètres ref et out</value>
-  </data>
   <data name="WRN_TupleLiteralNameMismatch" xml:space="preserve">
     <value>Le nom d'élément tuple '{0}' est ignoré, car un autre nom est spécifié ou aucun nom n'est spécifié par le type cible '{1}'.</value>
   </data>
@@ -3362,9 +3449,6 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   </data>
   <data name="ERR_AmbigContext" xml:space="preserve">
     <value>'{0}' est une référence ambiguë entre '{1}' et '{2}'</value>
-  </data>
-  <data name="ERR_ParamsCantBeRefOut" xml:space="preserve">
-    <value>Le paramètres params ne peut pas être déclaré comme ref ou out</value>
   </data>
   <data name="WRN_CmdOptionConflictsSource_Title" xml:space="preserve">
     <value>L'option se substitue à l'attribut spécifié dans un fichier source ou un module ajouté</value>
@@ -3426,9 +3510,6 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   <data name="ERR_NoDynamicPhantomOnBaseCtor" xml:space="preserve">
     <value>L'appel du constructeur doit être distribué dynamiquement, mais ne peut pas l'être car il fait partie d'un initialiseur de constructeur. Effectuez un cast des arguments dynamiques.</value>
   </data>
-  <data name="ERR_RefReturnCall2" xml:space="preserve">
-    <value>Impossible d'effectuer un retour par référence d'un membre du résultat de '{0}', car l'argument passé au paramètre '{1}' ne peut pas être retourné par référence</value>
-  </data>
   <data name="ERR_TypeInferenceFailedForImplicitlyTypedOutVariable" xml:space="preserve">
     <value>Impossible de déduire le type de variable de sortie implicitement typée. '{0}'.</value>
   </data>
@@ -3440,6 +3521,9 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   </data>
   <data name="ERR_ImplicitlyTypedVariableMultipleDeclarator" xml:space="preserve">
     <value>Les variables implicitement typées ne peuvent pas avoir plusieurs déclarateurs</value>
+  </data>
+  <data name="ERR_RefReturnReadonlyNotField" xml:space="preserve">
+    <value>Impossible de retourner {0} '{1}' par référence accessible en écriture, car il s'agit d'une variable en lecture seule</value>
   </data>
   <data name="ERR_NamespaceUnexpected" xml:space="preserve">
     <value>Un espace de noms ne peut pas contenir directement des membres tels que des champs ou des méthodes</value>
@@ -3603,9 +3687,6 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   <data name="ERR_InvalidAssemblyCulture" xml:space="preserve">
     <value>Les chaînes de culture d'assembly ne peuvent pas contenir de caractères null incorporés.</value>
   </data>
-  <data name="ERR_AddrOnReadOnlyLocal" xml:space="preserve">
-    <value>Impossible de prendre l'adresse d'une variable locale en lecture seule</value>
-  </data>
   <data name="ERR_PatternNullableType" xml:space="preserve">
     <value>Il n'est pas correct d'utiliser le type Nullable '{0}' dans un modèle. Utilisez le type sous-jacent '{1}' à la place.</value>
   </data>
@@ -3637,7 +3718,7 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
     <value>Impossible d'appliquer CallerMemberNameAttribute, car il n'existe pas de conversion standard du type '{0}' en type '{1}'</value>
   </data>
   <data name="ERR_RefReturnParameter2" xml:space="preserve">
-    <value>Impossible de retourner un membre du paramètre '{0}' par référence, car il ne s'agit pas d'un paramètre ref ou out</value>
+    <value>Impossible de retourner par référence un membre du paramètre '{0}', car il ne s'agit pas d'un paramètre ref ou out</value>
   </data>
   <data name="IDS_RELATEDERROR" xml:space="preserve">
     <value>(Emplacement du symbole par rapport à l'erreur précédente)</value>
@@ -3660,8 +3741,8 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   <data name="WRN_InvalidSearchPathDir_Title" xml:space="preserve">
     <value>Le chemin de recherche spécifié n'est pas correct</value>
   </data>
-  <data name="ERR_RefReturnCall" xml:space="preserve">
-    <value>Impossible d'effectuer un retour par référence d'un résultat de '{0}', car l'argument passé au paramètre '{1}' ne peut pas être retourné par référence</value>
+  <data name="ERR_RefReturnThis" xml:space="preserve">
+    <value>Impossible de retourner 'this' par référence.</value>
   </data>
   <data name="ERR_NoCanonicalView" xml:space="preserve">
     <value>Le type interop qui correspond au type interop incorporé '{0}' est introuvable. Vous manque-t-il une référence d'assembly ?</value>
@@ -3682,7 +3763,7 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
     <value>Impossible de retourner un paramètre '{0}' par référence, car il ne s'agit pas d'un paramètre ref ou out</value>
   </data>
   <data name="ERR_NoNamespacePrivate" xml:space="preserve">
-    <value>Les éléments définis dans un espace de noms ne peuvent pas être explicitement déclarés comme private, protected ou protected internal</value>
+    <value>Les éléments définis dans un espace de noms ne peuvent pas être explicitement déclarés comme private, protected ou protected internal ou private protected</value>
   </data>
   <data name="ERR_AssemblyNameOnNonModule" xml:space="preserve">
     <value>L'option /moduleassemblyname ne peut être spécifiée que lors de la génération d'un type cible de 'module'</value>
@@ -3718,7 +3799,7 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
     <value>'{0}' n'est pas un type référence requis par l'instruction lock</value>
   </data>
   <data name="ERR_RefReturnReadonlyStatic" xml:space="preserve">
-    <value>Impossible de retourner un champ readonly statique par référence</value>
+    <value>Impossible de retourner un champ readonly statique par référence accessible en écriture</value>
   </data>
   <data name="WRN_CLS_BadInterfaceMember_Title" xml:space="preserve">
     <value>Les interfaces conformes CLS doivent uniquement avoir des membres conformes CLS</value>
@@ -3782,6 +3863,9 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   </data>
   <data name="ERR_PropertyLacksGet" xml:space="preserve">
     <value>Impossible d'utiliser la propriété ou l'indexeur '{0}' dans ce contexte, car il lui manque l'accesseur get</value>
+  </data>
+  <data name="ERR_AutoPropsInRoStruct" xml:space="preserve">
+    <value>Les propriétés d'instance implémentées automatiquement dans les structs en lecture seule doivent être en lecture seule.</value>
   </data>
   <data name="ERR_LanguageVersionCannotHaveLeadingZeroes" xml:space="preserve">
     <value>La version de langage spécifiée '{0}' ne peut pas avoir de zéros non significatifs</value>
@@ -3852,6 +3936,9 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   <data name="WRN_EqualityOpWithoutGetHashCode" xml:space="preserve">
     <value>'{0}' définit l'opérateur == ou l'opérateur != mais ne se substitue pas à Object.GetHashCode()</value>
   </data>
+  <data name="IDS_LangVersions" xml:space="preserve">
+    <value>Versions de langage prises en charge :</value>
+  </data>
   <data name="ERR_BadBinaryOperatorSignature" xml:space="preserve">
     <value>Un des paramètres d'un opérateur binaire doit être le type conteneur</value>
   </data>
@@ -3917,6 +4004,9 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   </data>
   <data name="ERR_UnexpectedSemicolon" xml:space="preserve">
     <value>Point-virgule non valide après un bloc de méthode ou d'accesseur</value>
+  </data>
+  <data name="ERR_RefReadonlyNotField2" xml:space="preserve">
+    <value>Impossible d'utiliser les membres de {0} '{1}' en tant que valeur ref ou out, car il s'agit d'une variable en lecture seule</value>
   </data>
   <data name="ERR_LocalTypeNameClash" xml:space="preserve">
     <value>L'incorporation du type interop '{0}' de l'assembly '{1}' entraîne un conflit de noms dans l'assembly actuel. Attribuez à la propriété 'Incorporer les types interop' la valeur false.</value>
@@ -4020,6 +4110,9 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   <data name="ERR_ArrayOfStaticClass" xml:space="preserve">
     <value>'{0}' : les éléments de tableau ne peuvent pas être de type static</value>
   </data>
+  <data name="IDS_SK_CONSTRUCTOR" xml:space="preserve">
+    <value>constructeur</value>
+  </data>
   <data name="ERR_InvalidQM" xml:space="preserve">
     <value>Impossible de déterminer le type d'expression conditionnelle, car il n'existe pas de conversion implicite entre '{0}' et '{1}'</value>
   </data>
@@ -4031,6 +4124,9 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   </data>
   <data name="ERR_InaccessibleSetter" xml:space="preserve">
     <value>Impossible d'utiliser la propriété ou l'indexeur '{0}' dans ce contexte, car l'accesseur set n'est pas accessible</value>
+  </data>
+  <data name="IConversionExpressionIsNotCSharpConversion" xml:space="preserve">
+    <value>{0} n'est pas une expression de conversion C# valide</value>
   </data>
   <data name="ERR_NamedArgumentUsedInPositional" xml:space="preserve">
     <value>L'argument nommé '{0}' spécifie un paramètre pour lequel un paramètre positionnel a déjà été donné</value>
@@ -4174,7 +4270,7 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
     <value>L'objet '{0}' peut être supprimé plusieurs fois.</value>
   </data>
   <data name="ERR_CloseUnimplementedInterfaceMemberWrongRefReturn" xml:space="preserve">
-    <value>'{0}' n'implémente pas le membre d'interface '{1}'. '{2}' ne peut pas implémenter '{1}', car il n'effectue pas de retour par {3}</value>
+    <value>'{0}' n'implémente pas le membre d'interface '{1}'. '{2}' ne peut pas implémenter '{1}', car il n'a pas de retour par référence correspondant.</value>
   </data>
   <data name="ERR_FixedNeedsLvalue" xml:space="preserve">
     <value>Les mémoires tampons de taille fixe ne sont accessibles que via des variables locales ou des champs</value>
@@ -4315,7 +4411,7 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
     <value>Le paramètre de type '{1}' a la contrainte 'struct', donc '{1}' ne peut pas être utilisé comme contrainte pour '{0}'</value>
   </data>
   <data name="ERR_PredefinedValueTupleTypeNotFound" xml:space="preserve">
-    <value>Le type prédéfini '{0}' n'est pas défini ou importé</value>
+    <value>Le type prédéfini '{0}' n'est pas défini ou importé, ou il est déclaré dans plusieurs assemblys référencés</value>
   </data>
   <data name="TypeArgumentCannotBeNull" xml:space="preserve">
     <value>L'argument de type ne peut pas avoir la valeur null</value>
@@ -4376,6 +4472,9 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   </data>
   <data name="ERR_BadCastInFixed" xml:space="preserve">
     <value>La partie droite d'une assignation d'instruction fixed peut ne pas être une expression de cast</value>
+  </data>
+  <data name="IDS_FeatureRefExtensionMethods" xml:space="preserve">
+    <value>méthodes d'extension par référence</value>
   </data>
   <data name="ERR_AssgReadonly2" xml:space="preserve">
     <value>Impossible de modifier les membres d'un champ readonly '{0}' (sauf s'ils appartiennent à un constructeur ou un initialiseur de variable)</value>
@@ -4473,6 +4572,9 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   <data name="ERR_ComRefCallInExpressionTree" xml:space="preserve">
     <value>Une arborescence d'expression lambda ne peut pas contenir un appel COM avec des arguments où ref a été omis</value>
   </data>
+  <data name="ERR_ParamsCantBeWithModifier" xml:space="preserve">
+    <value>Impossible de déclarer le paramètre params en tant que {0}</value>
+  </data>
   <data name="ERR_BadForeachDecl" xml:space="preserve">
     <value>Le type et l'identificateur sont tous deux requis dans une instruction foreach</value>
   </data>
@@ -4480,7 +4582,7 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
     <value>Argument {0} : conversion impossible de '{1}' en '{2}'</value>
   </data>
   <data name="ERR_NamedArgumentSpecificationBeforeFixedArgument" xml:space="preserve">
-    <value>Les spécifications d'argument nommé doivent s'afficher après la spécification de tous les arguments fixes</value>
+    <value>Les spécifications d'argument nommé doivent s'afficher après la spécification de tous les arguments fixes. Utilisez la version de langage {0} ou une version ultérieure pour autoriser les arguments nommés non placés en position de fin.</value>
   </data>
   <data name="ERR_ImplBadConstraints" xml:space="preserve">
     <value>Les contraintes pour le paramètre de type '{0}' de la méthode '{1}' doivent correspondre aux contraintes pour le paramètre de type '{2}' de la méthode d'interface '{3}'. Utilisez plutôt une implémentation d'interface explicite.</value>
@@ -4502,6 +4604,9 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   </data>
   <data name="ERR_UnexpectedToken" xml:space="preserve">
     <value>Jeton inattendu '{0}'</value>
+  </data>
+  <data name="ERR_RefConditionalDifferentTypes" xml:space="preserve">
+    <value>L'expression doit être de type '{0}' pour correspondre à la valeur ref de remplacement</value>
   </data>
   <data name="ERR_CantDeriveFromSealedType" xml:space="preserve">
     <value>'{0}' : dérivation du type sealed '{1}' impossible</value>
@@ -4590,6 +4695,9 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   <data name="ERR_IllegalFixedType" xml:space="preserve">
     <value>Le type de mémoire tampon de taille fixe doit être : bool, byte, short, int, long, char, sbyte, ushort, uint, ulong, float ou double</value>
   </data>
+  <data name="ERR_CallArgMixing" xml:space="preserve">
+    <value>Cette combinaison d'arguments pour '{0}' n'est pas autorisée, car elle peut exposer les variables référencées par le paramètre '{1}' en dehors de la portée de leur déclaration</value>
+  </data>
   <data name="ERR_ConstOutOfRange" xml:space="preserve">
     <value>Impossible de convertir la valeur de constante '{0}' en '{1}'</value>
   </data>
@@ -4642,7 +4750,7 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
     <value>La fonctionnalité '{0}' n'est pas disponible en C# 6. Utilisez la version de langage {1} ou une version ultérieure.</value>
   </data>
   <data name="ERR_FeatureNotAvailableInVersion7" xml:space="preserve">
-    <value>La fonctionnalité '{0}' n'est pas disponible en C# 7. Utilisez la version de langage {1} ou une version ultérieure.</value>
+    <value>La fonctionnalité '{0}' n'est pas disponible en C# 7.0. Utilisez la version de langage {1} ou une version ultérieure.</value>
   </data>
   <data name="ERR_FeatureNotAvailableInVersion4" xml:space="preserve">
     <value>La fonctionnalité '{0}' n'est pas disponible en C# 4. Utilisez la version de langage {1} ou une version ultérieure.</value>
@@ -4730,6 +4838,9 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   </data>
   <data name="ERR_SubexpressionNotInNameof" xml:space="preserve">
     <value>Une sous-expression ne peut pas être utilisée dans un argument de nameof.</value>
+  </data>
+  <data name="ERR_MismatchedRefEscapeInTernary" xml:space="preserve">
+    <value>Les branches d'un opérateur ternaire ref ne peuvent pas faire référence à des variables ayant des portées de déclaration incompatibles</value>
   </data>
   <data name="ERR_FixedDimsRequired" xml:space="preserve">
     <value>Un champ de mémoire tampon de taille fixe doit utiliser le spécificateur de la taille du tableau après le nom du champ</value>
@@ -4883,6 +4994,9 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   </data>
   <data name="ERR_PatternDynamicType" xml:space="preserve">
     <value>Vous ne devez pas utiliser le type 'dynamic' dans un modèle.</value>
+  </data>
+  <data name="ERR_RefReadonlyNotField" xml:space="preserve">
+    <value>Impossible d'utiliser {0} '{1}' en tant que valeur ref ou out, car il s'agit d'une variable en lecture seule</value>
   </data>
   <data name="ERR_CallingFinalizeDeprecated" xml:space="preserve">
     <value>Impossible d'appeler directement des destructeurs et object.Finalize. Appelez IDisposable.Dispose s'il est disponible.</value>
@@ -5060,6 +5174,9 @@ Si une telle classe est utilisée en tant que classe de base et si la classe dé
   </data>
   <data name="IDS_FeatureExpressionBodiedIndexer" xml:space="preserve">
     <value>indexeur expression-bodied</value>
+  </data>
+  <data name="ERR_LocalFunctionMissingBody" xml:space="preserve">
+    <value>'{0}' est une fonction locale et doit donc toujours avoir un corps.</value>
   </data>
   <data name="ERR_DeriveFromDynamic" xml:space="preserve">
     <value>'{0}' : dérivation impossible du type dynamic</value>

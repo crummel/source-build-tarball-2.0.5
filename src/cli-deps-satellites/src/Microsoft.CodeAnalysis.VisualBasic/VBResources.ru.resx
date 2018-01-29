@@ -231,6 +231,9 @@
   <data name="ERR_GotoIntoFor" xml:space="preserve">
     <value>Недопустимый оператор "GoTo {0}", поскольку "{0}" находится в теле оператора ''For" или "For Each", не содержащего данный оператор.</value>
   </data>
+  <data name="IArgumentIsNotVisualBasicArgument" xml:space="preserve">
+    <value>{0} не является допустимым аргументом Visual Basic</value>
+  </data>
   <data name="WRN_DefAsgUseNullRefStr_Title" xml:space="preserve">
     <value>Переменная используется до того, как ей было назначено значение</value>
   </data>
@@ -447,7 +450,7 @@
     <value>Ссылка сборки "{0}" является недопустимой и не может быть разрешена.</value>
   </data>
   <data name="ERR_DuplicateAccessCategoryUsed" xml:space="preserve">
-    <value>Можно указать только один из модификаторов: "Public", "Private", "Protected", "Friend" или "Protected Friend".</value>
+    <value>Можно указать только один из модификаторов: "Public", "Private", "Protected", "Friend", "Protected Friend" или "Private Protected".</value>
   </data>
   <data name="WRN_LambdaPassedToRemoveHandler_Title" xml:space="preserve">
     <value>Лямбда-выражение не будет удалено из этого обработчика событий</value>
@@ -717,6 +720,9 @@
   <data name="ERR_PropertyNameConflictInMyCollection" xml:space="preserve">
     <value>"{0}" имеет то же имя, что и член, используемый для типа "{1}" в группе "My". Переименуйте тип или его вложенное пространство имен.</value>
   </data>
+  <data name="ERR_ExpectedNamedArgumentInAttributeList" xml:space="preserve">
+    <value>Ожидается именованный аргумент.</value>
+  </data>
   <data name="ERR_NameNotEvent2" xml:space="preserve">
     <value>"{0}" не является событием "{1}".</value>
   </data>
@@ -752,6 +758,9 @@
   </data>
   <data name="ERR_VarianceOutParamDisallowed1" xml:space="preserve">
     <value>Тип "{0}" не может использоваться в этом контексте, так как "{0}" является параметром "Out".</value>
+  </data>
+  <data name="ERR_InvalidDebugInfo" xml:space="preserve">
+    <value>Не удается считать сведения об отладке метода "{0}" (маркер 0x{1}) из сборки "{2}".</value>
   </data>
   <data name="ERR_DefaultMissingFromProperty2" xml:space="preserve">
     <value>"{0}" и "{1}" не могут перегружать друг друга, т. к. только один из них объявлен как "Default".</value>
@@ -800,6 +809,9 @@
   </data>
   <data name="ERR_QueryOperatorNotFound" xml:space="preserve">
     <value>Определение метода "{0}" недоступно в этом контексте.</value>
+  </data>
+  <data name="IConversionExpressionIsNotVisualBasicConversion" xml:space="preserve">
+    <value>{0} не является допустимым выражением преобразования Visual Basic</value>
   </data>
   <data name="ERR_InaccessibleMember3" xml:space="preserve">
     <value>"{0}.{1}" в этом контексте недоступен, так как он является "{2}".</value>
@@ -946,6 +958,9 @@
   </data>
   <data name="WRN_IfTooManyTypesObjectAssumed" xml:space="preserve">
     <value>Не удается получить общий тип, так как возможно больше одного типа: предполагается "Object".</value>
+  </data>
+  <data name="FEATURE_LeadingDigitSeparator" xml:space="preserve">
+    <value>разделитель начальных цифр</value>
   </data>
   <data name="ERR_ExpectedStringLiteral" xml:space="preserve">
     <value>Ожидалась строковая константа.</value>
@@ -1446,6 +1461,9 @@
   <data name="ERR_RedimNoSizes" xml:space="preserve">
     <value>В операторе "ReDim" требуется задать в скобках список новых границ для каждого измерения массива.</value>
   </data>
+  <data name="ERR_BadNonTrailingNamedArgument" xml:space="preserve">
+    <value>Именованный аргумент "{0}" используется не на своем месте, но за ним следует неименованный аргумент</value>
+  </data>
   <data name="ERR_InvalidAttributeUsageOnAccessor" xml:space="preserve">
     <value>Атрибут "{0}" не может использоваться для "{1}" из "{2}", поскольку данный атрибут не допускается для этого типа объявления.</value>
   </data>
@@ -1912,7 +1930,7 @@
     <value>Оператору "End Set" должен предшествовать соответствующий оператор "Set".</value>
   </data>
   <data name="ERR_CannotEmbedWithoutPdb" xml:space="preserve">
-    <value>Параметр /embed поддерживается только при создании файлов Portable PDB (/debug:portable или /debug:embedded).</value>
+    <value>Параметр /embed поддерживается только при создании PDB-файла.</value>
   </data>
   <data name="WRN_VarianceDeclarationAmbiguous3" xml:space="preserve">
     <value>Интерфейс "{0}" неоднозначен с другим реализованным интерфейсом "{1}" из-за параметров "In" и "Out" в "{2}".</value>
@@ -2221,6 +2239,9 @@
   </data>
   <data name="ERR_InvInsideInterface" xml:space="preserve">
     <value>Оператор не может присутствовать в теле интерфейса.</value>
+  </data>
+  <data name="ERR_NamedArgumentSpecificationBeforeFixedArgumentInLateboundInvocation" xml:space="preserve">
+    <value>Спецификации именованных аргументов должны создаваться после всех указанных фиксированных аргументов в вызове с поздним связыванием.</value>
   </data>
   <data name="ERR_NamedParamNotFound1" xml:space="preserve">
     <value>"{0}" не является параметром метода.</value>
@@ -2533,6 +2554,9 @@
   </data>
   <data name="ERR_ContinueWhileNotWithinWhile" xml:space="preserve">
     <value>"Continue While" может присутствовать только в операторе "While".</value>
+  </data>
+  <data name="FEATURE_PrivateProtected" xml:space="preserve">
+    <value>Частный защищенный</value>
   </data>
   <data name="ERR_TooManyArgs2" xml:space="preserve">
     <value>Слишком много аргументов в методе расширения "{0}", определенном в "{1}".</value>
@@ -3955,7 +3979,7 @@
     <value>Метод не может одновременно иметь параметры ParamArray и Optional.</value>
   </data>
   <data name="ERR_StructureCantUseProtected" xml:space="preserve">
-    <value>Метод в структуре нельзя объявлять как "Protected" или "Protected Friend".</value>
+    <value>Метод в структуре нельзя объявлять как "Protected", "Protected Friend" или "Private Protected".</value>
   </data>
   <data name="WRN_QueryMissingAsClauseinVarDecl" xml:space="preserve">
     <value>Предполагается, что переменная диапазона является типом Object, так как этот тип не может быть определен. Используйте предложение "As", чтобы указать другой тип.</value>
@@ -3965,6 +3989,9 @@
   </data>
   <data name="ERR_PartialTypeBadMustInherit1" xml:space="preserve">
     <value>"MustInherit" не может быть указан для разделяемого типа "{0}", так как не может быть объединен с "NotInheritable", указанным для одного из других разделяемых типов.</value>
+  </data>
+  <data name="IDS_LangVersions" xml:space="preserve">
+    <value>Поддерживаемые языковые версии:</value>
   </data>
   <data name="ERR_RemoveParamWrongForWinRT" xml:space="preserve">
     <value>В событии среды выполнения Windows тип параметра метода "RemoveHandler" должен иметь значение "EventRegistrationToken"</value>
@@ -4340,6 +4367,7 @@
 /target:winmdobj                  Создать промежуточный файл метаданных Windows
 /doc[+|-]                         Создает XML-файл документации.
 /doc:&lt;файл&gt;                       Создает XML-файл документации &lt;файл&gt;.
+/refout:&lt;файл&gt;                    Выходные данные создаваемой базовой сборки
 
                                   - ВХОДНЫЕ ФАЙЛЫ -
 /addmodule:&lt;список файлов&gt;                Ссылка на метаданные из заданного модуля
@@ -4384,15 +4412,16 @@
                                   целевой DLL-файл или EXE-файл.
 /deterministic                    Создать детерминированную сборку
                                   (включая GUID версии модуля и метку времени)
-/instrument:параметры               Задать параметры инструментирования.
-                                  Если не указано, инструментирование отключено.
-/sourcelink:&lt;файл&gt;                Данные о ссылке на исходные файлы для внедрения в Portable PDB.
+/refonly                          Создавать базовую сборку вместо основных выходных данных
+/instrument:TestCoverage          Создавать сборку, инструментированную для сбора
+                                  данных о покрытии
+/sourcelink:&lt;файл&gt;                Данные о ссылке на исходные файлы для внедрения в PDB.
 
                                   - ОШИБКИ И ПРЕДУПРЕЖДЕНИЯ -
 /nowarn                           Отключить все предупреждения.
 /nowarn:&lt;список чисел&gt;                   Отключить отдельные предупреждения.
 /warnaserror[+|-]                 Обрабатывать все предупреждения как ошибки.
-/warnaserror[+|-]:&lt;список чисел&gt;         Трактовать список предупреждений как ошибки.
+/warnaserror[+|-]:&lt;список чисел&gt;         Обрабатывать список предупреждений как ошибки.
 /ruleset:&lt;файл&gt;                   Указать файл набора правил, отключающий определенные
                                   диагностические операции.
 /errorlog:&lt;файл&gt;                  Указать файл для записи всех диагностических данных
@@ -4407,8 +4436,11 @@
 /imports:&lt;список_импорта&gt;         Объявить глобальные импорты для пространств имен в 
                                   указанных файлах метаданных. 
                                   список_импорта:пространство_имен,...
-/langversion:&lt;число&gt;              Указать языковую версию: 
-                                  9|9.0|10|10.0|11|11.0|12|12.0|14|14.0|15|15.0|default
+/langversion:?                    Отображать допустимые значения версии языка
+/langversion:&lt;string&gt;             Указать версию языка, например
+                                  "default" (последняя основная версия) или
+                                  "latest" (последняя версия, включая дополнительные),
+                                  или конкретные версии, например 14 или 15.3
 /optionexplicit[+|-]              Требовать явного объявления переменных.
 /optioninfer[+|-]                 Разрешить вывод для типов переменных.
 /rootnamespace:&lt;строка&gt;           Задает корневое пространство имен для всех объявлений 
@@ -4426,12 +4458,12 @@
 /nologo                           Не отображать заставку компилятора с информацией об авторских правах.
 /quiet                            Режим вывода без сообщений.
 /verbose                          Отображать подробные сообщения.
-/parallel[+|-]                    Параллельная сборка. 
+/parallel[+|-]                    Параллельная сборка.
+/version                          Отображать номер версии компилятора и выполнять выход.
 
                                   - ДОПОЛНИТЕЛЬНО -
 /baseaddress:&lt;число&gt;              Базовый адрес библиотеки или модуля 
                                   (шестнадцатеричный).
-/bugreport:&lt;файл&gt;                 Создать файл отчета об ошибках.
 /checksumalgorithm:&lt;алгоритм&gt;     Задать алгоритм расчета контрольной суммы 
                                   исходного файла, хранимой в PDB. Поддерживаемые значения:
                                   SHA1 (по умолчанию) или SHA256.
@@ -4450,7 +4482,7 @@
 /keycontainer:&lt;строка&gt;            Задает контейнер ключа для строгого имени.
 /keyfile:&lt;файл&gt;                   Задает файл ключа для строгого имени.
 /libpath:&lt;список_путей&gt;           Список каталогов для поиска ссылок на 
-                                  метаданные. (Разделитель — точка с запятой.)
+                                  метаданные. (разделитель — точка с запятой.)
 /main:&lt;класс&gt;                     Задает класс или модуль, содержащий 
                                   Sub Main. Он может являться производным 
                                   классом от System.Windows.Forms.Form. 
@@ -4470,7 +4502,7 @@
 /sdkpath:&lt;путь&gt;                   Расположение каталога пакета SDK .NET Framework
                                   (mscorlib.dll).
 /subsystemversion:&lt;версия&gt;        Указать версию подсистемы выходного PE-файла. 
-                                  версия: &lt;номер&gt;[.&lt;номер&gt;]
+                                  version: &lt;номер&gt;[.&lt;номер&gt;]
 /utf8output[+|-]                  Выдавать выходные данные компилятора в кодировке 
                                   UTF8.
 @&lt;файл&gt;                           Вставить параметры командной строки из текстового файла
@@ -4490,7 +4522,7 @@
     <value>"{0}" не может переопределить "{1}", так как они отличаются по ограничениям параметра типа.</value>
   </data>
   <data name="ERR_ExpectedNamedArgument" xml:space="preserve">
-    <value>Требуется именованный аргумент.</value>
+    <value>Ожидается именованный аргумент. Используйте версию языка {0} или более позднюю, чтобы использовать неконечные аргументы.</value>
   </data>
   <data name="ERR_CircularEvaluation1" xml:space="preserve">
     <value>Константа "{0}" не может зависеть от своего собственного значения.</value>

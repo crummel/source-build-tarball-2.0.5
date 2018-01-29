@@ -178,6 +178,9 @@
   <data name="Class1" xml:space="preserve">
     <value>classe</value>
   </data>
+  <data name="EmbeddedTextsRequirePdb" xml:space="preserve">
+    <value>Só há suporte para textos inseridos ao emitir um PDB.</value>
+  </data>
   <data name="ModuleCopyCannotBeUsedToCreateAssemblyMetadata" xml:space="preserve">
     <value>Cópia de módulo não pode ser usada para criar metadados do assembly.</value>
   </data>
@@ -224,16 +227,13 @@
     <value>Falha no Driver do Analisador</value>
   </data>
   <data name="MustIncludePrivateMembersUnlessRefAssembly" xml:space="preserve">
-    <value>Deve incluir membros privados a menos que esteja emitindo um assembly ref.</value>
+    <value>Deve incluir membros privados a menos que esteja emitindo um assembly de referência.</value>
   </data>
   <data name="ChangesMustBeOrderedAndNotOverlapping" xml:space="preserve">
     <value>As alterações devem ser ordenadas e não sobrepostas.</value>
   </data>
   <data name="KeepAliveIsTooSmall" xml:space="preserve">
     <value>Os argumentos para a opção '/keepalive' abaixo de -1 são inválidos.</value>
-  </data>
-  <data name="IOperationFeatureDisabled" xml:space="preserve">
-    <value>O recurso 'IOperation' está desabilitado.</value>
   </data>
   <data name="AbsolutePathExpected" xml:space="preserve">
     <value>Caminho absoluto esperado.</value>
@@ -497,9 +497,6 @@
   </data>
   <data name="TupleElementNameEmpty" xml:space="preserve">
     <value>O nome de elemento de tupla não pode ser uma cadeia de caracteres vazia.</value>
-  </data>
-  <data name="EmbeddedTextsRequirePortablePdb" xml:space="preserve">
-    <value>Só há suporte para textos inseridos ao emitir um PDB Portátil.</value>
   </data>
   <data name="InvalidOutputKindForSubmission" xml:space="preserve">
     <value>Tipo de saída inválido para envio. DynamicallyLinkedLibrary esperado.</value>
