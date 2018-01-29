@@ -231,6 +231,9 @@
   <data name="ERR_GotoIntoFor" xml:space="preserve">
     <value>"GoTo {0}" ist ungültig, da "{0}" sich innerhalb einer For- oder For Each-Anweisung befindet, die diese Anweisung nicht enthält.</value>
   </data>
+  <data name="IArgumentIsNotVisualBasicArgument" xml:space="preserve">
+    <value>"{0}" ist kein gültiges Visual Basic-Argument.</value>
+  </data>
   <data name="WRN_DefAsgUseNullRefStr_Title" xml:space="preserve">
     <value>Die Variable wurde verwendet, bevor ihr ein Wert zugewiesen wurde.</value>
   </data>
@@ -447,7 +450,7 @@
     <value>Der Assemblyverweis "{0}" ist ungültig und kann nicht aufgelöst werden.</value>
   </data>
   <data name="ERR_DuplicateAccessCategoryUsed" xml:space="preserve">
-    <value>Nur "Public", "Private", "Protected", "Friend" oder "Protected Friend" können angegeben werden.</value>
+    <value>Nur eine Option aus "Public", "Private", "Protected", "Friend", "Protected Friend" oder "Private Protected" kann angegeben werden.</value>
   </data>
   <data name="WRN_LambdaPassedToRemoveHandler_Title" xml:space="preserve">
     <value>Der Lambdaausdruck wird aus diesem Ereignishandler nicht entfernt.</value>
@@ -717,6 +720,9 @@
   <data name="ERR_PropertyNameConflictInMyCollection" xml:space="preserve">
     <value>"{0}" hat den gleichen Namen wie ein Member, der für den in einer My-Gruppe verfügbar gemachter Typ "{1}" verwendet wird. Benennen Sie den Typ oder den einschließenden Namespace um.</value>
   </data>
+  <data name="ERR_ExpectedNamedArgumentInAttributeList" xml:space="preserve">
+    <value>Benanntes Argument erwartet.</value>
+  </data>
   <data name="ERR_NameNotEvent2" xml:space="preserve">
     <value>"{0}" ist kein Ereignis von "{1}".</value>
   </data>
@@ -752,6 +758,9 @@
   </data>
   <data name="ERR_VarianceOutParamDisallowed1" xml:space="preserve">
     <value>Der Typ "{0}" kann nicht in diesem Kontext verwendet werden, weil "{0}" ein Parameter vom Typ "Out" ist.</value>
+  </data>
+  <data name="ERR_InvalidDebugInfo" xml:space="preserve">
+    <value>Die Debuginformationen der Methode "{0}" (Token 0x{1}) können nicht aus der Assembly "{2}" gelesen werden.</value>
   </data>
   <data name="ERR_DefaultMissingFromProperty2" xml:space="preserve">
     <value>"{0}" und "{1}" können sich nicht gegenseitig überladen, da nur eine als "Default" deklariert ist.</value>
@@ -800,6 +809,9 @@
   </data>
   <data name="ERR_QueryOperatorNotFound" xml:space="preserve">
     <value>Auf die Definition der {0}-Methode kann in diesem Kontext nicht zugegriffen werden.</value>
+  </data>
+  <data name="IConversionExpressionIsNotVisualBasicConversion" xml:space="preserve">
+    <value>"{0}" ist kein gültiger Visual Basic-Konvertierungsausdruck.</value>
   </data>
   <data name="ERR_InaccessibleMember3" xml:space="preserve">
     <value>"{0}.{1}" ist "{2}" und in diesem Kontext nicht zugreifbar.</value>
@@ -946,6 +958,9 @@
   </data>
   <data name="WRN_IfTooManyTypesObjectAssumed" xml:space="preserve">
     <value>Es kann kein gemeinsamer Typ abgeleitet werden, weil mehrere Typen möglich sind. "Object" wird angenommen.</value>
+  </data>
+  <data name="FEATURE_LeadingDigitSeparator" xml:space="preserve">
+    <value>Trennzeichen für vorangestellte Ziffern</value>
   </data>
   <data name="ERR_ExpectedStringLiteral" xml:space="preserve">
     <value>Zeichenfolgenkonstante erwartet.</value>
@@ -1446,6 +1461,9 @@
   <data name="ERR_RedimNoSizes" xml:space="preserve">
     <value>ReDim-Anweisungen erfordern eine in Klammern gesetzte Liste der neuen Grenzen jeder Arraydimension.</value>
   </data>
+  <data name="ERR_BadNonTrailingNamedArgument" xml:space="preserve">
+    <value>Das benannte Argument "{0}" wird außerhalb der Position verwendet, wird jedoch von einem unbenannten Argument gefolgt.</value>
+  </data>
   <data name="ERR_InvalidAttributeUsageOnAccessor" xml:space="preserve">
     <value>Das Attribut "{0}" kann nicht auf "{1}" von "{2}" angewendet werden, da das Attribut für diesen Deklarationstyp nicht gültig ist.</value>
   </data>
@@ -1912,7 +1930,7 @@
     <value>"End Set" muss ein entsprechendes "Set" voranstehen.</value>
   </data>
   <data name="ERR_CannotEmbedWithoutPdb" xml:space="preserve">
-    <value>Der Schalter "/embed" wird nur unterstützt, wenn portable PDB-Dateien ausgegeben werden ("/debug:portable" oder "/debug:embedded").</value>
+    <value>Die Option "/embed" wird nur beim Ausgeben einer PDB unterstützt.</value>
   </data>
   <data name="WRN_VarianceDeclarationAmbiguous3" xml:space="preserve">
     <value>Die Schnittstelle "{0}" unterscheidet sich aufgrund der Parameter "In" und "Out" in "{2}" nicht eindeutig von einer anderen implementierten Schnittstelle ({1}).</value>
@@ -2221,6 +2239,9 @@
   </data>
   <data name="ERR_InvInsideInterface" xml:space="preserve">
     <value>Die Anweisung kann nicht innerhalb des Schnittstellentexts verwendet werden.</value>
+  </data>
+  <data name="ERR_NamedArgumentSpecificationBeforeFixedArgumentInLateboundInvocation" xml:space="preserve">
+    <value>Die Spezifikationen für benannte Argumente müssen in einem spät gebundenen Aufruf nach Angabe aller festen Argumente aufgeführt werden.</value>
   </data>
   <data name="ERR_NamedParamNotFound1" xml:space="preserve">
     <value>"{0}" ist kein Methodenparameter.</value>
@@ -2533,6 +2554,9 @@
   </data>
   <data name="ERR_ContinueWhileNotWithinWhile" xml:space="preserve">
     <value>Continue While darf nur innerhalb einer While-Anweisung verwendet werden.</value>
+  </data>
+  <data name="FEATURE_PrivateProtected" xml:space="preserve">
+    <value>Privat geschützt</value>
   </data>
   <data name="ERR_TooManyArgs2" xml:space="preserve">
     <value>Zu viele Argumente für die in "{1}" definierte Erweiterungsmethode "{0}".</value>
@@ -3955,7 +3979,7 @@
     <value>Die Methode kann nicht über einen ParamArray-Parameter und einen Optional-Parameter verfügen.</value>
   </data>
   <data name="ERR_StructureCantUseProtected" xml:space="preserve">
-    <value>Eine Methode in einer Struktur kann nicht als "Protected" oder "Protected Friend" deklariert werden.</value>
+    <value>Eine Methode in einer Struktur kann nicht als "Protected", "Protected Friend" oder "Private Protected" deklariert werden.</value>
   </data>
   <data name="WRN_QueryMissingAsClauseinVarDecl" xml:space="preserve">
     <value>Für die Bereichsvariable wird der Typ "Object" angenommen, da ihr Typ nicht durch Rückschluss abgeleitet werden kann. Verwenden Sie eine As-Klausel, um einen anderen Typ anzugeben.</value>
@@ -3965,6 +3989,9 @@
   </data>
   <data name="ERR_PartialTypeBadMustInherit1" xml:space="preserve">
     <value>"MustInherit" kann nicht für den partiellen Typ "{0}" angegeben werden, da "NotInheritable" für einen der anderen partiellen Typen angegeben wurde und eine Kombination nicht möglich ist.</value>
+  </data>
+  <data name="IDS_LangVersions" xml:space="preserve">
+    <value>Unterstützte Sprachversionen:</value>
   </data>
   <data name="ERR_RemoveParamWrongForWinRT" xml:space="preserve">
     <value>Bei einem Windows-Runtime-Ereignis muss der Methodenparameter "RemoveHandler" vom Typ "EventRegistrationToken" sein.</value>
@@ -4409,9 +4436,11 @@
 /imports:&lt; Importliste &gt;            Deklariert globale Importe für Namespaces in 
                                   Metadatendateien, auf die verwiesen wird. 
                                   import_list:namespace,...
-/langversion:&lt;Zahl&gt;             Gibt die Sprachversion an: 
-                                  9|9.0|10|10.0|11|11.0|12|12.0|14|14.0|15|
-                                  15.0|15.3|default|latest
+/langversion:?                    Zeigt die zulässigen Werte für die Sprachversion an.
+/langversion:&lt;Zeichenfolge&gt;             Gibt die Sprachversion an:
+                                  "default" (neueste Hauptversion) oder
+                                  "latest" (neueste Version, einschließlich Nebenversionen)
+                                  oder bestimmte Versionen wie "14" oder "15.3".
 /optionexplicit[+|-]              Erfordert die explizite Deklaration von Variablen.
 /optioninfer[+|-]                 Lässt den Typrückschluss von Variablen zu.
 /rootnamespace:&lt;Zeichenfolge&gt;           Gibt den Stammnamespace für alle Typ-
@@ -4493,7 +4522,7 @@
     <value>"{0}" kann "{1}" nicht überschreiben, da sie unterschiedliche Typparametereinschränkungen aufweisen.</value>
   </data>
   <data name="ERR_ExpectedNamedArgument" xml:space="preserve">
-    <value>Benanntes Argument erwartet.</value>
+    <value>Benanntes Argument erwartet. Verwenden Sie Sprachversion {0} oder höher, um nicht nachfolgende benannte Argumente zu verwenden.</value>
   </data>
   <data name="ERR_CircularEvaluation1" xml:space="preserve">
     <value>Die Konstante "{0}" kann nicht von ihrem eigenen Wert abhängen.</value>

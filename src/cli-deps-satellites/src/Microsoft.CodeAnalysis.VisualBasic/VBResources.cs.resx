@@ -231,6 +231,9 @@
   <data name="ERR_GotoIntoFor" xml:space="preserve">
     <value>Příkaz GoTo {0} není platný, protože návěstí {0} je uvnitř příkazu For nebo For Each, který tento příkaz neobsahuje.</value>
   </data>
+  <data name="IArgumentIsNotVisualBasicArgument" xml:space="preserve">
+    <value>{0} není platný argument jazyka Visual Basic.</value>
+  </data>
   <data name="WRN_DefAsgUseNullRefStr_Title" xml:space="preserve">
     <value>Proměnná se používá dřív, než se k ní přiřadí hodnota.</value>
   </data>
@@ -447,7 +450,7 @@
     <value>Odkaz na sestavení {0} je neplatný a nedá se vyhodnotit.</value>
   </data>
   <data name="ERR_DuplicateAccessCategoryUsed" xml:space="preserve">
-    <value>Lze zadat jenom jedno z klíčových slov Public, Private, Protected, Friend nebo Protected Friend.</value>
+    <value>Lze zadat jen jednu z možností Public, Private, Protected, Friend, Protected Friend nebo Private Protected.</value>
   </data>
   <data name="WRN_LambdaPassedToRemoveHandler_Title" xml:space="preserve">
     <value>Výraz lambda se z této obslužné rutiny události neodebere.</value>
@@ -717,6 +720,9 @@
   <data name="ERR_PropertyNameConflictInMyCollection" xml:space="preserve">
     <value>{0} má stejný název, jako jiný člen použil pro typ {1} vystavený ve skupině My. Přejmenujte typ nebo obor názvů, v němž je obsažený.</value>
   </data>
+  <data name="ERR_ExpectedNamedArgumentInAttributeList" xml:space="preserve">
+    <value>Očekával se pojmenovaný argument.</value>
+  </data>
   <data name="ERR_NameNotEvent2" xml:space="preserve">
     <value>{0} není událost v {1}.</value>
   </data>
@@ -752,6 +758,9 @@
   </data>
   <data name="ERR_VarianceOutParamDisallowed1" xml:space="preserve">
     <value>Typ {0} nejde v tomto kontextu použít, protože {0} je parametrem typu Out.</value>
+  </data>
+  <data name="ERR_InvalidDebugInfo" xml:space="preserve">
+    <value>Informace o ladění metody {0} (token 0x{1}) ze sestavení {2} nelze přečíst.</value>
   </data>
   <data name="ERR_DefaultMissingFromProperty2" xml:space="preserve">
     <value>{0} a {1} se nemůžou vzájemně přetěžovat, protože jenom v jedné deklaraci je uvedené klíčové slovo Default.</value>
@@ -800,6 +809,9 @@
   </data>
   <data name="ERR_QueryOperatorNotFound" xml:space="preserve">
     <value>Definice metody {0} není v tomto kontextu dostupná.</value>
+  </data>
+  <data name="IConversionExpressionIsNotVisualBasicConversion" xml:space="preserve">
+    <value>{0} není platný výraz převodu jazyka Visual Basic.</value>
   </data>
   <data name="ERR_InaccessibleMember3" xml:space="preserve">
     <value>Metoda {0}.{1} není v tomto kontextu k dispozici, protože je {2}.</value>
@@ -946,6 +958,9 @@
   </data>
   <data name="WRN_IfTooManyTypesObjectAssumed" xml:space="preserve">
     <value>Společný typ nejde odvodit, protože je přípustný více než jeden typ; předpokládá se typ Object.</value>
+  </data>
+  <data name="FEATURE_LeadingDigitSeparator" xml:space="preserve">
+    <value>oddělovač úvodní číslice</value>
   </data>
   <data name="ERR_ExpectedStringLiteral" xml:space="preserve">
     <value>Očekávala se řetězcová konstanta.</value>
@@ -1446,6 +1461,9 @@
   <data name="ERR_RedimNoSizes" xml:space="preserve">
     <value>Příkazy ReDim vyžadují seznam nových mezí jednotlivých rozměrů pole uvedený v závorkách.</value>
   </data>
+  <data name="ERR_BadNonTrailingNamedArgument" xml:space="preserve">
+    <value>Pojmenovaný argument {0} se používá mimo pozici, je ale následovaný nepojmenovaným argumentem.</value>
+  </data>
   <data name="ERR_InvalidAttributeUsageOnAccessor" xml:space="preserve">
     <value>Atribut {0} nejde použít pro člena {1} v {2}, protože není platný pro tento deklarovaný typ.</value>
   </data>
@@ -1912,7 +1930,7 @@
     <value>Příkazu End Set musí předcházet párový příkaz Set.</value>
   </data>
   <data name="ERR_CannotEmbedWithoutPdb" xml:space="preserve">
-    <value>Přepínač /embed se podporuje jenom při generování souboru PDB typu Portable (/debug:portable nebo /debug:embedded).</value>
+    <value>Přepínač /embed je podporovaný jen při vydávání souboru PDB.</value>
   </data>
   <data name="WRN_VarianceDeclarationAmbiguous3" xml:space="preserve">
     <value>Rozhraní {0} je nejednoznačné s jiným implementovaným rozhraním {1} kvůli parametrům In a Out v {2}.</value>
@@ -2221,6 +2239,9 @@
   </data>
   <data name="ERR_InvInsideInterface" xml:space="preserve">
     <value>Příkaz se nemůže objevit v těle rozhraní.</value>
+  </data>
+  <data name="ERR_NamedArgumentSpecificationBeforeFixedArgumentInLateboundInvocation" xml:space="preserve">
+    <value>Specifikace pojmenovaných argumentů musí následovat po specifikaci všech pevných argumentů v pozdním vyvolání vazby.</value>
   </data>
   <data name="ERR_NamedParamNotFound1" xml:space="preserve">
     <value>{0} není parametr metody.</value>
@@ -2533,6 +2554,9 @@
   </data>
   <data name="ERR_ContinueWhileNotWithinWhile" xml:space="preserve">
     <value>Příkaz Continue While se dá použít jenom v rámci příkazu While.</value>
+  </data>
+  <data name="FEATURE_PrivateProtected" xml:space="preserve">
+    <value>Private Protected</value>
   </data>
   <data name="ERR_TooManyArgs2" xml:space="preserve">
     <value>Metoda rozšíření {0} definovaná v {1} má příliš moc argumentů.</value>
@@ -3955,7 +3979,7 @@
     <value>Metoda nemůže mít současně parametr ParamArray i Optional.</value>
   </data>
   <data name="ERR_StructureCantUseProtected" xml:space="preserve">
-    <value>Pro metodu ve struktuře nejde použít deklaraci Protected ani Protected Friend.</value>
+    <value>Metodu ve struktuře nelze deklarovat jako Protected, Protected Friend ani Private Protected.</value>
   </data>
   <data name="WRN_QueryMissingAsClauseinVarDecl" xml:space="preserve">
     <value>Předpokládá se, že proměnná rozsahu je typu Objekt, protože její typ nejde odvodit. Zadejte jiný typ pomocí klauzule As.</value>
@@ -3965,6 +3989,9 @@
   </data>
   <data name="ERR_PartialTypeBadMustInherit1" xml:space="preserve">
     <value>Deklaraci MustInherit nejde zadat pro částečný typ {0}, protože ji nejde kombinovat s deklarací NotInheritable zadanou pro jeden z jejích ostatních částečných typů.</value>
+  </data>
+  <data name="IDS_LangVersions" xml:space="preserve">
+    <value>Podporované jazykové verze:</value>
   </data>
   <data name="ERR_RemoveParamWrongForWinRT" xml:space="preserve">
     <value>V události prostředí Windows Runtime musí být parametr metody RemoveHandler typu EventRegistrationToken.</value>
@@ -4325,7 +4352,7 @@
     <value>Očekávalo se klíčové slovo Is.</value>
   </data>
   <data name="IDS_VBCHelp" xml:space="preserve">
-    <value>                  Možnosti kompilátoru Visual Basic
+    <value>                  Parametry kompilátoru Visual Basic
 
                                   - VÝSTUPNÍ SOUBOR -
 /out:&lt;soubor&gt;                     Určuje název výstupního souboru.
@@ -4409,9 +4436,11 @@
 /imports:&lt;seznam_importů&gt;         Deklaruje globální importy pro obory názvů
                                   v odkazovaných souborech metadat.
                                   seznam_importů: obor_názvů,...
-/langversion:&lt;číslo&gt;              Určuje jazykovou verzi:
-                                  9|9.0|10|10.0|11|11.0|12|12.0|14|14.0|15|
-                                  15.0|15.3|default|latest
+/langversion:?                    Zobrazí povolené hodnoty jazykové verze.                              
+/langversion:&lt;číslo&gt;              Určuje jazykovou verzi, například
+                                  default (nejnovější hlavní verze) nebo
+                                  latest (nejnovější verze včetně podverzí) nebo
+                                  konkrétní verze, například 14 nebo 15.3.
 /optionexplicit[+|-]              Vyžaduje explicitní deklarování proměnných.
 /optioninfer[+|-]                 Povoluje odvození typu proměnných.
 /rootnamespace:&lt;řetězec&gt;          Určuje kořenový obor názvů pro všechny
@@ -4466,7 +4495,7 @@
 /pathmap:&lt;K1&gt;=&lt;V1&gt;,&lt;K2&gt;=&lt;V2&gt;,...
                                   Určuje mapování pro výstup zdrojových názvů cest
                                   kompilátorem.
-/platform:&lt;řetězec&gt;                Omezuje platformy, na kterých se dá tento kód
+/platform:&lt;řetězec&gt;               Omezuje platformy, na kterých se dá tento kód
                                   spustit: x86, x64, Itanium, arm,
                                   AnyCPU32BitPreferred nebo anycpu (výchozí).
 /preferreduilang                  Určuje název upřednostňovaného výstupního jazyka.
@@ -4493,7 +4522,7 @@
     <value>{0} nemůže přepsat {1}, protože se liší v omezeních parametrů typu.</value>
   </data>
   <data name="ERR_ExpectedNamedArgument" xml:space="preserve">
-    <value>Očekával se pojmenovaný argument.</value>
+    <value>Očekával se pojmenovaný argument. Pokud chcete použít pojmenované argumenty, které nejsou na konci, použijte prosím jazyk verze {0} nebo vyšší.</value>
   </data>
   <data name="ERR_CircularEvaluation1" xml:space="preserve">
     <value>Konstanta {0} nemůže záviset na vlastní hodnotě.</value>

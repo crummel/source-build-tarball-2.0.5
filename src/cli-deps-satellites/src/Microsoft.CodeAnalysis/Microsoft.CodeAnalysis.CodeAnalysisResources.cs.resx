@@ -178,6 +178,9 @@
   <data name="Class1" xml:space="preserve">
     <value>třída</value>
   </data>
+  <data name="EmbeddedTextsRequirePdb" xml:space="preserve">
+    <value>Vložené texty jsou podporované jen při vydávání souboru PDB.</value>
+  </data>
   <data name="ModuleCopyCannotBeUsedToCreateAssemblyMetadata" xml:space="preserve">
     <value>Kopie modulu se nedá použít k vytvoření metadat sestavení.</value>
   </data>
@@ -231,9 +234,6 @@
   </data>
   <data name="KeepAliveIsTooSmall" xml:space="preserve">
     <value>Argumenty možnosti /keepalive nižší než -1 nejsou platné.</value>
-  </data>
-  <data name="IOperationFeatureDisabled" xml:space="preserve">
-    <value>Funkce IOperation je zakázaná.</value>
   </data>
   <data name="AbsolutePathExpected" xml:space="preserve">
     <value>Očekávala se absolutní cesta.</value>
@@ -497,9 +497,6 @@
   </data>
   <data name="TupleElementNameEmpty" xml:space="preserve">
     <value>Názvem prvku řazené kolekce členů nemůže být prázdný řetězec.</value>
-  </data>
-  <data name="EmbeddedTextsRequirePortablePdb" xml:space="preserve">
-    <value>Vložené texty se podporují jenom při generování souboru PDB typu Portable.</value>
   </data>
   <data name="InvalidOutputKindForSubmission" xml:space="preserve">
     <value>Neplatný druh výstupu pro odeslání Očekávalo se DynamicallyLinkedLibrary.</value>
