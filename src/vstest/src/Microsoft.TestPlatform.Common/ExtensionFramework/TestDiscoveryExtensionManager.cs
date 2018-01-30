@@ -51,7 +51,6 @@ namespace Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework
         /// </remarks>
         public IEnumerable<LazyExtension<ITestDiscoverer, Dictionary<string, object>>> UnfilteredDiscoverers { get; private set; }
 
-
         /// <summary>
         /// Gets the discoverers which are available for discovering tests.
         /// </summary>
@@ -80,7 +79,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework
 
                 TestPluginManager.Instance
                     .GetSpecificTestExtensions<TestDiscovererPluginInformation, ITestDiscoverer, ITestDiscovererCapabilities, TestDiscovererMetadata>(
-                        TestPlatformConstants.TestAdapterRegexPattern,
+                        TestPlatformConstants.TestAdapterEndsWithPattern,
                         out unfilteredTestExtensions,
                         out testExtensions);
 

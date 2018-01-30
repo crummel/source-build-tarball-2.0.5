@@ -5,7 +5,6 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.DataCollection
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
     using System.Reflection;
 
@@ -42,7 +41,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.DataCollection
         internal DefaultDataCollectionLauncher(IProcessHelper processHelper, IMessageLogger messageLogger) : base(processHelper, messageLogger)
         {
             this.processHelper = processHelper;
-            this.DataCollectorProcess = null;
+            this.DataCollectorProcessId = -1;
         }
 
         /// <summary>
@@ -53,8 +52,8 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.DataCollection
         /// <returns>ProcessId of launched Process. 0 means not launched.</returns>
         public override int LaunchDataCollector(IDictionary<string, string> environmentVariables, IList<string> commandLineArguments)
         {
-            string dataCollectorProcessPath = null, processWorkingDirectory = null;
-            var currentWorkingDirectory = Path.GetDirectoryName(typeof(DefaultDataCollectionLauncher).GetTypeInfo().Assembly.Location);
+            string dataCollectorProcessPath = null;
+            var dataCollectorDirectory = Path.GetDirectoryName(typeof(DefaultDataCollectionLauncher).GetTypeInfo().Assembly.GetAssemblyLocation());
 
             var currentProcessPath = this.processHelper.GetCurrentProcessFileName();
 
@@ -62,19 +61,17 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.DataCollection
             if (currentProcessPath.EndsWith("dotnet", StringComparison.OrdinalIgnoreCase)
                 || currentProcessPath.EndsWith("dotnet.exe", StringComparison.OrdinalIgnoreCase))
             {
-                dataCollectorProcessPath = Path.Combine(currentWorkingDirectory, "TestHost", DataCollectorProcessName);
+                dataCollectorProcessPath = Path.Combine(dataCollectorDirectory, "TestHost", DataCollectorProcessName);
             }
             else
             {
-                dataCollectorProcessPath = Path.Combine(currentWorkingDirectory, DataCollectorProcessName);
+                dataCollectorProcessPath = Path.Combine(dataCollectorDirectory, DataCollectorProcessName);
             }
 
-            processWorkingDirectory = Directory.GetCurrentDirectory();
-
             var argumentsString = string.Join(" ", commandLineArguments);
-
-            this.DataCollectorProcess = this.processHelper.LaunchProcess(dataCollectorProcessPath, argumentsString, processWorkingDirectory, environmentVariables, this.ErrorReceivedCallback, this.ExitCallBack) as Process;
-            return this.DataCollectorProcess?.Id ?? 0;
+            var dataCollectorProcess = this.processHelper.LaunchProcess(dataCollectorProcessPath, argumentsString, Directory.GetCurrentDirectory(), environmentVariables, this.ErrorReceivedCallback, this.ExitCallBack);
+            this.DataCollectorProcessId = this.processHelper.GetProcessId(dataCollectorProcess);
+            return this.DataCollectorProcessId;
         }
     }
 }

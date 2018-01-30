@@ -3,10 +3,12 @@
 
 namespace Microsoft.VisualStudio.TestPlatform.ObjectModel
 {
+    using System;
     using System.IO;
 
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Utilities;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
+    using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions;
 
     /// <summary>
     /// Defines the defaults/constants used across different components.
@@ -96,17 +98,37 @@ namespace Microsoft.VisualStudio.TestPlatform.ObjectModel
         public const bool DefaultTreatTestAdapterErrorsAsWarnings = false;
 
         /// <summary>
+        /// The default execution thread apartment state.
+        /// </summary>
+        [CLSCompliant(false)]
+#if NET451
+        // Keeping default STA thread for desktop tests for UI/Functional test scenarios
+        public static readonly PlatformApartmentState DefaultExecutionThreadApartmentState = PlatformApartmentState.STA;
+#else
+        // STA threads are not supported for net core, default to MTA
+        public static readonly PlatformApartmentState DefaultExecutionThreadApartmentState = PlatformApartmentState.MTA;
+#endif
+
+        /// <summary>
         ///  Contants for detecting .net framework.
         /// </summary>
         public const string TargetFrameworkAttributeFullName = "System.Runtime.Versioning.TargetFrameworkAttribute";
 
         public const string DotNetFrameWorkStringPrefix = ".NETFramework,Version=";
 
+        public const string DotNetFramework35 = ".NETFramework,Version=v3.5";
+
         public const string DotNetFramework40 = ".NETFramework,Version=v4.0";
 
         public const string DotNetFramework45 = ".NETFramework,Version=v4.5";
 
+        public const string DotNetFramework451 = ".NETFramework,Version=v4.5.1";
+
         public const string DotNetFramework46 = ".NETFramework,Version=v4.6";
+
+        public const string DotNetFrameworkCore10 = ".NETCoreApp,Version=v1.0";
+
+        public const string DotNetFrameworkUap10 = "Uap,Version=10.0";
 
         public const string TargetFrameworkName = "TargetFrameworkName";
     }

@@ -8,12 +8,12 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.Processors
 
     using System.Globalization;
 
-    using Microsoft.VisualStudio.TestPlatform.CommandLine.Processors.Utilities;
     using Microsoft.VisualStudio.TestPlatform.Common;
     using Microsoft.VisualStudio.TestPlatform.Common.Interfaces;
+    using Microsoft.VisualStudio.TestPlatform.Common.Utilities;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Utilities;
-
+    using Microsoft.VisualStudio.TestPlatform.Utilities;
     using CommandLineResources = Microsoft.VisualStudio.TestPlatform.CommandLine.Resources.Resources;
 
     /// <summary>
@@ -114,31 +114,11 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.Processors
                     argument));
             }
 
-            EnabledDataCollectors.Add(argument.ToLower());
-
-            var settings = this.runSettingsManager.ActiveRunSettings?.SettingsXml;
-            if (settings == null)
+            if(InferRunSettingsHelper.IsTestSettingsEnabled(this.runSettingsManager.ActiveRunSettings.SettingsXml))
             {
-                this.runSettingsManager.AddDefaultRunSettings();
-                settings = this.runSettingsManager.ActiveRunSettings?.SettingsXml;
+                throw new SettingsException(string.Format(CommandLineResources.CollectWithTestSettingErrorMessage, argument));
             }
-
-            var dataCollectionRunSettings = XmlRunSettingsUtilities.GetDataCollectionRunSettings(settings);
-            if (dataCollectionRunSettings == null)
-            {
-                dataCollectionRunSettings = new DataCollectionRunSettings();
-            }
-            else
-            {
-                // By default, all data collectors present in run settings are enabled, if enabled attribute is not specified.
-                // So explicitely disable those data collectors and enable those which are specified. 
-                DisableUnConfiguredDataCollectors(dataCollectionRunSettings);
-            }
-
-            // Add data collectors if not already present, enable if already present.
-            EnableDataCollectorUsingFriendlyName(argument, dataCollectionRunSettings);
-
-            this.runSettingsManager.UpdateRunSettingsNodeInnerXml(Constants.DataCollectionRunSettingsName, dataCollectionRunSettings.ToXml().InnerXml);
+            AddDataCollectorToRunSettings(argument, this.runSettingsManager);
         }
 
         /// <inheritdoc />
@@ -194,6 +174,40 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.Processors
             }
 
             return false;
+        }
+
+        internal static void AddDataCollectorToRunSettings(string argument, IRunSettingsProvider runSettingsManager)
+        {
+            EnabledDataCollectors.Add(argument.ToLower());
+
+            var settings = runSettingsManager.ActiveRunSettings?.SettingsXml;
+            if (settings == null)
+            {
+                runSettingsManager.AddDefaultRunSettings();
+                settings = runSettingsManager.ActiveRunSettings?.SettingsXml;
+            }
+
+            var dataCollectionRunSettings = XmlRunSettingsUtilities.GetDataCollectionRunSettings(settings);
+            if (dataCollectionRunSettings == null)
+            {
+                dataCollectionRunSettings = new DataCollectionRunSettings();
+            }
+            else
+            {
+                // By default, all data collectors present in run settings are enabled, if enabled attribute is not specified.
+                // So explicitely disable those data collectors and enable those which are specified. 
+                DisableUnConfiguredDataCollectors(dataCollectionRunSettings);
+            }
+
+            // Add data collectors if not already present, enable if already present.
+            EnableDataCollectorUsingFriendlyName(argument, dataCollectionRunSettings);
+
+            runSettingsManager.UpdateRunSettingsNodeInnerXml(Constants.DataCollectionRunSettingsName, dataCollectionRunSettings.ToXml().InnerXml);
+        }
+
+        internal static void AddDataCollectorFriendlyName(string friendlyName)
+        {
+            EnabledDataCollectors.Add(friendlyName.ToLower());
         }
     }
 }

@@ -23,6 +23,8 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
     {
         private ICommunicationManager communicationManager;
 
+        private ITransport transport;
+
         private bool sendMessagesToRemoteHost = true;
 
         private IDataSerializer dataSerializer;
@@ -44,8 +46,9 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
         /// Initializes a new instance of the <see cref="TestRequestSender"/> class.
         /// </summary>
         /// <param name="protocolConfig">Protocol related information</param>
-        public TestRequestSender(ProtocolConfig protocolConfig)
-            : this(new SocketCommunicationManager(), JsonDataSerializer.Instance, protocolConfig)
+        /// <param name="connectionInfo">Transport layer to set up connection</param>
+        public TestRequestSender(ProtocolConfig protocolConfig, TestHostConnectionInfo connectionInfo)
+            : this(new SocketCommunicationManager(), connectionInfo, JsonDataSerializer.Instance, protocolConfig)
         {
         }
 
@@ -53,12 +56,20 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
         /// Initializes a new instance of the <see cref="TestRequestSender"/> class.
         /// </summary>
         /// <param name="communicationManager">Communication Manager for sending and receiving messages.</param>
+        /// <param name="connectionInfo">ConnectionInfo to set up transport layer</param>
         /// <param name="dataSerializer">Serializer for serialization and deserialization of the messages.</param>
         /// <param name="protocolConfig">Protocol related information</param>
-        internal TestRequestSender(ICommunicationManager communicationManager, IDataSerializer dataSerializer, ProtocolConfig protocolConfig)
+        internal TestRequestSender(ICommunicationManager communicationManager, TestHostConnectionInfo connectionInfo, IDataSerializer dataSerializer, ProtocolConfig protocolConfig)
         {
             this.highestSupportedVersion = protocolConfig.Version;
             this.communicationManager = communicationManager;
+
+            // The connectionInfo here is that of RuntimeProvider, so reverse the role of runner.
+            connectionInfo.Role = connectionInfo.Role == ConnectionRole.Host
+                                                ? ConnectionRole.Client
+                                                : ConnectionRole.Host;
+
+            this.transport = new SocketTransport(communicationManager, connectionInfo);
             this.dataSerializer = dataSerializer;
         }
 
@@ -67,21 +78,19 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
         {
             this.clientExitCancellationSource = new CancellationTokenSource();
             this.clientExitErrorMessage = string.Empty;
-            var port = this.communicationManager.HostServer();
-            this.communicationManager.AcceptClientAsync();
-            return port;
+            return this.transport.Initialize().Port;
         }
 
         /// <inheritdoc/>
         public bool WaitForRequestHandlerConnection(int clientConnectionTimeout)
         {
-            return this.communicationManager.WaitForClientConnection(clientConnectionTimeout);
+            return this.transport.WaitForConnection(clientConnectionTimeout);
         }
 
         /// <inheritdoc/>
         public void Dispose()
         {
-            this.communicationManager?.StopServer();
+            this.transport.Dispose();
         }
 
         /// <inheritdoc/>
@@ -116,19 +125,19 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
         }
 
         /// <inheritdoc/>
-        public void InitializeDiscovery(IEnumerable<string> pathToAdditionalExtensions, bool loadOnlyWellKnownExtensions)
+        public void InitializeDiscovery(IEnumerable<string> pathToAdditionalExtensions)
         {
             this.communicationManager.SendMessage(MessageType.DiscoveryInitialize, pathToAdditionalExtensions, version: this.protocolVersion);
         }
 
         /// <inheritdoc/>
-        public void InitializeExecution(IEnumerable<string> pathToAdditionalExtensions, bool loadOnlyWellKnownExtensions)
+        public void InitializeExecution(IEnumerable<string> pathToAdditionalExtensions)
         {
             this.communicationManager.SendMessage(MessageType.ExecutionInitialize, pathToAdditionalExtensions, version: this.protocolVersion);
         }
 
         /// <inheritdoc/>
-        public void DiscoverTests(DiscoveryCriteria discoveryCriteria, ITestDiscoveryEventsHandler discoveryEventsHandler)
+        public void DiscoverTests(DiscoveryCriteria discoveryCriteria, ITestDiscoveryEventsHandler2 discoveryEventsHandler)
         {
             try
             {
@@ -158,10 +167,12 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
                     else if (string.Equals(MessageType.DiscoveryComplete, message.MessageType))
                     {
                         var discoveryCompletePayload = this.dataSerializer.DeserializePayload<DiscoveryCompletePayload>(message);
+
+                        var discoveryCompleteEventArgs = new DiscoveryCompleteEventArgs(discoveryCompletePayload.TotalTests, discoveryCompletePayload.IsAborted);
+                        discoveryCompleteEventArgs.Metrics = discoveryCompletePayload.Metrics;
                         discoveryEventsHandler.HandleDiscoveryComplete(
-                            discoveryCompletePayload.TotalTests,
-                            discoveryCompletePayload.LastDiscoveredTests,
-                            discoveryCompletePayload.IsAborted);
+                            discoveryCompleteEventArgs,
+                            discoveryCompletePayload.LastDiscoveredTests);
                         isDiscoveryComplete = true;
                     }
                     else if (string.Equals(MessageType.TestMessage, message.MessageType))
@@ -368,7 +379,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
             }
         }
 
-        private void OnDiscoveryAbort(ITestDiscoveryEventsHandler eventHandler, Exception exception)
+        private void OnDiscoveryAbort(ITestDiscoveryEventsHandler2 eventHandler, Exception exception)
         {
             try
             {
@@ -395,7 +406,9 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
                 eventHandler.HandleRawMessage(rawMessage);
 
                 // Complete discovery
-                eventHandler.HandleDiscoveryComplete(-1, null, true);
+                var discoveryCompleteEventArgs = new DiscoveryCompleteEventArgs(-1, true);
+
+                eventHandler.HandleDiscoveryComplete(discoveryCompleteEventArgs, null);
 
                 this.CleanupCommunicationIfProcessExit();
             }

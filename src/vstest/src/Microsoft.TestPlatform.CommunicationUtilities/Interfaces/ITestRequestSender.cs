@@ -41,22 +41,20 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.Interfaces
         /// Initializes the Discovery
         /// </summary>
         /// <param name="pathToAdditionalExtensions">Paths to check for additional extensions</param>
-        /// <param name="loadOnlyWellKnownExtensions">Load only well only extensions</param>
-        void InitializeDiscovery(IEnumerable<string> pathToAdditionalExtensions, bool loadOnlyWellKnownExtensions);
+        void InitializeDiscovery(IEnumerable<string> pathToAdditionalExtensions);
 
         /// <summary>
         /// Initializes the Execution
         /// </summary>
         /// <param name="pathToAdditionalExtensions">Paths to check for additional extensions</param>
-        /// <param name="loadOnlyWellKnownExtensions">Load only well only extensions</param>
-        void InitializeExecution(IEnumerable<string> pathToAdditionalExtensions, bool loadOnlyWellKnownExtensions);
+        void InitializeExecution(IEnumerable<string> pathToAdditionalExtensions);
 
         /// <summary>
         /// Discovers the tests
         /// </summary>
         /// <param name="discoveryCriteria">DiscoveryCriteria for discovery</param>
         /// <param name="discoveryEventsHandler">EventHandler for discovery events</param>
-        void DiscoverTests(DiscoveryCriteria discoveryCriteria, ITestDiscoveryEventsHandler discoveryEventsHandler);
+        void DiscoverTests(DiscoveryCriteria discoveryCriteria, ITestDiscoveryEventsHandler2 discoveryEventsHandler);
 
         /// <summary>
         /// Starts the TestRun with given sources and criteria

@@ -156,8 +156,8 @@
         <note from="bb-metadata">fuzzyMatch="15" wordcount="4" adjWordcount="3.4" curWordcount="3.4"</note>
       </trans-unit>
       <trans-unit id="NoDotnetExeFound">
-        <source>Could not find {0}. Make sure that the dotnet is installed on the machine.</source>
-        <target state="translated">{0} wurde nicht gefunden. Stellen Sie sicher, dass das dotnet auf dem Computer installiert ist.</target>
+        <source>Could not find '{0}' host. Make sure that '{0}' is installed on the machine and is available in PATH environment variable.</source>
+        <target state="translated">Der Host "{0}" wurde nicht gefunden. Stellen Sie sicher, dass "{0}" auf dem Computer installiert und in der PATH-Umgebungsvariablen verfügbar ist.</target>
         <note />
       </trans-unit>
     </body>

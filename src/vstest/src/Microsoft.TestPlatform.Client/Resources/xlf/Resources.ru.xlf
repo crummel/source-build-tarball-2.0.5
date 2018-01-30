@@ -38,6 +38,16 @@
         </alt-trans>
         <note from="bb-metadata">fuzzyMatch="15" wordcount="14" adjWordcount="11.9" curWordcount="11.9"</note>
       </trans-unit>
+      <trans-unit id="TestSessionTimeoutMessage">
+        <source>Aborting test run: test run timeout of {0} milliseconds exceeded.</source>
+        <target state="translated">Тестовый запуск отменяется: превышено допустимое время ожидания в {0} мс.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NoTestHostProviderFound">
+        <source>No suitable test runtime provider found for this run.</source>
+        <target state="translated">Не найден подходящий поставщик среды выполнения теста для этого запуска.</target>
+        <note />
+      </trans-unit>
     </body>
   </file>
 </xliff>

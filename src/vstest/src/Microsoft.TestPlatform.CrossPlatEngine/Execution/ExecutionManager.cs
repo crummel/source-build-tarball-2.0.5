@@ -5,6 +5,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Execution
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework;
     using Microsoft.VisualStudio.TestPlatform.Common.SettingsProvider;
@@ -27,10 +28,12 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Execution
 
         private BaseRunTests activeTestRun;
 
+        private IRequestData requestData;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutionManager"/> class.
         /// </summary>
-        public ExecutionManager() : this(TestPlatformEventSource.Instance)
+        public ExecutionManager(IRequestData requestData) : this(TestPlatformEventSource.Instance, requestData)
         {
         }
 
@@ -38,9 +41,10 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Execution
         /// Initializes a new instance of the <see cref="ExecutionManager"/> class.
         /// </summary>
         /// <param name="testPlatformEventSource">Test platform event source.</param>
-        protected ExecutionManager(ITestPlatformEventSource testPlatformEventSource)
+        protected ExecutionManager(ITestPlatformEventSource testPlatformEventSource, IRequestData requestData)
         {
             this.testPlatformEventSource = testPlatformEventSource;
+            this.requestData = requestData;
         }
 
         #region IExecutionManager Implementation
@@ -53,8 +57,12 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Execution
         {
             this.testPlatformEventSource.AdapterSearchStart();
 
-            // Start using these additional extensions
-            TestPluginCache.Instance.DefaultExtensionPaths = pathToAdditionalExtensions;
+            if (pathToAdditionalExtensions != null && pathToAdditionalExtensions.Any())
+            {
+                // Start using these additional extensions
+                TestPluginCache.Instance.DefaultExtensionPaths = pathToAdditionalExtensions;
+            }
+
             this.LoadExtensions();
 
             this.testPlatformEventSource.AdapterSearchStop();
@@ -64,12 +72,14 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Execution
         /// Starts the test run
         /// </summary>
         /// <param name="adapterSourceMap"> The adapter Source Map.  </param>
+        /// <param name="package">The user input test source(package) if it differ from actual test source otherwise null.</param>
         /// <param name="runSettings"> The run Settings.  </param>
         /// <param name="testExecutionContext"> The test Execution Context. </param>
         /// <param name="testCaseEventsHandler"> EventHandler for handling test cases level events from Engine. </param>
         /// <param name="runEventsHandler"> EventHandler for handling execution events from Engine.  </param>
         public void StartTestRun(
             Dictionary<string, IEnumerable<string>> adapterSourceMap,
+            string package,
             string runSettings,
             TestExecutionContext testExecutionContext,
             ITestCaseEventsHandler testCaseEventsHandler,
@@ -78,14 +88,14 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Execution
             this.testRunEventsHandler = runEventsHandler;
             try
             {
-                this.activeTestRun = new RunTestsWithSources(
-                     adapterSourceMap,
-                     runSettings,
-                     testExecutionContext,
-                     testCaseEventsHandler,
-                     runEventsHandler);
+                this.activeTestRun = new RunTestsWithSources(this.requestData, adapterSourceMap, package, runSettings, testExecutionContext, testCaseEventsHandler, runEventsHandler);
 
                 this.activeTestRun.RunTests();
+            }
+            catch(Exception e)
+            {
+                this.testRunEventsHandler.HandleLogMessage(ObjectModel.Logging.TestMessageLevel.Error, e.ToString());
+                this.Abort();
             }
             finally
             {
@@ -97,12 +107,14 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Execution
         /// Starts the test run with tests.
         /// </summary>
         /// <param name="tests"> The test list. </param>
+        /// <param name="package">The user input test source(package) if it differ from actual test source otherwise null.</param>
         /// <param name="runSettings"> The run Settings.  </param>
         /// <param name="testExecutionContext"> The test Execution Context. </param>
         /// <param name="testCaseEventsHandler"> EventHandler for handling test cases level events from Engine. </param>
         /// <param name="runEventsHandler"> EventHandler for handling execution events from Engine. </param>
         public void StartTestRun(
             IEnumerable<TestCase> tests,
+            string package,
             string runSettings,
             TestExecutionContext testExecutionContext,
             ITestCaseEventsHandler testCaseEventsHandler,
@@ -112,14 +124,14 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Execution
 
             try
             {
-                this.activeTestRun = new RunTestsWithTests(
-                                         tests,
-                                         runSettings,
-                                         testExecutionContext,
-                                         testCaseEventsHandler,
-                                         runEventsHandler);
+                this.activeTestRun = new RunTestsWithTests(this.requestData, tests, package, runSettings, testExecutionContext, testCaseEventsHandler, runEventsHandler);
 
                 this.activeTestRun.RunTests();
+            }
+            catch(Exception e)
+            {
+                this.testRunEventsHandler.HandleLogMessage(ObjectModel.Logging.TestMessageLevel.Error, e.ToString());
+                this.Abort();
             }
             finally
             {
@@ -170,10 +182,6 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Execution
             {
                 // Load the extensions on creation so that we dont have to spend time during first execution.
                 EqtTrace.Verbose("TestExecutorService: Loading the extensions");
-
-                TestDiscoveryExtensionManager.LoadAndInitializeAllExtensions(false);
-
-                EqtTrace.Verbose("TestExecutorService: Loaded the discoverers");
 
                 TestExecutorExtensionManager.LoadAndInitializeAllExtensions(false);
 

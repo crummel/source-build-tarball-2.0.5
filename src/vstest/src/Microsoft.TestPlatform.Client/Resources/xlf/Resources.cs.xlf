@@ -38,6 +38,16 @@
         </alt-trans>
         <note from="bb-metadata">fuzzyMatch="15" wordcount="14" adjWordcount="11.9" curWordcount="11.9"</note>
       </trans-unit>
+      <trans-unit id="TestSessionTimeoutMessage">
+        <source>Aborting test run: test run timeout of {0} milliseconds exceeded.</source>
+        <target state="translated">Testovací běh se ruší: byl překročen časový limit testovacího běhu ({0} ms).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="NoTestHostProviderFound">
+        <source>No suitable test runtime provider found for this run.</source>
+        <target state="translated">Pro tento běh se nenašel žádný vhodný zprostředkovatel testů v režimu runtime.</target>
+        <note />
+      </trans-unit>
     </body>
   </file>
 </xliff>

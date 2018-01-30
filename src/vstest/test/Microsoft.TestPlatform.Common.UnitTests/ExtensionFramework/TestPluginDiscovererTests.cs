@@ -9,13 +9,19 @@ namespace TestPlatform.Common.UnitTests.ExtensionFramework
     using System.Reflection;
     using System.Xml;
 
+    using Microsoft.VisualStudio.TestPlatform.Common.DataCollector;
     using Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework;
     using Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework.Utilities;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
+    using Microsoft.VisualStudio.TestPlatform.ObjectModel.DataCollection;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using MSTest.TestFramework.AssertExtensions;
+    using Moq;
+    using Microsoft.VisualStudio.TestPlatform.Utilities.Helpers.Interfaces;
 
     [TestClass]
     public class TestPluginDiscovererTests
@@ -33,7 +39,7 @@ namespace TestPlatform.Common.UnitTests.ExtensionFramework
             var pathToExtensions = new List<string> { "foo.dll" };
 
             // The below should not throw an exception.
-            Assert.IsNotNull(this.testPluginDiscoverer.GetTestExtensionsInformation<TestLoggerPluginInformation, ITestLogger>(pathToExtensions, loadOnlyWellKnownExtensions: true));
+            Assert.IsNotNull(this.testPluginDiscoverer.GetTestExtensionsInformation<TestLoggerPluginInformation, ITestLogger>(pathToExtensions));
         }
 
         [TestMethod]
@@ -42,7 +48,7 @@ namespace TestPlatform.Common.UnitTests.ExtensionFramework
             var pathToExtensions = new List<string> { typeof(TestPluginDiscovererTests).GetTypeInfo().Assembly.Location };
 
             // The below should not throw an exception.
-            var testExtensions = this.testPluginDiscoverer.GetTestExtensionsInformation<TestDiscovererPluginInformation, ITestDiscoverer>(pathToExtensions, loadOnlyWellKnownExtensions: true);
+            var testExtensions = this.testPluginDiscoverer.GetTestExtensionsInformation<TestDiscovererPluginInformation, ITestDiscoverer>(pathToExtensions);
             var discovererPluginInformation = new TestDiscovererPluginInformation(typeof(AbstractTestDiscoverer));
             Assert.IsFalse(testExtensions.ContainsKey(discovererPluginInformation.IdentifierData));
         }
@@ -53,7 +59,7 @@ namespace TestPlatform.Common.UnitTests.ExtensionFramework
             var pathToExtensions = new List<string> { typeof(TestPluginDiscovererTests).GetTypeInfo().Assembly.Location };
 
             // The below should not throw an exception.
-            var testExtensions = this.testPluginDiscoverer.GetTestExtensionsInformation<TestDiscovererPluginInformation, ITestDiscoverer>(pathToExtensions, loadOnlyWellKnownExtensions: true);
+            var testExtensions = this.testPluginDiscoverer.GetTestExtensionsInformation<TestDiscovererPluginInformation, ITestDiscoverer>(pathToExtensions);
 
             var discovererPluginInformation = new TestDiscovererPluginInformation(typeof(ValidDiscoverer));
             var discovererPluginInformation2 = new TestDiscovererPluginInformation(typeof(ValidDiscoverer2));
@@ -68,7 +74,7 @@ namespace TestPlatform.Common.UnitTests.ExtensionFramework
             var pathToExtensions = new List<string> { typeof(TestPluginDiscovererTests).GetTypeInfo().Assembly.Location };
 
             // The below should not throw an exception.
-            var testExtensions = this.testPluginDiscoverer.GetTestExtensionsInformation<TestExecutorPluginInformation, ITestExecutor>(pathToExtensions, loadOnlyWellKnownExtensions: true);
+            var testExtensions = this.testPluginDiscoverer.GetTestExtensionsInformation<TestExecutorPluginInformation, ITestExecutor>(pathToExtensions);
 
             var pluginInformation = new TestExecutorPluginInformation(typeof(ValidExecutor));
             var pluginInformation2 = new TestExecutorPluginInformation(typeof(ValidExecutor2));
@@ -84,7 +90,7 @@ namespace TestPlatform.Common.UnitTests.ExtensionFramework
             var pathToExtensions = new List<string> { typeof(TestPluginDiscovererTests).GetTypeInfo().Assembly.Location };
 
             // The below should not throw an exception.
-            var testExtensions = this.testPluginDiscoverer.GetTestExtensionsInformation<TestLoggerPluginInformation, ITestLogger>(pathToExtensions, loadOnlyWellKnownExtensions: true);
+            var testExtensions = this.testPluginDiscoverer.GetTestExtensionsInformation<TestLoggerPluginInformation, ITestLogger>(pathToExtensions);
 
             var pluginInformation = new TestLoggerPluginInformation(typeof(ValidLogger));
             var pluginInformation2 = new TestLoggerPluginInformation(typeof(ValidLogger2));
@@ -95,12 +101,27 @@ namespace TestPlatform.Common.UnitTests.ExtensionFramework
         }
 
         [TestMethod]
+        public void GetTestExtensionsInformationShouldReturnDataCollectorExtensionsAndIgnoresInvalidDataCollectors()
+        {
+            var pathToExtensions = new List<string> { typeof(TestPluginDiscovererTests).GetTypeInfo().Assembly.Location };
+
+            // The below should not throw an exception.
+            var testExtensions = this.testPluginDiscoverer.GetTestExtensionsInformation<DataCollectorConfig, DataCollector>(pathToExtensions);
+
+            var pluginInformation = new DataCollectorConfig(typeof(ValidDataCollector));
+
+            Assert.AreEqual(2, testExtensions.Keys.Count);
+            Assert.AreEqual(1, testExtensions.Keys.Where(k => k.Equals("datacollector://foo/bar")).Count());
+            Assert.AreEqual(1, testExtensions.Keys.Where(k => k.Equals("datacollector://foo/bar1")).Count());
+        }
+
+        [TestMethod]
         public void GetTestExtensionsInformationShouldReturnSettingsProviderExtensions()
         {
             var pathToExtensions = new List<string> { typeof(TestPluginDiscovererTests).GetTypeInfo().Assembly.Location };
 
             // The below should not throw an exception.
-            var testExtensions = this.testPluginDiscoverer.GetTestExtensionsInformation<TestSettingsProviderPluginInformation, ISettingsProvider>(pathToExtensions, loadOnlyWellKnownExtensions: true);
+            var testExtensions = this.testPluginDiscoverer.GetTestExtensionsInformation<TestSettingsProviderPluginInformation, ISettingsProvider>(pathToExtensions);
 
             var pluginInformation = new TestSettingsProviderPluginInformation(typeof(ValidSettingsProvider));
             var pluginInformation2 = new TestSettingsProviderPluginInformation(typeof(ValidSettingsProvider2));
@@ -108,6 +129,49 @@ namespace TestPlatform.Common.UnitTests.ExtensionFramework
             Assert.IsTrue(testExtensions.Keys.Select(k => k.Contains("ValidSettingsProvider")).Count() >= 3);
             Assert.IsTrue(testExtensions.ContainsKey(pluginInformation.IdentifierData));
             Assert.IsTrue(testExtensions.ContainsKey(pluginInformation2.IdentifierData));
+        }
+
+        [TestMethod]
+        public void GetTestExtensionsInformationShouldNotAbortOnFaultyExtensions()
+        {
+            var pathToExtensions = new List<string>
+            {
+                typeof(TestPluginDiscovererTests).GetTypeInfo().Assembly.Location,
+            };
+
+            var testExtensions = this.testPluginDiscoverer.GetTestExtensionsInformation<FaultyTestExecutorPluginInformation, ITestExecutor>(pathToExtensions);
+
+            Assert.That.DoesNotThrow(() =>this.testPluginDiscoverer.GetTestExtensionsInformation<FaultyTestExecutorPluginInformation, ITestExecutor>(pathToExtensions));
+        }
+
+        [TestMethod]
+        public void GetTestExtensionsInformationShouldAddUWPCppAdatersIfTheyExists()
+        {
+            var pathToExtensions = new List<string>();
+
+            Mock<IFileHelper> mockFileHelper = new Mock<IFileHelper>();
+            mockFileHelper.Setup(fh => fh.Exists("Microsoft.VisualStudio.TestTools.CppUnitTestFramework.CppUnitTestExtension.dll")).Returns(true);
+
+            this.testPluginDiscoverer = new TestPluginDiscoverer(mockFileHelper.Object);
+
+            var testExtensions = this.testPluginDiscoverer.GetTestExtensionsInformation<FaultyTestExecutorPluginInformation, ITestExecutor>(pathToExtensions);
+
+            mockFileHelper.Verify(fh => fh.Exists("Microsoft.VisualStudio.TestTools.CppUnitTestFramework.CppUnitTestExtension.dll"), Times.Once);
+        }
+
+        [TestMethod]
+        public void GetTestExtensionsInformationShouldAddMSTestV1UWPAdaptersIfTheyExists()
+        {
+            var pathToExtensions = new List<string>();
+
+            Mock<IFileHelper> mockFileHelper = new Mock<IFileHelper>();
+            mockFileHelper.Setup(fh => fh.Exists("Microsoft.VisualStudio.TestPlatform.Extensions.MSAppContainerAdapter.dll")).Returns(true);
+
+            this.testPluginDiscoverer = new TestPluginDiscoverer(mockFileHelper.Object);
+
+            var testExtensions = this.testPluginDiscoverer.GetTestExtensionsInformation<FaultyTestExecutorPluginInformation, ITestExecutor>(pathToExtensions);
+
+            mockFileHelper.Verify(fh => fh.Exists("Microsoft.VisualStudio.TestPlatform.Extensions.MSAppContainerAdapter.dll"), Times.Once);
         }
 
         #region implementations
@@ -263,6 +327,57 @@ namespace TestPlatform.Common.UnitTests.ExtensionFramework
 
         #endregion
 
+        #region  DataCollectors
+
+        public class InvalidDataCollector : DataCollector
+        {
+            public override void Initialize(
+                XmlElement configurationElement,
+                DataCollectionEvents events,
+                DataCollectionSink dataSink,
+                DataCollectionLogger logger,
+                DataCollectionEnvironmentContext environmentContext)
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// The a data collector inheriting from another data collector.
+        /// </summary>
+        [DataCollectorFriendlyName("Foo1")]
+        [DataCollectorTypeUri("datacollector://foo/bar1")]
+        public class ADataCollectorInheritingFromAnotherDataCollector : InvalidDataCollector
+        {
+        }
+
+        [DataCollectorFriendlyName("Foo")]
+        [DataCollectorTypeUri("datacollector://foo/bar")]
+        public class ValidDataCollector : DataCollector
+        {
+            public override void Initialize(
+                XmlElement configurationElement,
+                DataCollectionEvents events,
+                DataCollectionSink dataSink,
+                DataCollectionLogger logger,
+                DataCollectionEnvironmentContext environmentContext)
+            {
+
+            }
+        }
+        #endregion
+
+        internal class FaultyTestExecutorPluginInformation : TestExtensionPluginInformation
+        {
+            /// <summary>
+            /// Default constructor
+            /// </summary>
+            /// <param name="type"> The Type. </param>
+            public FaultyTestExecutorPluginInformation(Type type): base(type)
+            {
+                throw new Exception();
+            }
+        }
         #endregion
     }
 }
