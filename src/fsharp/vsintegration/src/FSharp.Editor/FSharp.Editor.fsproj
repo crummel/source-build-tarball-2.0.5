@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
+<!-- Copyright (c) Microsoft Corporation.  All Rights Reserved.  See License.txt in the project root for license information. -->
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <FSharpSourcesRoot>$(MSBuildProjectDirectory)\..\..\..\src</FSharpSourcesRoot>
@@ -29,8 +29,15 @@
     <IncludePkgdefInVSIXContainer>true</IncludePkgdefInVSIXContainer>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="FSharp.Editor.resx" />
-    <Compile Include="srFSharp.Editor.fs" />
+    <InternalsVisibleTo Include="FSharp.ProjectSystem.FSharp" />
+    <InternalsVisibleTo Include="VisualFSharp.Unittests" />
+    <InternalsVisibleTo Include="VisualFSharp.Salsa" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FSharp.Editor.resx">
+      <GenerateSource>true</GenerateSource>
+      <GeneratedModuleName>Microsoft.VisualStudio.FSharp.Editor.SR</GeneratedModuleName>
+    </EmbeddedResource>
     <Compile Include="Common\AssemblyInfo.fs" />
     <Compile Include="Common\Pervasive.fs" />
     <Compile Include="Common\Extensions.fs" />
@@ -55,6 +62,7 @@
     <Compile Include="Classification\ColorizationService.fs" />
     <Compile Include="Formatting\BraceMatchingService.fs" />
     <Compile Include="Formatting\IndentationService.fs" />
+    <Compile Include="Formatting\EditorFormattingService.fs" />
     <Compile Include="Debugging\BreakpointResolutionService.fs" />
     <Compile Include="Debugging\LanguageDebugInfoService.fs" />
     <Compile Include="Diagnostics\DocumentDiagnosticAnalyzer.fs" />
@@ -65,6 +73,7 @@
     <Compile Include="DocComments\XMLDocumentation.fs" />
     <Compile Include="Completion\CompletionUtils.fs" />
     <Compile Include="Completion\CompletionProvider.fs" />
+    <Compile Include="Completion\PathCompletionUtilities.fs" />
     <Compile Include="Completion\FileSystemCompletion.fs" />
     <Compile Include="Completion\CompletionService.fs" />
     <Compile Include="Completion\SignatureHelp.fs" />
@@ -92,6 +101,7 @@
     <Compile Include="CodeFix\RemoveUnusedOpens.fs" />
     <Compile Include="CodeFix\MissingReferenceCodeFixProvider.fs" />
     <Compile Include="CodeFix\FixIndexerAccess.fs" />
+    <Compile Include="CodeFix\RenameParamToMatchSignature.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(FSharpSourcesRoot)\fsharp\FSharp.Core\FSharp.Core.fsproj">
@@ -264,7 +274,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Collections.Immutable">
-      <HintPath>$(FSharpSourcesRoot)\..\packages\System.Collections.Immutable.1.2.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <HintPath>$(FSharpSourcesRoot)\..\packages\System.Collections.Immutable.$(SystemCollectionsImmutableVersion)\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">

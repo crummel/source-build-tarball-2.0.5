@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
+﻿// Copyright (c) Microsoft Corporation.  All Rights Reserved.  See License.txt in the project root for license information.
 
 namespace Microsoft.VisualStudio.FSharp.Editor
 
@@ -14,11 +14,11 @@ open Microsoft.CodeAnalysis.Editor.Implementation.Debugging
 open Microsoft.CodeAnalysis.Host.Mef
 open Microsoft.CodeAnalysis.Text
 
-open Microsoft.VisualStudio.FSharp.LanguageService
+open Microsoft.FSharp.Compiler
 
 [<Shared>]
 [<ExportLanguageService(typeof<ILanguageDebugInfoService>, FSharpConstants.FSharpLanguageName)>]
-type internal FSharpLanguageDebugInfoService [<ImportingConstructor>](projectInfoManager: ProjectInfoManager) =
+type internal FSharpLanguageDebugInfoService [<ImportingConstructor>](projectInfoManager: FSharpProjectOptionsManager) =
 
     static member GetDataTipInformation(sourceText: SourceText, position: int, tokens: List<ClassifiedSpan>): TextSpan option =
         let tokenIndex = tokens |> Seq.tryFindIndex(fun t -> t.TextSpan.Contains(position))
