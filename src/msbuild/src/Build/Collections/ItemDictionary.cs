@@ -65,11 +65,11 @@ namespace Microsoft.Build.Collections
         /// Constructor for an empty collection taking an initial capacity
         /// for the number of distinct item types
         /// </summary>
-        internal ItemDictionary(int initialItemTypesCapacity)
+        internal ItemDictionary(int initialItemTypesCapacity, int initialItemsCapacity = 0)
         {
             // Tracing.Record("new item dictionary");
             _itemLists = new Dictionary<string, LinkedList<T>>(initialItemTypesCapacity, MSBuildNameIgnoreCaseComparer.Default);
-            _nodes = new Dictionary<T, LinkedListNode<T>>();
+            _nodes = new Dictionary<T, LinkedListNode<T>>(initialItemsCapacity);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Microsoft.Build.Collections
                 {
                     if (!_itemLists.TryGetValue(itemtype, out list))
                     {
-                        return ReadOnlyEmptyList<T>.Instance;
+                        return Array.Empty<T>();
                     }
                 }
 
@@ -189,7 +189,7 @@ namespace Microsoft.Build.Collections
         {
             ICollection<T> result = this[itemType];
 
-            return (result == null) ? ReadOnlyEmptyList<T>.Instance : result;
+            return result ?? Array.Empty<T>();
         }
 
         #endregion

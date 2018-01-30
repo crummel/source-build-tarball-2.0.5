@@ -1914,10 +1914,14 @@ namespace Microsoft.Build.Construction
         {
             var nodes = new List<ProjectImportElement>();
 
-            foreach (var referencedSdk in ParseSdks(Sdk, SdkLocation))
+            string sdk = Sdk;
+            if (!string.IsNullOrWhiteSpace(sdk))
             {
-                nodes.Add(ProjectImportElement.CreateImplicit("Sdk.props", currentProjectOrImport, ImplicitImportLocation.Top, referencedSdk));
-                nodes.Add(ProjectImportElement.CreateImplicit("Sdk.targets", currentProjectOrImport, ImplicitImportLocation.Bottom, referencedSdk));
+                foreach (var referencedSdk in ParseSdks(sdk, SdkLocation))
+                {
+                    nodes.Add(ProjectImportElement.CreateImplicit("Sdk.props", currentProjectOrImport, ImplicitImportLocation.Top, referencedSdk));
+                    nodes.Add(ProjectImportElement.CreateImplicit("Sdk.targets", currentProjectOrImport, ImplicitImportLocation.Bottom, referencedSdk));
+                }
             }
 
             foreach (var sdkNode in Children.OfType<ProjectSdkElement>())
@@ -1936,11 +1940,6 @@ namespace Microsoft.Build.Construction
 
         private static IEnumerable<SdkReference> ParseSdks(string sdks, IElementLocation sdkLocation)
         {
-            if (String.IsNullOrWhiteSpace(sdks))
-            {
-                yield break;
-            }
-
             foreach (string sdk in sdks.Split(';').Select(i => i.Trim()))
             {
                 SdkReference sdkReference;
@@ -2094,7 +2093,11 @@ namespace Microsoft.Build.Construction
         {
             ErrorUtilities.VerifyThrowInternalRooted(fullPath);
 
-            var document = new XmlDocumentWithLocation {PreserveWhitespace = preserveFormatting};
+            var document = new XmlDocumentWithLocation
+            {
+                FullPath = fullPath,
+                PreserveWhitespace = preserveFormatting
+            };
 #if (!STANDALONEBUILD)
             using (new CodeMarkerStartEnd(CodeMarkerEvent.perfMSBuildProjectLoadFromFileBegin, CodeMarkerEvent.perfMSBuildProjectLoadFromFileEnd))
 #endif
@@ -2111,7 +2114,6 @@ namespace Microsoft.Build.Construction
                         document.Load(xtr.Reader);
                     }
 
-                    document.FullPath = fullPath;
                     _projectFileLocation = ElementLocation.Create(fullPath);
                     _directory = Path.GetDirectoryName(fullPath);
 

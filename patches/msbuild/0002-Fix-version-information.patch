@@ -18,7 +18,7 @@ index e0777f0..79aef4e 100644
      <PublicSign>true</PublicSign>
 -    <VersionPrefix>15.3.0</VersionPrefix>
 -    <VersionSuffix>preview-000234-01</VersionSuffix>
-+    <VersionPrefix>15.4.8</VersionPrefix>
++    <VersionPrefix>15.5.180</VersionPrefix>
    </PropertyGroup>
  
    <PropertyGroup>
@@ -30,8 +30,8 @@ index 61097f5..102a9d5 100644
          internal const string CurrentAssemblyVersion = Microsoft.VisualStudio.Internal.BrandNames.VSGeneralAssemblyVersion;
  #endif
  
--        internal const string CurrentAssemblyFileVersion = "15.4.0.0";
-+        internal const string CurrentAssemblyFileVersion = "15.4.8.50081";
+-        internal const string CurrentAssemblyFileVersion = "15.5.0.0";
++        internal const string CurrentAssemblyFileVersion = "15.5.180.51428";
  
          /// <summary>
          /// Current version of this MSBuild Engine assembly in the form, e.g, "12.0"

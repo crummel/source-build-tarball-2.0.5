@@ -6,7 +6,7 @@
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)MSFT.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign>true</PublicSign>
-    <VersionPrefix>15.4.8</VersionPrefix>
+    <VersionPrefix>15.5.180</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>

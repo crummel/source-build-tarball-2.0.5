@@ -89,6 +89,11 @@ namespace Microsoft.Build.Utilities
         Version47 = 11,
 
         /// <summary>
+        /// version 4.7
+        /// </summary>
+        Version471 = 12,
+
+        /// <summary>
         /// The latest version available at the time of major release. This
         /// value should not be updated in minor releases as it could be a
         /// breaking change. Use 'Latest' if possible, but note the
@@ -1125,7 +1130,7 @@ namespace Microsoft.Build.Utilities
                 ErrorUtilities.DebugTraceMessage("GetLegacyTargetPlatformReferences", "Encountered exception trying to gather the platform references: {0}", e.Message);
             }
 
-            return new string[0];
+            return Array.Empty<string>();
         }
 
         /// <summary>
@@ -1148,7 +1153,7 @@ namespace Microsoft.Build.Utilities
             ErrorUtilities.VerifyThrowArgumentLength(targetPlatformIdentifier, "targetPlatformIdentifier");
             ErrorUtilities.VerifyThrowArgumentLength(targetPlatformVersion, "targetPlatformVersion");
 
-            string[] contractWinMDs = new string[0];
+            string[] contractWinMDs = Array.Empty<string>();
 
             TargetPlatformSDK matchingSdk = GetMatchingPlatformSDK(targetPlatformIdentifier, targetPlatformVersion, diskRoots, null, registryRoot);
             string platformKey = TargetPlatformSDK.GetSdkKey(targetPlatformIdentifier, targetPlatformVersion);
@@ -1190,7 +1195,7 @@ namespace Microsoft.Build.Utilities
         {
             if (apiContracts == null)
             {
-                return new string[] { };
+                return Array.Empty<string>();
             }
 
             List<string> contractWinMDs = new List<string>();
@@ -2047,9 +2052,9 @@ namespace Microsoft.Build.Utilities
                 case TargetDotNetFrameworkVersion.Version47:
                     return FrameworkLocationHelper.dotNetFrameworkVersion47;
 
-                case TargetDotNetFrameworkVersion.Latest:
-                    // Latest is a special value to indicate the highest version we know about.
-                    return FrameworkLocationHelper.dotNetFrameworkVersion47;
+                case TargetDotNetFrameworkVersion.Version471:
+                case TargetDotNetFrameworkVersion.Latest: // Latest is a special value to indicate the highest version we know about.
+                    return FrameworkLocationHelper.dotNetFrameworkVersion471;
 
                 default:
                     ErrorUtilities.ThrowArgument("ToolLocationHelper.UnsupportedFrameworkVersion", version);
@@ -2472,10 +2477,10 @@ namespace Microsoft.Build.Utilities
             string registryRoot = NativeMethodsShared.IsWindows ? GetTargetPlatformMonikerRegistryRoots(registrySearchLocation) : string.Empty;
 
             string cachedTargetPlatformsKey = String.Join("|",
-                String.Join(";", sdkDiskRoots.ToArray()),
+                String.Join(";", sdkDiskRoots),
                 registryRoot);
 
-            string cachedExtensionSdksKey = extensionDiskRoots == null ? String.Empty : String.Join(";", extensionDiskRoots.ToArray());
+            string cachedExtensionSdksKey = extensionDiskRoots == null ? String.Empty : String.Join(";", extensionDiskRoots);
 
             lock (s_locker)
             {

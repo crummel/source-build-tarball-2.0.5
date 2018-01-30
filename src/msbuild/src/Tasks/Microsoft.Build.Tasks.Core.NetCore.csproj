@@ -78,7 +78,6 @@
     <Compile Include="..\Shared\Modifiers.cs" />
     <Compile Include="..\Shared\ReadOnlyCollection.cs" />
     <Compile Include="..\Shared\ReadOnlyEmptyDictionary.cs" />
-    <Compile Include="..\Shared\ReadOnlyEmptyList.cs" />
     <Compile Include="..\Shared\Tracing.cs" />
     <Compile Include="..\Shared\Traits.cs" />
     <Compile Include="..\Shared\VersionUtilities.cs" />
@@ -107,6 +106,7 @@
     <Compile Include="AssemblyDependency\AssemblyFoldersFromConfig\AssemblyFoldersFromConfigResolver.cs" />
     <Compile Include="AssemblyDependency\AssemblyFoldersResolver.cs" />
     <Compile Include="AssemblyDependency\AssemblyInformation.cs" />
+    <Compile Include="AssemblyDependency\AssemblyMetadata.cs" />
     <Compile Include="AssemblyDependency\AssemblyNameReference.cs" />
     <Compile Include="AssemblyDependency\AssemblyNameReferenceAscendingVersionComparer.cs" />
     <Compile Include="AssemblyDependency\AssemblyResolution.cs" />

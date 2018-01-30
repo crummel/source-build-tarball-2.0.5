@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -12,6 +13,7 @@ using System.Runtime.Versioning;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
 using Microsoft.Build.Utilities;
+using Microsoft.Build.Tasks.AssemblyDependency;
 #if (!STANDALONEBUILD)
 using Microsoft.Internal.Performance;
 #endif
@@ -42,7 +44,7 @@ namespace Microsoft.Build.Tasks
         private Dictionary<AssemblyNameExtension, Reference> _references = new Dictionary<AssemblyNameExtension, Reference>(AssemblyNameComparer.GenericComparer);
 
         /// <summary>The table of remapped assemblies. Used for Unification.</summary>
-        private DependentAssembly[] _remappedAssemblies = new DependentAssembly[0];
+        private DependentAssembly[] _remappedAssemblies = Array.Empty<DependentAssembly>();
         /// <summary>If true, then search for dependencies.</summary>
         private bool _findDependencies = true;
         /// <summary>
@@ -159,6 +161,8 @@ namespace Microsoft.Build.Tasks
         /// </summary>
         private WarnOrErrorOnTargetArchitectureMismatchBehavior _warnOrErrorOnTargetArchitectureMismatch = WarnOrErrorOnTargetArchitectureMismatchBehavior.Warning;
 
+        private readonly ConcurrentDictionary<string, AssemblyMetadata> _assemblyMetadataCache;
+
         /// <summary>
         /// When we exclude an assembly from resolution because it is part of out exclusion list we need to let the user know why this is. 
         /// There can be a number of reasons each for un-resolving a reference, these reasons are encapsulated by a different black list. We need to log a specific message 
@@ -178,7 +182,7 @@ namespace Microsoft.Build.Tasks
         /// </summary>
         /// <param name="findDependencies">If true, then search for dependencies.</param>
         /// <param name="findSatellites">If true, then search for satellite files.</param>
-        /// <param name="findSerializatoinAssemblies">If true, then search for serialization assembly files.</param>
+        /// <param name="findSerializationAssemblies">If true, then search for serialization assembly files.</param>
         /// <param name="findRelatedFiles">If true, then search for related files.</param>
         /// <param name="searchPaths">Paths to search for dependent assemblies on.</param>
         /// <param name="candidateAssemblyFiles">List of literal assembly file names to be considered when SearchPaths has {CandidateAssemblyFiles}.</param>
@@ -193,6 +197,7 @@ namespace Microsoft.Build.Tasks
         /// <param name="getAssemblyMetadata">Delegate used for finding dependencies of a file.</param>
         /// <param name="getRegistrySubKeyNames">Used to get registry subkey names.</param>
         /// <param name="getRegistrySubKeyDefaultValue">Used to get registry default values.</param>
+        /// <param name="assemblyMetadataCache">Cache of metadata already read from paths.</param>
         internal ReferenceTable
         (
             IBuildEngine buildEngine,
@@ -232,8 +237,8 @@ namespace Microsoft.Build.Tasks
             ReadMachineTypeFromPEHeader readMachineTypeFromPEHeader,
             WarnOrErrorOnTargetArchitectureMismatchBehavior warnOrErrorOnTargetArchitectureMismatch,
             bool ignoreFrameworkAttributeVersionMismatch,
-            bool unresolveFrameworkAssembliesFromHigherFrameworks
-        )
+            bool unresolveFrameworkAssembliesFromHigherFrameworks,
+            ConcurrentDictionary<string, AssemblyMetadata> assemblyMetadataCache)
         {
             _buildEngine = buildEngine;
             _log = log;
@@ -266,6 +271,7 @@ namespace Microsoft.Build.Tasks
             _readMachineTypeFromPEHeader = readMachineTypeFromPEHeader;
             _warnOrErrorOnTargetArchitectureMismatch = warnOrErrorOnTargetArchitectureMismatch;
             _ignoreFrameworkAttributeVersionMismatch = ignoreFrameworkAttributeVersionMismatch;
+            _assemblyMetadataCache = assemblyMetadataCache;
 
             // Set condition for when to check assembly version against the target framework version 
             _checkAssemblyVersionAgainstTargetFrameworkVersion = unresolveFrameworkAssembliesFromHigherFrameworks || ((_projectTargetFramework ?? ReferenceTable.s_targetFrameworkVersion_40) <= ReferenceTable.s_targetFrameworkVersion_40);
@@ -1006,6 +1012,7 @@ namespace Microsoft.Build.Tasks
             _getAssemblyMetadata
             (
                 reference.FullPath,
+                _assemblyMetadataCache,
                 out dependentAssemblies,
                 out scatterFiles,
                 out frameworkName
@@ -1866,7 +1873,7 @@ namespace Microsoft.Build.Tasks
                     if (entry != null)
                     {
                         // We have found an entry in the redist list that this assembly is a framework assembly of some version
-                        // also one if its parent refernces has specific version set to true, therefore we need to make sure
+                        // also one if its parent references has specific version set to true, therefore we need to make sure
                         // that we do not consider it for conflict resolution.
                         continue;
                     }
@@ -2364,26 +2371,20 @@ namespace Microsoft.Build.Tasks
             {
                 foreach (DependentAssembly remappedAssembly in _remappedAssemblies)
                 {
-                    // First, exclude anything without the simple name match
-                    AssemblyNameExtension comparisonAssembly = new AssemblyNameExtension(remappedAssembly.PartialAssemblyName.CloneIfPossible());
-                    if (assemblyName.CompareBaseNameTo(comparisonAssembly) == 0)
-                    {
-                        // Comparison assembly is a partial name. Give it our version.
-                        comparisonAssembly.ReplaceVersion(assemblyName.Version);
+                    AssemblyName comparisonAssembly = remappedAssembly.AssemblyNameReadOnly;
 
-                        if (assemblyName.Equals(comparisonAssembly))
+                    if (CompareAssembliesIgnoringVersion(assemblyName.AssemblyName, comparisonAssembly))
+                    {
+                        foreach (BindingRedirect bindingRedirect in remappedAssembly.BindingRedirects)
                         {
-                            foreach (BindingRedirect bindingRedirect in remappedAssembly.BindingRedirects)
+                            if (assemblyName.Version >= bindingRedirect.OldVersionLow && assemblyName.Version <= bindingRedirect.OldVersionHigh)
                             {
-                                if (assemblyName.Version >= bindingRedirect.OldVersionLow && assemblyName.Version <= bindingRedirect.OldVersionHigh)
+                                // If the new version is different than the old version, then there is a unification.
+                                if (assemblyName.Version != bindingRedirect.NewVersion)
                                 {
-                                    // If the new version is different than the old version, then there is a unification.
-                                    if (assemblyName.Version != bindingRedirect.NewVersion)
-                                    {
-                                        unifiedVersion = bindingRedirect.NewVersion;
-                                        unificationReason = UnificationReason.BecauseOfBindingRedirect;
-                                        return true;
-                                    }
+                                    unifiedVersion = bindingRedirect.NewVersion;
+                                    unificationReason = UnificationReason.BecauseOfBindingRedirect;
+                                    return true;
                                 }
                             }
                         }
@@ -2416,6 +2417,37 @@ namespace Microsoft.Build.Tasks
         }
 
         /// <summary>
+        /// Used to avoid extra allocations from cloning AssemblyNameExtension and AssemblyName
+        /// </summary>
+        private bool CompareAssembliesIgnoringVersion(AssemblyName a, AssemblyName b)
+        {
+            ErrorUtilities.VerifyThrowInternalNull(a, nameof(a));
+            ErrorUtilities.VerifyThrowInternalNull(b, nameof(b));
+
+            if (a == b)
+            {
+                return true;
+            }
+
+            if (0 != String.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            if (!AssemblyNameExtension.CompareCultures(a, b))
+            {
+                return false;
+            }
+
+            if (!AssemblyNameExtension.ComparePublicKeyTokens(a.GetPublicKeyToken(), b.GetPublicKeyToken()))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Return the resulting reference items, dependencies and other files.
         /// </summary>
         /// <param name="primaryFiles">Primary references fully resolved.</param>
@@ -2434,13 +2466,13 @@ namespace Microsoft.Build.Tasks
             out ITaskItem[] copyLocalFiles
         )
         {
-            primaryFiles = new ITaskItem[0];
-            dependencyFiles = new ITaskItem[0];
-            relatedFiles = new ITaskItem[0];
-            satelliteFiles = new ITaskItem[0];
-            serializationAssemblyFiles = new ITaskItem[0];
-            scatterFiles = new ITaskItem[0];
-            copyLocalFiles = new ITaskItem[0];
+            primaryFiles = Array.Empty<ITaskItem>();
+            dependencyFiles = Array.Empty<ITaskItem>();
+            relatedFiles = Array.Empty<ITaskItem>();
+            satelliteFiles = Array.Empty<ITaskItem>();
+            serializationAssemblyFiles = Array.Empty<ITaskItem>();
+            scatterFiles = Array.Empty<ITaskItem>();
+            copyLocalFiles = Array.Empty<ITaskItem>();
 
             ArrayList primaryItems = new ArrayList();
             ArrayList dependencyItems = new ArrayList();
@@ -2511,7 +2543,7 @@ namespace Microsoft.Build.Tasks
             scatterFiles = (ITaskItem[])scatterItems.ToArray(typeof(ITaskItem));
 
             // Sort for stable outputs. (These came from a hashtable, which as undefined enumeration order.)
-            Array.Sort(primaryFiles, TaskItemSpecFilenameComparer.comparer);
+            Array.Sort(primaryFiles, TaskItemSpecFilenameComparer.Comparer);
 
             // Find the copy-local items.
             FindCopyLocalItems(primaryFiles, copyLocalItems);
@@ -2758,7 +2790,7 @@ namespace Microsoft.Build.Tasks
 
                 if (machineType == NativeMethods.IMAGE_FILE_MACHINE_INVALID)
                 {
-                    throw new BadImageFormatException(ResourceUtilities.FormatResourceString("ResolveAssemblyReference.ImplementationDllHasInvalidPEHeader"));
+                    throw new BadImageFormatException(ResourceUtilities.GetResourceString("ResolveAssemblyReference.ImplementationDllHasInvalidPEHeader"));
                 }
 
                 switch (machineType)

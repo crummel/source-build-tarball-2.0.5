@@ -833,7 +833,7 @@ namespace Microsoft.Build.Execution
                 }
 
                 // Create/Retrieve a configuration for each request
-                BuildRequestConfiguration buildRequestConfiguration = new BuildRequestConfiguration(submission.BuildRequestData, _buildParameters.DefaultToolsVersion, _buildParameters.GetToolset);
+                BuildRequestConfiguration buildRequestConfiguration = new BuildRequestConfiguration(submission.BuildRequestData, _buildParameters.DefaultToolsVersion);
                 BuildRequestConfiguration matchingConfiguration = _configCache.GetMatchingConfiguration(buildRequestConfiguration);
                 BuildRequestConfiguration newConfiguration = ResolveConfiguration(buildRequestConfiguration, matchingConfiguration, submission.BuildRequestData.Flags.HasFlag(BuildRequestDataFlags.ReplaceExistingProjectInstance));
 
@@ -861,7 +861,7 @@ namespace Microsoft.Build.Execution
                 }
 
                 // Submit the build request.
-                BuildRequestBlocker blocker = new BuildRequestBlocker(-1, new string[0], new BuildRequest[] { submission.BuildRequest });
+                BuildRequestBlocker blocker = new BuildRequestBlocker(-1, Array.Empty<string>(), new BuildRequest[] { submission.BuildRequest });
                 _workQueue.Post(() =>
                 {
                     try
@@ -948,7 +948,7 @@ namespace Microsoft.Build.Execution
 
             if (existingConfiguration == null)
             {
-                existingConfiguration = new BuildRequestConfiguration(GetNewConfigurationId(), new BuildRequestData(newInstance, new string[] { }), null /* use the instance's tools version */, null /* shouldn't need to get toolsets because ProjectInstance's ToolsVersion overrides */);
+                existingConfiguration = new BuildRequestConfiguration(GetNewConfigurationId(), new BuildRequestData(newInstance, Array.Empty<string>()), null /* use the instance's tools version */);
             }
             else
             {
@@ -1650,6 +1650,19 @@ namespace Microsoft.Build.Execution
 
                 if (_buildSubmissions.Count == 0)
                 {
+                    if (submission.BuildRequestData != null && submission.BuildRequestData.Flags.HasFlag(BuildRequestDataFlags.ClearCachesAfterBuild))
+                    {
+                        // Reset the project root element cache if specified which ensures that projects will be re-loaded from disk.  We do not need to reset the
+                        // cache on child nodes because the OutOfProcNode class sets "autoReloadFromDisk" to "true" which handles the case when a restore modifies
+                        // part of the import graph.
+                        _buildParameters?.ProjectRootElementCache?.Clear();
+
+                        FileMatcher.ClearFileEnumerationsCache();
+#if !CLR2COMPATIBILITY
+                        FileUtilities.ClearFileExistenceCache();
+#endif
+                    }
+
                     _noActiveSubmissionsEvent.Set();
                 }
             }

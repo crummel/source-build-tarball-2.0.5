@@ -9,15 +9,18 @@
 
   <ItemGroup>
     <PackageReference Include="NETStandard.Library" Version="1.6.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.2.0" />
     <PackageReference Include="System.Collections.NonGeneric" Version="4.0.1" />
     <PackageReference Include="System.Diagnostics.Process" Version="4.1.0" />
     <PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.0" />
+    <PackageReference Include="System.Linq.Parallel" Version="4.0.1" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.1.0" />
     <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.1.1" />
     <PackageReference Include="System.Runtime.Serialization.Xml" Version="4.1.1" />
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.0.0" />
     <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.1.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="4.0.1" />
+    <PackageReference Include="System.Threading.Tasks.Parallel" Version="4.0.1" />
     <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
     <PackageReference Include="System.Xml.XmlDocument" Version="4.0.1" />
   </ItemGroup>
@@ -54,6 +57,7 @@
     <Compile Include="..\Shared\HybridDictionary.cs" />
     <Compile Include="..\Shared\InternalErrorException.cs" />
     <Compile Include="..\Shared\IKeyed.cs" />
+    <Compile Include="..\Shared\IConstrainedEqualityComparer.cs" />
     <Compile Include="..\Shared\MSBuildNameIgnoreCaseComparer.cs" />
     <Compile Include="..\Shared\Modifiers.cs" />
     <Compile Include="..\Shared\NativeMethodsShared.cs" />
@@ -62,7 +66,6 @@
     <Compile Include="..\Shared\OpportunisticIntern.cs" />
     <Compile Include="..\Shared\ReadOnlyEmptyCollection.cs" />
     <Compile Include="..\Shared\ReadOnlyEmptyDictionary.cs" />
-    <Compile Include="..\Shared\ReadOnlyEmptyList.cs" />
     <Compile Include="..\Shared\RegistryDelegates.cs" />
     <Compile Include="..\Shared\RegistryHelper.cs" />
     <Compile Include="..\Shared\ResourceUtilities.cs" />
@@ -113,3 +116,4 @@
     </EmbeddedResource>
   </ItemGroup>
 </Project>
+

@@ -108,13 +108,13 @@ namespace Microsoft.Build.Evaluation
         /// List of ProjectItemElement's traversing into imports.
         /// Gathered during the first pass to avoid traversing again.
         /// </summary>
-        private readonly IList<ProjectItemGroupElement> _itemGroupElements;
+        private readonly List<ProjectItemGroupElement> _itemGroupElements;
 
         /// <summary>
         /// List of ProjectItemDefinitionElement's traversing into imports.
         /// Gathered during the first pass to avoid traversing again.
         /// </summary>
-        private readonly IList<ProjectItemDefinitionGroupElement> _itemDefinitionGroupElements;
+        private readonly List<ProjectItemDefinitionGroupElement> _itemDefinitionGroupElements;
 
         /// <summary>
         /// List of ProjectUsingTaskElement's traversing into imports.
@@ -122,13 +122,13 @@ namespace Microsoft.Build.Evaluation
         /// Key is the directory of the file importing the usingTask, which is needed
         /// to handle any relative paths in the usingTask.
         /// </summary>
-        private readonly IList<Pair<string, ProjectUsingTaskElement>> _usingTaskElements;
+        private readonly List<Pair<string, ProjectUsingTaskElement>> _usingTaskElements;
 
         /// <summary>
         /// List of ProjectTargetElement's traversing into imports. 
         /// Gathered during the first pass to avoid traversing again.
         /// </summary>
-        private readonly IList<ProjectTargetElement> _targetElements;
+        private readonly List<ProjectTargetElement> _targetElements;
 
         /// <summary>
         /// Paths to imports already seen and where they were imported from; used to flag duplicate imports
@@ -415,7 +415,7 @@ namespace Microsoft.Build.Evaluation
             // STEP 2: Split Include on any semicolons, and take each split in turn
             if (evaluatedIncludeEscaped.Length > 0)
             {
-                IList<string> includeSplitsEscaped = ExpressionShredder.SplitSemiColonSeparatedList(evaluatedIncludeEscaped);
+                var includeSplitsEscaped = ExpressionShredder.SplitSemiColonSeparatedList(evaluatedIncludeEscaped);
 
                 foreach (string includeSplitEscaped in includeSplitsEscaped)
                 {
@@ -494,7 +494,7 @@ namespace Microsoft.Build.Evaluation
         /// </summary>
         private static ProjectTaskInstance ReadTaskElement(ProjectTaskElement taskElement)
         {
-            List<ProjectTaskInstanceChild> taskOutputs = new List<ProjectTaskInstanceChild>();
+            List<ProjectTaskInstanceChild> taskOutputs = new List<ProjectTaskInstanceChild>(taskElement.Count);
 
             foreach (ProjectOutputElement output in taskElement.Outputs)
             {
@@ -540,7 +540,7 @@ namespace Microsoft.Build.Evaluation
         /// </summary>
         private static ProjectPropertyGroupTaskInstance ReadPropertyGroupUnderTargetElement(ProjectPropertyGroupElement propertyGroupElement)
         {
-            List<ProjectPropertyGroupTaskPropertyInstance> properties = new List<ProjectPropertyGroupTaskPropertyInstance>();
+            List<ProjectPropertyGroupTaskPropertyInstance> properties = new List<ProjectPropertyGroupTaskPropertyInstance>(propertyGroupElement.Count);
 
             foreach (ProjectPropertyElement propertyElement in propertyGroupElement.Properties)
             {
@@ -570,7 +570,7 @@ namespace Microsoft.Build.Evaluation
         /// </summary>
         private static ProjectItemGroupTaskInstance ReadItemGroupUnderTargetElement(ProjectItemGroupElement itemGroupElement)
         {
-            List<ProjectItemGroupTaskItemInstance> items = new List<ProjectItemGroupTaskItemInstance>();
+            List<ProjectItemGroupTaskItemInstance> items = new List<ProjectItemGroupTaskItemInstance>(itemGroupElement.Count);
 
             foreach (ProjectItemElement itemElement in itemGroupElement.Items)
             {
@@ -630,7 +630,7 @@ namespace Microsoft.Build.Evaluation
         /// </summary>
         private static ProjectTargetInstance ReadNewTargetElement(ProjectTargetElement targetElement, bool parentProjectSupportsReturnsAttribute)
         {
-            List<ProjectTargetInstanceChild> targetChildren = new List<ProjectTargetInstanceChild>();
+            List<ProjectTargetInstanceChild> targetChildren = new List<ProjectTargetInstanceChild>(targetElement.Count);
             List<ProjectOnErrorInstance> targetOnErrorChildren = new List<ProjectOnErrorInstance>();
 
             foreach (ProjectElement targetChildElement in targetElement.Children)
@@ -734,7 +734,6 @@ namespace Microsoft.Build.Evaluation
             ICollection<P> builtInProperties = AddBuiltInProperties();
             ICollection<P> environmentProperties = AddEnvironmentProperties();
             ICollection<P> toolsetProperties = AddToolsetProperties();
-            ICollection<P> subToolsetProperties = AddSubToolsetProperties();
             ICollection<P> globalProperties = AddGlobalProperties();
 
 #if FEATURE_MSBUILD_DEBUGGER
@@ -746,7 +745,6 @@ namespace Microsoft.Build.Evaluation
                 _initialLocals.Add(new KeyValuePair<string, object>(s_initialLocalsTypes[(int)LocalsTypes.BuiltIn].Name, builtInProperties));
                 _initialLocals.Add(new KeyValuePair<string, object>(s_initialLocalsTypes[(int)LocalsTypes.Environment].Name, environmentProperties));
                 _initialLocals.Add(new KeyValuePair<string, object>(s_initialLocalsTypes[(int)LocalsTypes.Toolset].Name, toolsetProperties));
-                _initialLocals.Add(new KeyValuePair<string, object>(s_initialLocalsTypes[(int)LocalsTypes.SubToolset].Name, subToolsetProperties));
                 _initialLocals.Add(new KeyValuePair<string, object>(s_initialLocalsTypes[(int)LocalsTypes.Global].Name, globalProperties));
 
                 DebuggerManager.DefineState(_projectRootElement.Location, _projectRootElement.ElementName, s_initialLocalsTypes);
@@ -794,9 +792,9 @@ namespace Microsoft.Build.Evaluation
             PerformDepthFirstPass(_projectRootElement);
 
             List<string> initialTargets = new List<string>(_initialTargetsList.Count);
-            for (int i = 0; i < _initialTargetsList.Count; i++)
+            foreach (var initialTarget in _initialTargetsList)
             {
-                initialTargets.Add(EscapingUtilities.UnescapeAll(_initialTargetsList[i].Trim()));
+                initialTargets.Add(EscapingUtilities.UnescapeAll(initialTarget.Trim()));
             }
 
             _data.InitialTargets = initialTargets;
@@ -808,7 +806,7 @@ namespace Microsoft.Build.Evaluation
             DataCollection.CommentMarkProfile(8817, endPass1);
 #endif
             // Pass2: evaluate item definitions
-            foreach (ProjectItemDefinitionGroupElement itemDefinitionGroupElement in _itemDefinitionGroupElements)
+            foreach (var itemDefinitionGroupElement in _itemDefinitionGroupElements)
             {
                 EvaluateItemDefinitionGroupElement(itemDefinitionGroupElement);
             }
@@ -825,17 +823,15 @@ namespace Microsoft.Build.Evaluation
             lazyEvaluator = new LazyItemEvaluator<P, I, M, D>(_data, _itemFactory, _evaluationLoggingContext);
 
             // Pass3: evaluate project items
-            foreach (ProjectItemGroupElement itemGroupElement in _itemGroupElements)
-            {
-                EvaluateItemGroupElement(itemGroupElement, lazyEvaluator);
+            foreach (ProjectItemGroupElement itemGroup in _itemGroupElements)
+            { 
+                EvaluateItemGroupElement(itemGroup, lazyEvaluator);
             }
 
             if (lazyEvaluator != null)
             {
-
                 // Tell the lazy evaluator to compute the items and add them to _data
-                IList<LazyItemEvaluator<P, I, M, D>.ItemData> items = lazyEvaluator.GetAllItems();
-                foreach (var itemData in items)
+                foreach (var itemData in lazyEvaluator.GetAllItemsDeferred())
                 {
                     if (itemData.ConditionResult)
                     {
@@ -865,22 +861,23 @@ namespace Microsoft.Build.Evaluation
             DataCollection.CommentMarkProfile(8819, endPass3);
 #endif
             // Pass4: evaluate using-tasks
-            foreach (Pair<string, ProjectUsingTaskElement> entry in _usingTaskElements)
-            {
+            foreach (var entry in _usingTaskElements)
+            {   
                 EvaluateUsingTaskElement(entry.Key, entry.Value);
             }
 
             // If there was no DefaultTargets attribute found in the depth first pass, 
             // use the name of the first target. If there isn't any target, don't error until build time.
-            if (_data.DefaultTargets == null || _data.DefaultTargets.Count == 0)
-            {
-                List<string> defaultTargets = new List<string>(_targetElements.Count);
-                if (_targetElements.Count > 0)
-                {
-                    defaultTargets.Add(_targetElements[0].Name);
-                }
 
-                _data.DefaultTargets = defaultTargets;
+            if (_data.DefaultTargets == null)
+            {
+                _data.DefaultTargets = new List<string>(1);
+            }
+
+            var targetElementsCount = _targetElements.Count;
+            if (_data.DefaultTargets.Count == 0 && targetElementsCount > 0)
+            {
+                _data.DefaultTargets.Add(_targetElements[0].Name);
             }
 
             Dictionary<string, List<TargetSpecification>> targetsWhichRunBeforeByTarget = new Dictionary<string, List<TargetSpecification>>(StringComparer.OrdinalIgnoreCase);
@@ -896,9 +893,9 @@ namespace Microsoft.Build.Evaluation
 #endif
 
             // Pass5: read targets (but don't evaluate them: that happens during build)
-            foreach (ProjectTargetElement targetElement in _targetElements)
+            for (var i = 0; i < targetElementsCount; i++)
             {
-                ReadTargetElement(targetElement, activeTargetsByEvaluationOrder, activeTargets);
+                ReadTargetElement(_targetElements[i], activeTargetsByEvaluationOrder, activeTargets);
             }
 
             foreach (ProjectTargetElement target in activeTargetsByEvaluationOrder)
@@ -958,15 +955,13 @@ namespace Microsoft.Build.Evaluation
         private void PerformDepthFirstPass(ProjectRootElement currentProjectOrImport)
         {
             // We accumulate InitialTargets from the project and each import
-            IList<string> initialTargets = _expander.ExpandIntoStringListLeaveEscaped(currentProjectOrImport.InitialTargets, ExpanderOptions.ExpandProperties, currentProjectOrImport.InitialTargetsLocation);
+            var initialTargets = _expander.ExpandIntoStringListLeaveEscaped(currentProjectOrImport.InitialTargets, ExpanderOptions.ExpandProperties, currentProjectOrImport.InitialTargetsLocation);
             _initialTargetsList.AddRange(initialTargets);
 
             if (!Traits.Instance.EscapeHatches.IgnoreTreatAsLocalProperty)
             {
-                IList<string> globalPropertiesToTreatAsLocals = _expander.ExpandIntoStringListLeaveEscaped(currentProjectOrImport.TreatAsLocalProperty, ExpanderOptions.ExpandProperties, currentProjectOrImport.TreatAsLocalPropertyLocation);
-
-                foreach (string propertyName in globalPropertiesToTreatAsLocals)
-                {
+                foreach (string propertyName in _expander.ExpandIntoStringListLeaveEscaped(currentProjectOrImport.TreatAsLocalProperty, ExpanderOptions.ExpandProperties, currentProjectOrImport.TreatAsLocalPropertyLocation))
+                { 
                     XmlUtilities.VerifyThrowProjectValidElementName(propertyName, currentProjectOrImport.Location);
                     _data.GlobalPropertiesToTreatAsLocal.Add(propertyName);
                 }
@@ -1005,12 +1000,15 @@ namespace Microsoft.Build.Evaluation
 #endif
 
             // Get all the implicit imports (e.g. <Project Sdk="" />, but not <Import Sdk="" />)
-            var implicitImports = currentProjectOrImport.GetImplicitImportNodes(currentProjectOrImport);
+            List<ProjectImportElement> implicitImports = currentProjectOrImport.GetImplicitImportNodes(currentProjectOrImport);
 
             // Evaluate the "top" implicit imports as if they were the first entry in the file.
-            foreach (var import in implicitImports.Where(i => i.ImplicitImportLocation == ImplicitImportLocation.Top))
+            foreach (var import in implicitImports)
             {
-                EvaluateImportElement(currentProjectOrImport.DirectoryPath, import);
+                if (import.ImplicitImportLocation == ImplicitImportLocation.Top)
+                {
+                    EvaluateImportElement(currentProjectOrImport.DirectoryPath, import);
+                }
             }
 
             foreach (ProjectElement element in currentProjectOrImport.Children)
@@ -1174,9 +1172,12 @@ namespace Microsoft.Build.Evaluation
             }
 
             // Evaluate the "bottom" implicit imports as if they were the last entry in the file.
-            foreach (var import in implicitImports.Where(i => i.ImplicitImportLocation == ImplicitImportLocation.Bottom))
+            foreach (var import in implicitImports)
             {
-                EvaluateImportElement(currentProjectOrImport.DirectoryPath, import);
+                if (import.ImplicitImportLocation == ImplicitImportLocation.Bottom)
+                {
+                    EvaluateImportElement(currentProjectOrImport.DirectoryPath, import);
+                }
             }
 
 #if FEATURE_MSBUILD_DEBUGGER
@@ -1280,7 +1281,7 @@ namespace Microsoft.Build.Evaluation
                 itemGroupConditionResult = EvaluateCondition(itemGroupElement, ExpanderOptions.ExpandPropertiesAndItems, ParserOptions.AllowPropertiesAndItemLists);
             }
 
-            if (itemGroupConditionResult || _data.ShouldEvaluateForDesignTime)
+            if (itemGroupConditionResult || (_data.ShouldEvaluateForDesignTime && _data.CanEvaluateElementsWithFalseConditions))
             {
                 foreach (ProjectItemElement itemElement in itemGroupElement.Items)
                 {
@@ -1352,8 +1353,8 @@ namespace Microsoft.Build.Evaluation
         /// </summary>
         private void AddBeforeAndAfterTargetMappings(ProjectTargetElement targetElement, Dictionary<string, LinkedListNode<ProjectTargetElement>> activeTargets, Dictionary<string, List<TargetSpecification>> targetsWhichRunBeforeByTarget, Dictionary<string, List<TargetSpecification>> targetsWhichRunAfterByTarget)
         {
-            IList<string> beforeTargets = _expander.ExpandIntoStringListLeaveEscaped(targetElement.BeforeTargets, ExpanderOptions.ExpandPropertiesAndItems, targetElement.BeforeTargetsLocation);
-            IList<string> afterTargets = _expander.ExpandIntoStringListLeaveEscaped(targetElement.AfterTargets, ExpanderOptions.ExpandPropertiesAndItems, targetElement.AfterTargetsLocation);
+            var beforeTargets = _expander.ExpandIntoStringListLeaveEscaped(targetElement.BeforeTargets, ExpanderOptions.ExpandPropertiesAndItems, targetElement.BeforeTargetsLocation);
+            var afterTargets = _expander.ExpandIntoStringListLeaveEscaped(targetElement.AfterTargets, ExpanderOptions.ExpandPropertiesAndItems, targetElement.AfterTargetsLocation);
 
             foreach (string beforeTarget in beforeTargets)
             {
@@ -1505,18 +1506,17 @@ namespace Microsoft.Build.Evaluation
                 toolsetProperties.Add(property);
             }
 
-            return toolsetProperties;
-        }
-
-        /// <summary>
-        /// Put all the sub-toolset's properties into our property bag.  Run after 
-        /// AddToolsetProperties to ensure that, if there are any overlaps, the sub-toolset wins.
-        /// </summary>
-        private ICollection<P> AddSubToolsetProperties()
-        {
-            List<P> subToolsetProperties = new List<P>();
-
-            if (_data.SubToolsetVersion != null)
+            if (_data.SubToolsetVersion == null)
+            {
+                // In previous versions of MSBuild, there is almost always a subtoolset that adds a VisualStudioVersion property.  Since there
+                // is most likely not a subtoolset now, we need to add VisualStudioVersion if its not already a property.
+                if (!_data.Properties.Contains(Constants.VisualStudioVersionPropertyName))
+                {
+                    P subToolsetVersionProperty = _data.SetProperty(Constants.VisualStudioVersionPropertyName, MSBuildConstants.CurrentVisualStudioVersion, false /* NOT global property */, false /* may NOT be a reserved name */);
+                    toolsetProperties.Add(subToolsetVersionProperty);
+                }
+            }
+            else
             {
                 SubToolset subToolset = null;
 
@@ -1526,7 +1526,7 @@ namespace Microsoft.Build.Evaluation
                 if (!_data.Properties.Contains(Constants.SubToolsetVersionPropertyName))
                 {
                     P subToolsetVersionProperty = _data.SetProperty(Constants.SubToolsetVersionPropertyName, _data.SubToolsetVersion, false /* NOT global property */, false /* may NOT be a reserved name */);
-                    subToolsetProperties.Add(subToolsetVersionProperty);
+                    toolsetProperties.Add(subToolsetVersionProperty);
                 }
 
                 if (_data.Toolset.SubToolsets.TryGetValue(_data.SubToolsetVersion, out subToolset))
@@ -1534,12 +1534,12 @@ namespace Microsoft.Build.Evaluation
                     foreach (ProjectPropertyInstance subToolsetProperty in subToolset.Properties.Values)
                     {
                         P property = _data.SetProperty(subToolsetProperty.Name, ((IProperty)subToolsetProperty).EvaluatedValueEscaped, false /* NOT global property */, false /* may NOT be a reserved name */);
-                        subToolsetProperties.Add(property);
+                        toolsetProperties.Add(property);
                     }
                 }
             }
 
-            return subToolsetProperties;
+            return toolsetProperties;
         }
 
         /// <summary>
@@ -1549,7 +1549,7 @@ namespace Microsoft.Build.Evaluation
         {
             if (_data.GlobalPropertiesDictionary == null)
             {
-                return ReadOnlyEmptyList<P>.Instance;
+                return Array.Empty<P>();
             }
 
             List<P> globalProperties = new List<P>(_data.GlobalPropertiesDictionary.Count);
@@ -1694,7 +1694,7 @@ namespace Microsoft.Build.Evaluation
                 itemConditionResult = EvaluateCondition(itemElement, ExpanderOptions.ExpandPropertiesAndItems, ParserOptions.AllowPropertiesAndItemLists);
             }
 
-            if (!itemConditionResult && !_data.ShouldEvaluateForDesignTime)
+            if (!itemConditionResult && !(_data.ShouldEvaluateForDesignTime && _data.CanEvaluateElementsWithFalseConditions))
             {
 #if FEATURE_MSBUILD_DEBUGGER
                 if (DebuggerManager.DebuggingEnabled)
@@ -1777,7 +1777,7 @@ namespace Microsoft.Build.Evaluation
 
                 if (evaluatedExclude.Length > 0)
                 {
-                    IList<string> excludeSplits = ExpressionShredder.SplitSemiColonSeparatedList(evaluatedExclude);
+                    var excludeSplits = ExpressionShredder.SplitSemiColonSeparatedList(evaluatedExclude);
 
                     HashSet<string> excludes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -2260,17 +2260,15 @@ namespace Microsoft.Build.Evaluation
             // Adding the value of $(MSBuildExtensionsPath*) property to the list of search paths
             var prop = _data.GetProperty(fallbackSearchPathMatch.PropertyName);
 
-            var pathsToSearch =
-                // The actual value of the property, with no fallbacks
-                new[] { prop?.EvaluatedValue }
-                // The list of fallbacks, in order
-                .Concat(fallbackSearchPathMatch.SearchPaths).ToList();
-
+            var pathsToSearch = new string[fallbackSearchPathMatch.SearchPaths.Count + 1];
+            pathsToSearch[0] = prop?.EvaluatedValue;                       // The actual value of the property, with no fallbacks
+            fallbackSearchPathMatch.SearchPaths.CopyTo(pathsToSearch, 1);  // The list of fallbacks, in order
+            
             string extensionPropertyRefAsString = fallbackSearchPathMatch.MsBuildPropertyFormat;
 
             _evaluationLoggingContext.LogComment(MessageImportance.Low, "SearchPathsForMSBuildExtensionsPath",
                                         extensionPropertyRefAsString,
-                                        String.Join(Path.PathSeparator.ToString(), pathsToSearch));
+                                        String.Join(";", pathsToSearch));
 
             bool atleastOneExactFilePathWasLookedAtAndNotFound = false;
 
@@ -2296,14 +2294,14 @@ namespace Microsoft.Build.Evaluation
                     continue;
                 }
 
-                var newExpandedCondition = importElement.Condition.Replace(extensionPropertyRefAsString, extensionPathExpanded);
+                var newExpandedCondition = importElement.Condition.Replace(extensionPropertyRefAsString, extensionPathExpanded, StringComparison.OrdinalIgnoreCase);
                 if (!EvaluateConditionCollectingConditionedProperties(importElement, newExpandedCondition, ExpanderOptions.ExpandProperties, ParserOptions.AllowProperties,
                             _projectRootElementCache))
                 {
                     continue;
                 }
 
-                var newExpandedImportPath = importElement.Project.Replace(extensionPropertyRefAsString, extensionPathExpanded);
+                var newExpandedImportPath = importElement.Project.Replace(extensionPropertyRefAsString, extensionPathExpanded, StringComparison.OrdinalIgnoreCase);
                 _evaluationLoggingContext.LogComment(MessageImportance.Low, "TryingExtensionsPath", newExpandedImportPath, extensionPathExpanded);
 
                 List<ProjectRootElement> projects;
@@ -2370,8 +2368,8 @@ namespace Microsoft.Build.Evaluation
             {
                 if (_logProjectImportedEvents)
                 {
-                    // Expand the expression for the Log.
-                    string expanded = _expander.ExpandIntoStringAndUnescape(importElement.Condition, ExpanderOptions.ExpandProperties, importElement.ConditionLocation);
+                    // Expand the expression for the Log.  Since we know the condition evaluated to false, leave unexpandable properties in the condition so as not to cause an error
+                    string expanded = _expander.ExpandIntoStringAndUnescape(importElement.Condition, ExpanderOptions.ExpandProperties | ExpanderOptions.LeavePropertiesUnexpandedOnError, importElement.ConditionLocation);
 
                     ProjectImportedEventArgs eventArgs = new ProjectImportedEventArgs(
                         importElement.Location.Line,
@@ -2458,7 +2456,7 @@ namespace Microsoft.Build.Evaluation
                     }
 
                     // Expand the wildcards and provide an alphabetical order list of import statements.
-                    importFilesEscaped = EngineFileUtilities.GetFileListEscaped(directoryOfImportingFile, importExpressionEscapedItem);
+                    importFilesEscaped = EngineFileUtilities.GetFileListEscaped(directoryOfImportingFile, importExpressionEscapedItem, forceEvaluate: true);
                 }
                 catch (Exception ex) when (ExceptionHandling.IsIoRelatedException(ex))
                 {

@@ -98,8 +98,6 @@ namespace Microsoft.Build.UnitTests
             return s_builtInMetadataNames.Contains(metadataName);
         }
 
-        internal delegate void MethodUnderTest();
-
         /// <summary>
         /// Gets an item list from the project and assert that it contains
         /// exactly one item with the supplied name.
@@ -119,44 +117,43 @@ namespace Microsoft.Build.UnitTests
             return items[0];
         }
 
-        /// <summary>
-        /// Helper that asserts if an exception of type specified is
-        /// not thrown when calling specified method
-        /// </summary>
-        /// <example>
-        /// AssertThrows(typeof(InvalidOperationException), delegate { object o = ((IEnumerator)enumerator).Current; });
-        /// </example>
-        internal static void AssertThrows(Type exception, MethodUnderTest method)
+        internal static void AssertItemEvaluationFromProject(string projectContents, string[] inputFiles, string[] expectedInclude, Dictionary<string, string>[] expectedMetadataPerItem = null, bool normalizeSlashes = false, bool makeExpectedIncludeAbsolute = false)
         {
-            try
-            {
-                method();
-            }
-            catch (Exception ex)
-            {
-                if (ex.GetType() == exception)
+            AssertItemEvaluationFromGenericItemEvaluator((p, c) =>
                 {
-                    return;
-                }
-            }
-            Assert.True(false, "Didn't throw " + exception.ToString());
+                    return new Project(p, new Dictionary<string, string>(), MSBuildConstants.CurrentToolsVersion, c)
+                        .Items
+                        .Select(i => (TestItem) new ProjectItemTestItemAdapter(i))
+                        .ToList();
+                },
+            projectContents,
+            inputFiles,
+            expectedInclude,
+            makeExpectedIncludeAbsolute,
+            expectedMetadataPerItem,
+            normalizeSlashes);
         }
 
-        internal static void AssertItemEvaluation(string projectContents, string[] inputFiles, string[] expectedInclude, Dictionary<string, string>[] expectedMetadataPerItem = null, bool normalizeSlashes = false)
+        internal static void AssertItemEvaluationFromGenericItemEvaluator(Func<string, ProjectCollection, IList<TestItem>> itemEvaluator, string projectContents, string[] inputFiles, string[] expectedInclude, bool makeExpectedIncludeAbsolute = false, TempPaths[] expectedMetadataPerItem = null, bool normalizeSlashes = false)
         {
             using (var env = TestEnvironment.Create())
             using (var collection = new ProjectCollection())
             {
                 var testProject = env.CreateTestProjectWithFiles(projectContents, inputFiles);
-                var evaluatedItems = new Project(testProject.ProjectFile, new Dictionary<string, string>(), MSBuildConstants.CurrentToolsVersion, collection).Items.ToList();
+                var evaluatedItems = itemEvaluator(testProject.ProjectFile, collection);
+
+                if (makeExpectedIncludeAbsolute)
+                {
+                    expectedInclude = expectedInclude.Select(i => Path.Combine(testProject.TestRoot, i)).ToArray();
+                }
 
                 if (expectedMetadataPerItem == null)
                 {
-                    ObjectModelHelpers.AssertItems(expectedInclude, evaluatedItems, expectedDirectMetadata: null, normalizeSlashes: normalizeSlashes);
+                    AssertItems(expectedInclude, evaluatedItems, expectedDirectMetadata: null, normalizeSlashes: normalizeSlashes);
                 }
                 else
                 {
-                    ObjectModelHelpers.AssertItems(expectedInclude, evaluatedItems, expectedMetadataPerItem, normalizeSlashes);
+                    AssertItems(expectedInclude, evaluatedItems, expectedMetadataPerItem, normalizeSlashes);
                 }
             }
         }
@@ -166,10 +163,62 @@ namespace Microsoft.Build.UnitTests
             return path.Replace('/', Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
         }
 
+        // todo Make IItem<M> public and add these new members to it.
+        internal interface TestItem
+        {
+            string EvaluatedInclude { get; }
+            int DirectMetadataCount { get; }
+            string GetMetadataValue(string key);
+        }
+
+        internal class ProjectItemTestItemAdapter : TestItem
+        {
+            private readonly ProjectItem _projectInstance;
+
+            public ProjectItemTestItemAdapter(ProjectItem projectInstance)
+            {
+                _projectInstance = projectInstance;
+            }
+
+            public string EvaluatedInclude => _projectInstance.EvaluatedInclude;
+            public int DirectMetadataCount => _projectInstance.DirectMetadataCount;
+            public string GetMetadataValue(string key) => _projectInstance.GetMetadataValue(key);
+
+            public static implicit operator ProjectItemTestItemAdapter(ProjectItem pi)
+            {
+                return new ProjectItemTestItemAdapter(pi);
+            }
+        }
+
+        internal class ProjectItemInstanceTestItemAdapter : TestItem
+        {
+            private readonly ProjectItemInstance _projectInstance;
+
+            public ProjectItemInstanceTestItemAdapter(ProjectItemInstance projectInstance)
+            {
+                _projectInstance = projectInstance;
+            }
+
+            public string EvaluatedInclude => _projectInstance.EvaluatedInclude;
+            public int DirectMetadataCount => _projectInstance.DirectMetadataCount;
+            public string GetMetadataValue(string key) => _projectInstance.GetMetadataValue(key);
+
+            public static implicit operator ProjectItemInstanceTestItemAdapter(ProjectItemInstance pi)
+            {
+                return new ProjectItemInstanceTestItemAdapter(pi);
+            }
+        }
+
+        internal static void AssertItems(string[] expectedItems, IList<ProjectItem> items, Dictionary<string, string> expectedDirectMetadata = null, bool normalizeSlashes = false)
+        {
+            var converteditems = items.Select(i => (TestItem) new ProjectItemTestItemAdapter(i)).ToList();
+            AssertItems(expectedItems, converteditems, expectedDirectMetadata, normalizeSlashes);
+        }
+
         /// <summary>
         /// Asserts that the list of items has the specified evaluated includes.
         /// </summary>
-        internal static void AssertItems(string[] expectedItems, IList<ProjectItem> items, Dictionary<string, string> expectedDirectMetadata = null, bool normalizeSlashes = false)
+        internal static void AssertItems(string[] expectedItems, IList<TestItem> items, Dictionary<string, string> expectedDirectMetadata = null, bool normalizeSlashes = false)
         {
             if (expectedDirectMetadata == null)
             {
@@ -189,6 +238,12 @@ namespace Microsoft.Build.UnitTests
 
         public static void AssertItems(string[] expectedItems, IList<ProjectItem> items, Dictionary<string, string>[] expectedDirectMetadataPerItem, bool normalizeSlashes = false)
         {
+            var convertedItems = items.Select(i => (TestItem) new ProjectItemTestItemAdapter(i)).ToList();
+            AssertItems(expectedItems, convertedItems, expectedDirectMetadataPerItem, normalizeSlashes);
+        }
+
+        public static void AssertItems(string[] expectedItems, IList<TestItem> items, Dictionary<string, string>[] expectedDirectMetadataPerItem, bool normalizeSlashes = false)
+        {
             Assert.Equal(expectedItems.Length, items.Count);
 
             Assert.Equal(expectedItems.Length, expectedDirectMetadataPerItem.Length);
@@ -201,7 +256,7 @@ namespace Microsoft.Build.UnitTests
                 }
                 else
                 {
-                    Assert.Equal(NormalizeSlashes(expectedItems[i]), NormalizeSlashes(items[i].EvaluatedInclude));
+                    Assert.Equal(NormalizeSlashes(expectedItems[i]), items[i].EvaluatedInclude);
                 }
 
                 AssertItemHasMetadata(expectedDirectMetadataPerItem[i], items[i]);
@@ -357,7 +412,13 @@ namespace Microsoft.Build.UnitTests
                 Assert.True(false, "Items were returned in the incorrect order.  See 'Standard Out' tab for more details.");
             }
         }
+
         internal static void AssertItemHasMetadata(Dictionary<string, string> expected, ProjectItem item)
+        {
+            AssertItemHasMetadata(expected, new ProjectItemTestItemAdapter(item));
+        }
+
+        internal static void AssertItemHasMetadata(Dictionary<string, string> expected, TestItem item)
         {
             Assert.Equal(expected.Keys.Count, item.DirectMetadataCount);
 
@@ -1006,6 +1067,11 @@ namespace Microsoft.Build.UnitTests
 
             IList<ProjectItem> items = GetItems(content, allItems);
             return items;
+        }
+
+        internal static string GetConcatenatedItemsOfType(this Project project, string itemType, string itemSeparator = ";")
+        {
+            return string.Join(itemSeparator, project.Items.Where(i => i.ItemType.Equals(itemType)).Select(i => i.EvaluatedInclude));
         }
 
         /// <summary>

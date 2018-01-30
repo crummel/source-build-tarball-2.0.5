@@ -785,7 +785,7 @@ namespace Microsoft.Build.BackEnd
             try
             {
                 // Loop through all the TaskItems in our arraylist, and convert them.
-                ArrayList finalTaskInputs = new ArrayList();
+                ArrayList finalTaskInputs = new ArrayList(taskItems.Count);
 
                 if (parameterType != typeof(ITaskItem[]))
                 {
@@ -980,19 +980,16 @@ namespace Microsoft.Build.BackEnd
                     }
                 }
 
-                if (String.IsNullOrEmpty(Environment.GetEnvironmentVariable("MSBUILDDISABLEINTRINSICMSBUILDTASK")))
+                // Map to an intrinsic task, if necessary.
+                if (String.Equals(returnClass.TaskFactory.TaskType.FullName, "Microsoft.Build.Tasks.MSBuild", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Map to an intrinsic task, if necessary.
-                    if (String.Equals(returnClass.TaskFactory.TaskType.FullName, "Microsoft.Build.Tasks.MSBuild", StringComparison.OrdinalIgnoreCase))
-                    {
-                        returnClass = new TaskFactoryWrapper(new IntrinsicTaskFactory(typeof(MSBuild)), new LoadedType(typeof(MSBuild), AssemblyLoadInfo.Create(typeof(TaskExecutionHost).GetTypeInfo().Assembly.FullName, null)), _taskName, null);
-                        _intrinsicTasks[_taskName] = returnClass;
-                    }
-                    else if (String.Equals(returnClass.TaskFactory.TaskType.FullName, "Microsoft.Build.Tasks.CallTarget", StringComparison.OrdinalIgnoreCase))
-                    {
-                        returnClass = new TaskFactoryWrapper(new IntrinsicTaskFactory(typeof(CallTarget)), new LoadedType(typeof(CallTarget), AssemblyLoadInfo.Create(typeof(TaskExecutionHost).GetTypeInfo().Assembly.FullName, null)), _taskName, null);
-                        _intrinsicTasks[_taskName] = returnClass;
-                    }
+                    returnClass = new TaskFactoryWrapper(new IntrinsicTaskFactory(typeof(MSBuild)), new LoadedType(typeof(MSBuild), AssemblyLoadInfo.Create(typeof(TaskExecutionHost).GetTypeInfo().Assembly.FullName, null)), _taskName, null);
+                    _intrinsicTasks[_taskName] = returnClass;
+                }
+                else if (String.Equals(returnClass.TaskFactory.TaskType.FullName, "Microsoft.Build.Tasks.CallTarget", StringComparison.OrdinalIgnoreCase))
+                {
+                    returnClass = new TaskFactoryWrapper(new IntrinsicTaskFactory(typeof(CallTarget)), new LoadedType(typeof(CallTarget), AssemblyLoadInfo.Create(typeof(TaskExecutionHost).GetTypeInfo().Assembly.FullName, null)), _taskName, null);
+                    _intrinsicTasks[_taskName] = returnClass;
                 }
             }
 
@@ -1353,7 +1350,7 @@ namespace Microsoft.Build.BackEnd
         {
             if (_logTaskInputs && !_taskLoggingContext.LoggingService.OnlyLogCriticalEvents && parameterValue.Count > 0)
             {
-                string parameterText = ResourceUtilities.FormatResourceString("TaskParameterPrefix");
+                string parameterText = ResourceUtilities.GetResourceString("TaskParameterPrefix");
                 parameterText = ItemGroupLoggingHelper.GetParameterText(parameterText, parameter.Name, parameterValue);
                 _taskLoggingContext.LogCommentFromText(MessageImportance.Low, parameterText);
             }
@@ -1380,7 +1377,7 @@ namespace Microsoft.Build.BackEnd
                 {
                     _taskLoggingContext.LogCommentFromText(
                         MessageImportance.Low,
-                        ResourceUtilities.FormatResourceString("TaskParameterPrefix") + parameter.Name + "=" + ItemGroupLoggingHelper.GetStringFromParameterValue(parameterValue));
+                        ResourceUtilities.GetResourceString("TaskParameterPrefix") + parameter.Name + "=" + ItemGroupLoggingHelper.GetStringFromParameterValue(parameterValue));
                 }
             }
 
@@ -1496,7 +1493,7 @@ namespace Microsoft.Build.BackEnd
                     if (_logTaskInputs && !_taskLoggingContext.LoggingService.OnlyLogCriticalEvents && outputs.Length > 0)
                     {
                         string parameterText = ItemGroupLoggingHelper.GetParameterText(
-                            ResourceUtilities.FormatResourceString("OutputItemParameterMessagePrefix"),
+                            ResourceUtilities.GetResourceString("OutputItemParameterMessagePrefix"),
                             outputTargetName,
                             outputs);
 
@@ -1576,7 +1573,7 @@ namespace Microsoft.Build.BackEnd
 
                     if (_logTaskInputs && !_taskLoggingContext.LoggingService.OnlyLogCriticalEvents && outputs.Length > 0)
                     {
-                        string parameterText = ItemGroupLoggingHelper.GetParameterText(ResourceUtilities.FormatResourceString("OutputItemParameterMessagePrefix"), outputTargetName, outputs);
+                        string parameterText = ItemGroupLoggingHelper.GetParameterText(ResourceUtilities.GetResourceString("OutputItemParameterMessagePrefix"), outputTargetName, outputs);
                         _taskLoggingContext.LogCommentFromText(MessageImportance.Low, parameterText);
                     }
                 }

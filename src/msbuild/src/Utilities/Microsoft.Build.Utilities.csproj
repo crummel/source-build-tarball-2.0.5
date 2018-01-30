@@ -111,6 +111,9 @@
     <Compile Include="..\Shared\HybridDictionary.cs">
       <Link>Collections\HybridDictionary.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\IConstrainedEqualityComparer.cs">
+      <Link>IConstrainedEqualityComparer.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\InternalErrorException.cs">
       <Link>InternalErrorException.cs</Link>
     </Compile>
@@ -139,9 +142,6 @@
     </Compile>
     <Compile Include="..\Shared\ReadOnlyEmptyDictionary.cs">
       <Link>Collections\ReadOnlyEmptyDictionary.cs</Link>
-    </Compile>
-    <Compile Include="..\Shared\ReadOnlyEmptyList.cs">
-      <Link>Collections\ReadOnlyEmptyList.cs</Link>
     </Compile>
     <Compile Include="..\Shared\RegistryDelegates.cs">
       <Link>RegistryDelegates.cs</Link>

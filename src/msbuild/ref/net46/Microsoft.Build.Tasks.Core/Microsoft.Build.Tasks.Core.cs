@@ -580,6 +580,8 @@ namespace Microsoft.Build.Tasks
         [Microsoft.Build.Framework.OutputAttribute]
         public string FrameworkVersion46Path { get { throw null; } }
         [Microsoft.Build.Framework.OutputAttribute]
+        public string FrameworkVersion471Path { get { throw null; } }
+        [Microsoft.Build.Framework.OutputAttribute]
         public string FrameworkVersion47Path { get { throw null; } }
         [Microsoft.Build.Framework.OutputAttribute]
         public string Path { get { throw null; } }
@@ -839,6 +841,8 @@ namespace Microsoft.Build.Tasks
         public bool CopyLocalDependenciesWhenParentReferenceInGac { get { throw null; } set { } }
         [Microsoft.Build.Framework.OutputAttribute]
         public Microsoft.Build.Framework.ITaskItem[] CopyLocalFiles { get { throw null; } }
+        [Microsoft.Build.Framework.OutputAttribute]
+        public string DependsOnNETStandard { [System.Runtime.CompilerServices.CompilerGeneratedAttribute]get { throw null; } }
         [Microsoft.Build.Framework.OutputAttribute]
         public string DependsOnSystemRuntime { [System.Runtime.CompilerServices.CompilerGeneratedAttribute]get { throw null; } }
         public bool DoNotCopyLocalIfInGac { [System.Runtime.CompilerServices.CompilerGeneratedAttribute]get { throw null; } [System.Runtime.CompilerServices.CompilerGeneratedAttribute]set { } }
@@ -2545,6 +2549,7 @@ namespace Microsoft.VisualStudio.Setup.Configuration
     {
         Complete = (uint)4294967295,
         Local = (uint)1,
+        NoErrors = (uint)8,
         None = (uint)0,
         NoRebootRequired = (uint)4,
         Registered = (uint)2,

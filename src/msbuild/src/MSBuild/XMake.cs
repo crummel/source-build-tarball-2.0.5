@@ -23,6 +23,7 @@ using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Shared;
 
+using Microsoft.Build.Utilities;
 #if (!STANDALONEBUILD)
 using Microsoft.Internal.Performance;
 #endif
@@ -551,6 +552,7 @@ namespace Microsoft.Build.CommandLine
                 bool detailedSummary = false;
                 ISet<string> warningsAsErrors = null;
                 ISet<string> warningsAsMessages = null;
+                bool enableRestore = Traits.Instance.EnableRestoreFirst;
 
                 CommandLineSwitches switchesFromAutoResponseFile;
                 CommandLineSwitches switchesNotFromAutoResponseFile;
@@ -571,14 +573,13 @@ namespace Microsoft.Build.CommandLine
                         ref schemaFile,
 #endif
                         ref cpuCount,
-#if FEATURE_NODE_REUSE
                         ref enableNodeReuse,
-#endif
                         ref preprocessWriter,
                         ref debugger,
                         ref detailedSummary,
                         ref warningsAsErrors,
                         ref warningsAsMessages,
+                        ref enableRestore,
                         recursing: false
                         ))
                 {
@@ -587,7 +588,7 @@ namespace Microsoft.Build.CommandLine
                     // is a better way.
                     if (cpuCount == 1 && FileUtilities.IsSolutionFilename(projectFile) && verbosity > LoggerVerbosity.Minimal)
                     {
-                        Console.WriteLine(ResourceUtilities.FormatResourceString("PossiblyOmittedMaxCPUSwitch"));
+                        Console.WriteLine(ResourceUtilities.GetResourceString("PossiblyOmittedMaxCPUSwitch"));
                     }
                     if (preprocessWriter != null || debugger)
                     {
@@ -615,7 +616,7 @@ namespace Microsoft.Build.CommandLine
 #if FEATURE_XML_SCHEMA_VALIDATION
                             needToValidateProject, schemaFile,
 #endif
-                            cpuCount, enableNodeReuse, preprocessWriter, debugger, detailedSummary, warningsAsErrors, warningsAsMessages))
+                            cpuCount, enableNodeReuse, preprocessWriter, debugger, detailedSummary, warningsAsErrors, warningsAsMessages, enableRestore))
                             {
                                 exitType = ExitType.BuildError;
                             }
@@ -816,7 +817,7 @@ namespace Microsoft.Build.CommandLine
                 return;
             }
 
-            Console.WriteLine(ResourceUtilities.FormatResourceString("AbortingBuild"));
+            Console.WriteLine(ResourceUtilities.GetResourceString("AbortingBuild"));
 
             // The OS takes a lock in
             // kernel32.dll!_SetConsoleCtrlHandler, so if a task
@@ -910,7 +911,8 @@ namespace Microsoft.Build.CommandLine
             bool debugger,
             bool detailedSummary,
             ISet<string> warningsAsErrors,
-            ISet<string> warningsAsMessages
+            ISet<string> warningsAsMessages,
+            bool enableRestore
         )
         {
             if (String.Equals(Path.GetExtension(projectFile), ".vcproj", StringComparison.OrdinalIgnoreCase) ||
@@ -998,14 +1000,14 @@ namespace Microsoft.Build.CommandLine
                 ToolsetDefinitionLocations toolsetDefinitionLocations = ToolsetDefinitionLocations.Default;
 
                 projectCollection = new ProjectCollection
-                        (
-                        globalProperties,
-                        loggers,
-                        null,
-                        toolsetDefinitionLocations,
-                        cpuCount,
-                        onlyLogCriticalEvents
-                        );
+                (
+                    globalProperties,
+                    loggers,
+                    null,
+                    toolsetDefinitionLocations,
+                    cpuCount,
+                    onlyLogCriticalEvents
+                );
 
                 if (debugger)
                 {
@@ -1108,19 +1110,17 @@ namespace Microsoft.Build.CommandLine
                     {
                         try
                         {
-                            lock (s_buildLock)
+                            if (enableRestore)
                             {
-                                s_activeBuild = buildManager.PendBuildRequest(request);
+                                results = ExecuteRestore(projectFile, toolsVersion, buildManager, globalProperties);
 
-                                // Even if Ctrl-C was already hit, we still pend the build request and then cancel.
-                                // That's so the build does not appear to have completed successfully.
-                                if (s_receivedCancel == 1)
+                                if (results.OverallResult != BuildResultCode.Success)
                                 {
-                                    buildManager.CancelAllSubmissions();
+                                    return false;
                                 }
                             }
 
-                            results = s_activeBuild.Execute();
+                            results = ExecuteBuild(buildManager, request);
                         }
                         finally
                         {
@@ -1199,6 +1199,47 @@ namespace Microsoft.Build.CommandLine
 
             return success;
         }
+
+        private static BuildResult ExecuteBuild(BuildManager buildManager, BuildRequestData request)
+        {
+            lock (s_buildLock)
+            {
+                s_activeBuild = buildManager.PendBuildRequest(request);
+
+                // Even if Ctrl-C was already hit, we still pend the build request and then cancel.
+                // That's so the build does not appear to have completed successfully.
+                if (s_receivedCancel == 1)
+                {
+                    buildManager.CancelAllSubmissions();
+                }
+            }
+
+            return s_activeBuild.Execute();
+        }
+
+        private static BuildResult ExecuteRestore(string projectFile, string toolsVersion, BuildManager buildManager, Dictionary<string, string> globalProperties)
+        {
+            // Make a copy of the global properties
+            Dictionary<string, string> restoreGlobalProperties = new Dictionary<string, string>(globalProperties);
+
+            // Add/set a property with a random value to ensure that restore happens under a different evaluation context
+            // If the evaluation context is not different, then projects won't be re-evaluated after restore
+            // The initializer syntax can't be used just in case a user set this property to a value
+            restoreGlobalProperties["MSBuildRestoreSessionId"] = Guid.NewGuid().ToString("D");
+
+            // Create a new request with a Restore target only and specify the ClearProjectRootElementCacheAfterBuild flag to ensure the projects will
+            // be reloaded from disk for subsequent builds
+            BuildRequestData restoreRequest = new BuildRequestData(
+                projectFile,
+                restoreGlobalProperties,
+                toolsVersion,
+                targetsToBuild: new[] { MSBuildConstants.RestoreTargetName },
+                hostServices: null,
+                flags: BuildRequestDataFlags.ClearCachesAfterBuild | BuildRequestDataFlags.SkipNonexistentTargets);
+
+            return ExecuteBuild(buildManager, restoreRequest);
+        }
+
 #if (!STANDALONEBUILD)
         /// <summary>
         /// Initializes the build engine, and starts the project build.
@@ -1764,6 +1805,11 @@ namespace Microsoft.Build.CommandLine
         private const string autoResponseFileName = "MSBuild.rsp";
 
         /// <summary>
+        /// THe name of an auto-response file to search for in the project directory and above.
+        /// </summary>
+        private const string directoryResponseFileName = "Directory.Build.rsp";
+
+        /// <summary>
         /// Whether switches from the auto-response file are being used.
         /// </summary>
         internal static bool usingSwitchesFromAutoResponseFile = false;
@@ -1776,6 +1822,11 @@ namespace Microsoft.Build.CommandLine
         private static bool GatherAutoResponseFileSwitches(string path, CommandLineSwitches switchesFromAutoResponseFile)
         {
             string autoResponseFile = Path.Combine(path, autoResponseFileName);
+            return GatherAutoResponseFileSwitchesFromFullPath(autoResponseFile, switchesFromAutoResponseFile);
+        }
+
+        private static bool GatherAutoResponseFileSwitchesFromFullPath(string autoResponseFile, CommandLineSwitches switchesFromAutoResponseFile)
+        {
             bool found = false;
 
             // if the auto-response file does not exist, only use the switches on the command line
@@ -1796,6 +1847,9 @@ namespace Microsoft.Build.CommandLine
                     // we picked up some switches from the auto-response file
                     usingSwitchesFromAutoResponseFile = true;
                 }
+
+                // Throw errors found in the response file
+                switchesFromAutoResponseFile.ThrowErrors();
             }
 
             return found;
@@ -1822,14 +1876,13 @@ namespace Microsoft.Build.CommandLine
             ref string schemaFile,
 #endif
             ref int cpuCount,
-#if FEATURE_NODE_REUSE
             ref bool enableNodeReuse,
-#endif
             ref TextWriter preprocessWriter,
             ref bool debugger,
             ref bool detailedSummary,
             ref ISet<string> warningsAsErrors,
             ref ISet<string> warningsAsMessages,
+            ref bool enableRestore,
             bool recursing
         )
         {
@@ -1897,6 +1950,14 @@ namespace Microsoft.Build.CommandLine
                         // gather any switches from an msbuild.rsp that is next to the project or solution file itself
                         string projectDirectory = Path.GetDirectoryName(Path.GetFullPath(projectFile));
 
+                        // gather any switches from the first Directory.Build.rsp found in the project directory or above
+                        string directoryResponseFile = FileUtilities.GetPathOfFileAbove(directoryResponseFileName, projectDirectory);
+
+                        if (!String.IsNullOrWhiteSpace(directoryResponseFile))
+                        {
+                            GatherAutoResponseFileSwitchesFromFullPath(directoryResponseFile, switchesFromAutoResponseFile);
+                        }
+
                         bool found = false;
 
                         // Don't look for more response files if it's only in the same place we already looked (next to the exe)
@@ -1928,14 +1989,13 @@ namespace Microsoft.Build.CommandLine
                                                                ref schemaFile,
 #endif
                                                                ref cpuCount,
-#if FEATURE_NODE_REUSE
                                                                ref enableNodeReuse,
-#endif
                                                                ref preprocessWriter,
                                                                ref debugger,
                                                                ref detailedSummary,
                                                                ref warningsAsErrors,
                                                                ref warningsAsMessages,
+                                                               ref enableRestore,
                                                                recursing: true
                                                              );
                         }
@@ -1953,10 +2013,9 @@ namespace Microsoft.Build.CommandLine
                     // figure out if there was a max cpu count provided
                     cpuCount = ProcessMaxCPUCountSwitch(commandLineSwitches[CommandLineSwitches.ParameterizedSwitch.MaxCPUCount]);
 
-#if FEATURE_NODE_REUSE
                     // figure out if we shold reuse nodes
+                    // If FEATURE_NODE_REUSE is OFF, just validates that the switch is OK, and always returns False
                     enableNodeReuse = ProcessNodeReuseSwitch(commandLineSwitches[CommandLineSwitches.ParameterizedSwitch.NodeReuse]);
-#endif
 
                     // determine what if any writer to preprocess to
                     preprocessWriter = null;
@@ -1973,6 +2032,11 @@ namespace Microsoft.Build.CommandLine
                     warningsAsErrors = ProcessWarnAsErrorSwitch(commandLineSwitches);
 
                     warningsAsMessages = ProcessWarnAsMessageSwitch(commandLineSwitches);
+
+                    if (commandLineSwitches.IsParameterizedSwitchSet(CommandLineSwitches.ParameterizedSwitch.Restore))
+                    {
+                        enableRestore = ProcessRestoreSwitch(commandLineSwitches[CommandLineSwitches.ParameterizedSwitch.Restore]);
+                    }
 
                     // figure out which loggers are going to listen to build events
                     string[][] groupedFileLoggerParameters = commandLineSwitches.GetFileLoggerParameters();
@@ -2023,7 +2087,6 @@ namespace Microsoft.Build.CommandLine
             return invokeBuild;
         }
 
-#if FEATURE_NODE_REUSE
         /// <summary>
         /// Processes the node reuse switch, the user can set node reuse to true, false or not set the switch. If the switch is
         /// not set the system will check to see if the process is being run as an administrator. This check in localnode provider
@@ -2031,7 +2094,12 @@ namespace Microsoft.Build.CommandLine
         /// </summary>
         internal static bool ProcessNodeReuseSwitch(string[] parameters)
         {
-            bool enableNodeReuse = true;
+            bool enableNodeReuse;
+#if FEATURE_NODE_REUSE
+            enableNodeReuse = true;
+#else
+            enableNodeReuse = false;
+#endif
 
             if (Environment.GetEnvironmentVariable("MSBUILDDISABLENODEREUSE") == "1") // For example to disable node reuse in a gated checkin, without using the flag
             {
@@ -2055,9 +2123,13 @@ namespace Microsoft.Build.CommandLine
                 }
             }
 
+#if !FEATURE_NODE_REUSE
+            if(enableNodeReuse) // Only allowed to pass False on the command line for this switch if the feature is disabled for this installation
+                CommandLineSwitchException.Throw("InvalidNodeReuseTrueValue", parameters[parameters.Length - 1]);
+#endif
+
             return enableNodeReuse;
         }
-#endif
 
         /// <summary>
         /// Figure out what TextWriter we should preprocess the project file to.
@@ -2135,6 +2207,29 @@ namespace Microsoft.Build.CommandLine
             return warningsAsMessages;
         }
 
+        internal static bool ProcessRestoreSwitch(string[] parameters)
+        {
+            bool enableRestore = true;
+
+            if (parameters.Length > 0)
+            {
+                try
+                {
+                    enableRestore = bool.Parse(parameters[parameters.Length - 1]);
+                }
+                catch (FormatException ex)
+                {
+                    CommandLineSwitchException.Throw("InvalidRestoreValue", parameters[parameters.Length - 1], ex.Message);
+                }
+                catch (ArgumentNullException ex)
+                {
+                    CommandLineSwitchException.Throw("InvalidRestoreValue", parameters[parameters.Length - 1], ex.Message);
+                }
+            }
+
+            return enableRestore;
+        }
+
         /// <summary>
         /// Uses the input from thinNodeMode switch to start a local node server
         /// </summary>
@@ -2194,11 +2289,8 @@ namespace Microsoft.Build.CommandLine
                         OutOfProcNode node = new OutOfProcNode(clientToServerPipeHandle, serverToClientPipeHandle);
 #endif
 
-
-                        bool nodeReuse = false;
-#if FEATURE_NODE_REUSE
-                        nodeReuse = ProcessNodeReuseSwitch(commandLineSwitches[CommandLineSwitches.ParameterizedSwitch.NodeReuse]);
-#endif
+                        // If FEATURE_NODE_REUSE is OFF, just validates that the switch is OK, and always returns False
+                        bool nodeReuse = ProcessNodeReuseSwitch(commandLineSwitches[CommandLineSwitches.ParameterizedSwitch.NodeReuse]);
 
                         shutdownReason = node.Run(nodeReuse, out nodeException);
 
@@ -3336,7 +3428,7 @@ namespace Microsoft.Build.CommandLine
             Console.WriteLine(AssemblyResources.GetString("HelpMessage_15_ValidateSwitch"));
 #endif
             Console.WriteLine(AssemblyResources.GetString("HelpMessage_19_IgnoreProjectExtensionsSwitch"));
-#if FEATURE_NODE_REUSE
+#if FEATURE_NODE_REUSE // Do not advertise the switch when feature is off, even though we won't fail to parse it for compatibility with existing build scripts
             Console.WriteLine(AssemblyResources.GetString("HelpMessage_24_NodeReuse"));
 #endif
             Console.WriteLine(AssemblyResources.GetString("HelpMessage_25_PreprocessSwitch"));
@@ -3348,6 +3440,7 @@ namespace Microsoft.Build.CommandLine
                 Console.WriteLine(AssemblyResources.GetString("HelpMessage_27_DebuggerSwitch"));
             }
 #endif
+            Console.WriteLine(AssemblyResources.GetString("HelpMessage_31_RestoreSwitch"));
             Console.WriteLine(AssemblyResources.GetString("HelpMessage_7_ResponseFile"));
             Console.WriteLine(AssemblyResources.GetString("HelpMessage_8_NoAutoResponseSwitch"));
             Console.WriteLine(AssemblyResources.GetString("HelpMessage_5_NoLogoSwitch"));

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <PlatformSpecificBuild>true</PlatformSpecificBuild>
@@ -64,7 +64,6 @@
     </Compile>
     <Compile Include="..\Shared\Constants.cs" />
     <Compile Include="..\Shared\ReadOnlyEmptyDictionary.cs" />
-    <Compile Include="..\Shared\ReadOnlyEmptyList.cs" />
     <Compile Include="..\Shared\ErrorUtilities.cs">
       <Link>ErrorUtilities.cs</Link>
     </Compile>
@@ -163,6 +162,8 @@
     </Compile>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="AssemblyResources.cs" />
+    <Compile Include="Concurrent\ConcurrentDictionary.cs" />
+    <Compile Include="Concurrent\ConcurrentQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeLoader.cs" />
     <Compile Include="..\MSBuild\LogMessagePacket.cs">
@@ -189,9 +190,7 @@
     <Compile Include="..\MSBuild\OutOfProcTaskAppDomainWrapperBase.cs">
       <Link>OutOfProcTaskAppDomainWrapperBase.cs</Link>
     </Compile>
-    <Compile Include="OutOfProcTaskAppDomainWrapper.cs">
-      <Link>OutOfProcTaskAppDomainWrapperStub.cs</Link>
-    </Compile>
+    <Compile Include="OutOfProcTaskAppDomainWrapper.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

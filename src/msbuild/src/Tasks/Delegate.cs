@@ -2,9 +2,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Collections.Generic;
 using System.Runtime.Versioning;
+using Microsoft.Build.Tasks.AssemblyDependency;
 
 using Microsoft.Build.Shared;
 
@@ -85,6 +87,7 @@ namespace Microsoft.Build.Tasks
     internal delegate void GetAssemblyMetadata
     (
         string path,
+        ConcurrentDictionary<string, AssemblyMetadata> assemblyMetadataCache,
         out AssemblyNameExtension[] dependencies,
         out string[] scatterFiles,
         out FrameworkName frameworkNameAttribute

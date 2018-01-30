@@ -17,6 +17,7 @@ using Microsoft.Build.Execution;
 using Microsoft.Build.Shared;
 using Microsoft.Build.Construction;
 using Microsoft.Build.UnitTests.BackEnd;
+using Shouldly;
 using ObjectModel = System.Collections.ObjectModel;
 using Xunit;
 
@@ -83,11 +84,7 @@ namespace Microsoft.Build.UnitTests.OM.Collections
             PropertyDictionary<ProjectPropertyInstance> deserializedProperties = null;
             TranslationHelpers.GetReadTranslator().TranslateDictionary<PropertyDictionary<ProjectPropertyInstance>, ProjectPropertyInstance>(ref deserializedProperties, ProjectPropertyInstance.FactoryForDeserialization);
 
-            Assert.Equal(properties.PropertyNames.Count, deserializedProperties.PropertyNames.Count);
-            foreach (string propertyName in properties.PropertyNames)
-            {
-                Assert.Equal(properties[propertyName].EvaluatedValue, deserializedProperties[propertyName].EvaluatedValue);
-            }
+            Assert.Equal(properties, deserializedProperties);
         }
 
         /// <summary>
@@ -102,7 +99,7 @@ namespace Microsoft.Build.UnitTests.OM.Collections
             PropertyDictionary<ProjectPropertyInstance> deserializedProperties = null;
             TranslationHelpers.GetReadTranslator().TranslateDictionary<PropertyDictionary<ProjectPropertyInstance>, ProjectPropertyInstance>(ref deserializedProperties, ProjectPropertyInstance.FactoryForDeserialization);
 
-            Assert.Equal(properties.PropertyNames.Count, deserializedProperties.PropertyNames.Count);
+            Assert.Equal(properties, deserializedProperties);
         }
 
         /// <summary>
@@ -119,9 +116,12 @@ namespace Microsoft.Build.UnitTests.OM.Collections
             // Enumeration of empty collection
             using (IEnumerator<ProjectItemInstance> enumerator = items.GetEnumerator())
             {
-                Assert.Equal(false, enumerator.MoveNext());
-                ObjectModelHelpers.AssertThrows(typeof(InvalidOperationException), delegate { object o = ((IEnumerator)enumerator).Current; });
-                Assert.Equal(null, enumerator.Current);
+                enumerator.MoveNext().ShouldBeFalse();
+                Should.Throw<InvalidOperationException>(() =>
+                {
+                    object o = ((IEnumerator) enumerator).Current;
+                });
+                enumerator.Current.ShouldBeNull();
             }
 
             List<ProjectItemInstance> list = new List<ProjectItemInstance>();
@@ -261,24 +261,6 @@ namespace Microsoft.Build.UnitTests.OM.Collections
             // Does not overflow stack:
             foreach (object o in enumerable)
             {
-            }
-        }
-
-        /// <summary>
-        /// Verify that the converting collection functions.
-        /// </summary>
-        [Fact]
-        public void ReadOnlyConvertingCollection()
-        {
-            string[] source = { "1", "2", "3" };
-            ReadOnlyConvertingCollection<string, int> convertingCollection = new ReadOnlyConvertingCollection<string, int>(source, delegate (string x) { return Convert.ToInt32(x); });
-            Assert.Equal(3, convertingCollection.Count);
-            Assert.True(convertingCollection.IsReadOnly);
-
-            int index = 1;
-            foreach (int value in convertingCollection)
-            {
-                Assert.Equal(index++, value);
             }
         }
 

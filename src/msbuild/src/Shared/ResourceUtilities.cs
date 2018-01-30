@@ -7,11 +7,9 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
-#if DEBUG
-using Microsoft.Build.Framework;
-#endif
 using System.Reflection;
 using System.Text;
+using System.ComponentModel;
 
 #if BUILDINGAPPXTASKS
 namespace Microsoft.Build.AppxPackage.Shared
@@ -172,6 +170,13 @@ namespace Microsoft.Build.Shared
 
             // NOTE: the AssemblyResources.GetString() method is thread-safe
             return ExtractMessageCode(true /* msbuildCodeOnly */, FormatString(GetResourceString(resourceName), args), out code);
+        }
+
+        [Obsolete("Use GetResourceString instead.", true)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        internal static string FormatResourceString(string resourceName)
+        {   // Avoids an accidental dependency on FormatResourceString(string, params object[])
+            return null;
         }
 
         /// <summary>

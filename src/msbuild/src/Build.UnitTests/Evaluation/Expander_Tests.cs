@@ -31,6 +31,7 @@ using ProjectItemInstanceFactory = Microsoft.Build.Execution.ProjectItemInstance
 using Xunit;
 using Microsoft.Build.BackEnd;
 using Microsoft.Build.Engine.UnitTests;
+using Shouldly;
 
 namespace Microsoft.Build.UnitTests.Evaluation
 {
@@ -1157,7 +1158,7 @@ namespace Microsoft.Build.UnitTests.Evaluation
         /// <param name="itemMetadata"></param>
         private void CreateComplexPropertiesItemsMetadata
             (
-            out ReadOnlyLookup readOnlyLookup,
+            out Lookup readOnlyLookup,
             out StringMetadataTable itemMetadata
             )
         {
@@ -1211,7 +1212,7 @@ namespace Microsoft.Build.UnitTests.Evaluation
             lookup.PopulateWithItems("IntermediateAssembly", intermediateAssemblyItemGroup);
             lookup.PopulateWithItems("Content", contentItemGroup);
 
-            readOnlyLookup = new ReadOnlyLookup(lookup);
+            readOnlyLookup = lookup;
         }
 
         /// <summary>
@@ -1220,7 +1221,7 @@ namespace Microsoft.Build.UnitTests.Evaluation
         [Fact]
         public void ExpandAllIntoTaskItemsComplex()
         {
-            ReadOnlyLookup lookup;
+            Lookup lookup;
             StringMetadataTable itemMetadata;
             CreateComplexPropertiesItemsMetadata(out lookup, out itemMetadata);
 
@@ -1252,7 +1253,7 @@ namespace Microsoft.Build.UnitTests.Evaluation
         [Fact]
         public void ExpandAllIntoStringComplexPiecemeal()
         {
-            ReadOnlyLookup lookup;
+            Lookup lookup;
             StringMetadataTable itemMetadata;
             CreateComplexPropertiesItemsMetadata(out lookup, out itemMetadata);
 
@@ -1305,7 +1306,7 @@ namespace Microsoft.Build.UnitTests.Evaluation
         [Fact]
         public void ExpandAllIntoStringEmpty()
         {
-            ReadOnlyLookup lookup;
+            Lookup lookup;
             StringMetadataTable itemMetadata;
             CreateComplexPropertiesItemsMetadata(out lookup, out itemMetadata);
 
@@ -1331,7 +1332,7 @@ namespace Microsoft.Build.UnitTests.Evaluation
         [Fact]
         public void ExpandAllIntoStringComplex()
         {
-            ReadOnlyLookup lookup;
+            Lookup lookup;
             StringMetadataTable itemMetadata;
             CreateComplexPropertiesItemsMetadata(out lookup, out itemMetadata);
 
@@ -1353,7 +1354,7 @@ namespace Microsoft.Build.UnitTests.Evaluation
         [Fact]
         public void ExpandAllIntoStringLeaveEscapedComplex()
         {
-            ReadOnlyLookup lookup;
+            Lookup lookup;
             StringMetadataTable itemMetadata;
             CreateComplexPropertiesItemsMetadata(out lookup, out itemMetadata);
 
@@ -1375,7 +1376,7 @@ namespace Microsoft.Build.UnitTests.Evaluation
         [Fact]
         public void ExpandAllIntoStringExpectIdenticalReference()
         {
-            ReadOnlyLookup lookup;
+            Lookup lookup;
             StringMetadataTable itemMetadata;
             CreateComplexPropertiesItemsMetadata(out lookup, out itemMetadata);
 
@@ -1406,7 +1407,7 @@ namespace Microsoft.Build.UnitTests.Evaluation
         [Fact]
         public void ExpandAllIntoStringExpanderOptions()
         {
-            ReadOnlyLookup lookup;
+            Lookup lookup;
             StringMetadataTable itemMetadata;
             CreateComplexPropertiesItemsMetadata(out lookup, out itemMetadata);
 
@@ -1429,7 +1430,7 @@ namespace Microsoft.Build.UnitTests.Evaluation
         [Fact]
         public void ExpandAllIntoStringListLeaveEscapedComplex()
         {
-            ReadOnlyLookup lookup;
+            Lookup lookup;
             StringMetadataTable itemMetadata;
             CreateComplexPropertiesItemsMetadata(out lookup, out itemMetadata);
 
@@ -1438,7 +1439,7 @@ namespace Microsoft.Build.UnitTests.Evaluation
             string value = "@(Resource->'%(Filename)') ; @(Content) ; @(NonExistent) ; $(NonExistent) ; %(NonExistent) ; " +
                 "$(OutputPath) ; $(TargetPath) ; %(Language)_%(Culture)";
 
-            IList<string> expanded = expander.ExpandIntoStringListLeaveEscaped(value, ExpanderOptions.ExpandAll, MockElementLocation.Instance);
+            IList<string> expanded = expander.ExpandIntoStringListLeaveEscaped(value, ExpanderOptions.ExpandAll, MockElementLocation.Instance).ToList();
 
             Assert.Equal(9, expanded.Count);
             Assert.Equal(@"string$(p)", expanded[0]);
@@ -2684,11 +2685,11 @@ namespace Microsoft.Build.UnitTests.Evaluation
 
                 Expander<ProjectPropertyInstance, ProjectItemInstance> expander = new Expander<ProjectPropertyInstance, ProjectItemInstance>(pg);
 
-                string result = expander.ExpandIntoStringLeaveEscaped(@"$([MSBuild]::GetDirectoryNameOfFileAbove($(StartingDirectory), $(FileToFind)))", ExpanderOptions.ExpandProperties, MockElementLocation.Instance);
+                string result = expander.ExpandIntoStringAndUnescape(@"$([MSBuild]::GetDirectoryNameOfFileAbove($(StartingDirectory), $(FileToFind)))", ExpanderOptions.ExpandProperties, MockElementLocation.Instance);
 
                 Assert.Equal(Microsoft.Build.Shared.FileUtilities.EnsureTrailingSlash(tempPath), Microsoft.Build.Shared.FileUtilities.EnsureTrailingSlash(result));
 
-                result = expander.ExpandIntoStringLeaveEscaped(@"$([MSBuild]::GetDirectoryNameOfFileAbove($(StartingDirectory), Hobbits))", ExpanderOptions.ExpandProperties, MockElementLocation.Instance);
+                result = expander.ExpandIntoStringAndUnescape(@"$([MSBuild]::GetDirectoryNameOfFileAbove($(StartingDirectory), Hobbits))", ExpanderOptions.ExpandProperties, MockElementLocation.Instance);
 
                 Assert.Equal(String.Empty, result);
             }
@@ -2718,11 +2719,11 @@ namespace Microsoft.Build.UnitTests.Evaluation
 
                 Expander<ProjectPropertyInstance, ProjectItemInstance> expander = new Expander<ProjectPropertyInstance, ProjectItemInstance>(pg);
 
-                string result = expander.ExpandIntoStringLeaveEscaped(@"$([MSBuild]::GetPathOfFileAbove($(FileToFind)))", ExpanderOptions.ExpandProperties, mockElementLocation);
+                string result = expander.ExpandIntoStringAndUnescape(@"$([MSBuild]::GetPathOfFileAbove($(FileToFind)))", ExpanderOptions.ExpandProperties, mockElementLocation);
 
                 Assert.Equal(fileToFind, result);
 
-                result = expander.ExpandIntoStringLeaveEscaped(@"$([MSBuild]::GetPathOfFileAbove('Hobbits'))", ExpanderOptions.ExpandProperties, mockElementLocation);
+                result = expander.ExpandIntoStringAndUnescape(@"$([MSBuild]::GetPathOfFileAbove('Hobbits'))", ExpanderOptions.ExpandProperties, mockElementLocation);
 
                 Assert.Equal(String.Empty, result);
             }
@@ -2905,11 +2906,11 @@ namespace Microsoft.Build.UnitTests.Evaluation
 
             Assert.Equal(
                 $"{Path.GetFullPath("one")}{Path.DirectorySeparatorChar}",
-                expander.ExpandIntoStringLeaveEscaped(@"$([MSBuild]::NormalizeDirectory($(MyPath)))", ExpanderOptions.ExpandProperties, MockElementLocation.Instance));
+                expander.ExpandIntoStringAndUnescape(@"$([MSBuild]::NormalizeDirectory($(MyPath)))", ExpanderOptions.ExpandProperties, MockElementLocation.Instance));
 
             Assert.Equal(
                 $"{Path.GetFullPath(Path.Combine("one", "two"))}{Path.DirectorySeparatorChar}",
-                expander.ExpandIntoStringLeaveEscaped(@"$([MSBuild]::NormalizeDirectory($(MyPath), $(MySecondPath)))", ExpanderOptions.ExpandProperties, MockElementLocation.Instance));
+                expander.ExpandIntoStringAndUnescape(@"$([MSBuild]::NormalizeDirectory($(MyPath), $(MySecondPath)))", ExpanderOptions.ExpandProperties, MockElementLocation.Instance));
         }
 
         /// <summary>
@@ -3517,6 +3518,26 @@ $(
             result = expander.ExpandIntoStringLeaveEscaped("$([MSBuild]::EnsureTrailingSlash($(SomeProperty)))", ExpanderOptions.ExpandProperties, MockElementLocation.Instance);
 
             Assert.Equal(path + Path.DirectorySeparatorChar, result);
+        }
+
+        [Fact]
+        public void PropertyFunctionWithNewLines()
+        {
+            const string propertyFunction = @"$(SomeProperty
+ .Substring(0, 10)
+  .ToString()
+   .Substring(0, 5)
+     .ToString())";
+
+            PropertyDictionary<ProjectPropertyInstance> pg = new PropertyDictionary<ProjectPropertyInstance>();
+
+            pg.Set(ProjectPropertyInstance.Create("SomeProperty", "6C8546D5297C424F962201B0E0E9F142"));
+
+            Expander<ProjectPropertyInstance, ProjectItemInstance> expander = new Expander<ProjectPropertyInstance, ProjectItemInstance>(pg);
+
+            string result = expander.ExpandIntoStringLeaveEscaped(propertyFunction, ExpanderOptions.ExpandProperties, MockElementLocation.Instance);
+
+            result.ShouldBe("6C854");
         }
     }
 }

@@ -80,6 +80,9 @@ set RUNTIME_HOST=
 if /i "%HOST%"=="CoreCLR" (
     set RUNTIME_HOST=%~dp0Tools\DotNetCLI\Dotnet.exe
     set MSBUILD_CUSTOM_PATH=%~dp0Tools\MSBuild.exe
+    :: The LKG MSBuild on Core is too old to support
+    :: SourceLink targets, so disable them.
+    set SOURCE_LINK_ARGUMENT=/p:SourceLinkCreate=false /p:DebugType=full
 ) else if /i "%HOST%"=="Full" (
     set RUNTIME_HOST=
 ) else (
@@ -104,7 +107,7 @@ echo.
 echo ** Rebuilding MSBuild with downloaded binaries
 
 set MSBUILDLOGPATH=%~dp0msbuild_bootstrap_build-%HOST%.log
-call "%~dp0build.cmd" /t:Rebuild /p:Configuration=%BUILD_CONFIGURATION% /p:"SkipBuildPackages=true" %LOCALIZED_BUILD_ARGUMENT% %SYNC_XLF_ARGUMENT% %RUNTIMETYPE_ARGUMENT%
+call "%~dp0build.cmd" /t:Rebuild /p:Configuration=%BUILD_CONFIGURATION% /p:"SkipBuildPackages=true" %LOCALIZED_BUILD_ARGUMENT% %SYNC_XLF_ARGUMENT% %RUNTIMETYPE_ARGUMENT% %SOURCE_LINK_ARGUMENT%
 
 if %ERRORLEVEL% NEQ 0 (
     echo.
@@ -155,7 +158,10 @@ if /i "%TARGET%"=="CoreCLR" (
 :: warning MSB3026: Could not copy "XXX" to "XXX". Beginning retry 1 in 1000ms.
 :: warning MSB3073: Exec task failure (when set to be a warning) -- needed to keep from failing on dev desktops that don't have C++ tools
 :: warning AL1053: The version '1.2.3.4-foo' specified for the 'product version' is not in the normal 'major.minor.build.revision' format
-SET _NOWARN=MSB3277;MSB3026;MSB3073;AL1053
+:: warning MSB4011: Imported target already imported. This will happen when Microsoft.NuGet.ImportAfter.targets installed on the local
+::                  machine still has the import to NuGet.targets which is now in Microsoft.Common.CurrentVersion.targets. This can be
+::                  removed when we want to require VS15.5+ to build locally.
+SET _NOWARN=MSB3277;MSB3026;MSB3073;AL1053;MSB4011
 set MSBUILDBINLOGPATH=%~dp0msbuild_rebuild-%HOST%.binlog
 
 echo.

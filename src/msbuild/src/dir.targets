@@ -18,29 +18,52 @@
     <DocumentationFile Condition="'$(EnableDocumentationFile)' == 'true'">$(OutputPath)$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
-  <Import Project="$(CSharpTargets)" 
-          Condition="('$(NetCoreBuild)' != 'true') 
+  <Import Project="$(CSharpTargets)"
+          Condition="('$(NetCoreBuild)' != 'true')
                       and Exists('$(CSharpTargets)')"/>
 
-  <Import Project="$(CSharpPortableTargets)" 
-          Condition="'$(NetCoreBuild)' == 'true' 
+  <Import Project="$(CSharpPortableTargets)"
+          Condition="'$(NetCoreBuild)' == 'true'
                       and Exists('$(CSharpPortableTargets)')"/>
-  
+
   <!-- Fallback: If we're building Debug-NetCore with a mono host, MSBuildExtensionsPath32 resolves to a system wide Mono specific directory that does not have the portable targets. Fallback to using the BuildTools one -->
   <Import Project="$(CSharpPortableTargetsFallback)"
-          Condition="'$(NetCoreBuild)' == 'true' 
+          Condition="'$(NetCoreBuild)' == 'true'
                       and Exists('$(CSharpPortableTargetsFallback)')
                       and !Exists('$(CSharpPortableTargets)')"/>
-  
+
   <Import Project="$(RepoRoot)\targets\OverrideGetReferenceAssemblyPaths.targets"
           Condition="'$(NetCoreBuild)' == 'true'"/>
 
-  <!-- OSS sign assemblies after compile runs. -->
-  <Import Condition="Exists('$(ToolsDir)\sign.targets')" Project="$(ToolsDir)\sign.targets" />
-  
+  <PropertyGroup Condition="'$(IsTestProject)' != 'true'">
+    <!-- When we build internally we need to use DelaySign, otherwise use PublicSign -->
+    <PublicSign Condition="'$(UseOpenSourceSign)' != 'false'">true</PublicSign>
+    <DelaySign Condition="'$(UseOpenSourceSign)' == 'false'">true</DelaySign>
+    <KeyOriginatorFile>$(SourceDir)MSFT.snk</KeyOriginatorFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+    <SignAssembly>true</SignAssembly>
+    <PublicSign>true</PublicSign>
+    <AssemblyOriginatorKeyFile>$(SourceDir)Test.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <Target Name="FakeDelaySignForAL" BeforeTargets="GenerateSatelliteAssemblies">
+    <PropertyGroup>
+      <_OriginalDelaySign>$(DelaySign)</_OriginalDelaySign>
+      <DelaySign>true</DelaySign>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="RestoreDelaySignAfterAL" AfterTargets="GenerateSatelliteAssemblies">
+    <PropertyGroup>
+      <DelaySign>$(_OriginalDelaySign)</DelaySign>
+    </PropertyGroup>
+  </Target>
+
   <Import Project="$(MicroBuildDir)\MicroBuild.Core.targets" Condition="Exists('$(MicroBuildDir)\MicroBuild.Core.targets')" />
 
-    <!-- Targets from buildtools that restore packages before building. -->
+  <!-- Targets from buildtools that restore packages before building. -->
   <!-- TODO: ideally replaced by a standard "dotnet restore" over the solution. -->
   <Import Condition="Exists('$(ToolsDir)\packageresolve.targets')" Project="$(ToolsDir)\packageresolve.targets" />
 
@@ -55,7 +78,7 @@
       <Visible>false</Visible>
     </NuSpecProjectFile>
   </ItemGroup>
-  
+
   <!-- Use NuSpec.ReferenceGenerator to create / update the .NET Core dependencies of the packages -->
   <Import Condition="'$(NetCoreBuild)'=='true'  and '$(UpdateNuGetPackageDependencies)' == 'true' and Exists('$(NuSpecReferenceGeneratorDir)\NuSpec.ReferenceGenerator.targets')"  Project="$(NuSpecReferenceGeneratorDir)\NuSpec.ReferenceGenerator.targets"/>
 
@@ -76,7 +99,7 @@
   </PropertyGroup>
 
   <!-- TODO: enable for all runtime hosts https://github.com/Microsoft/msbuild/issues/694 -->
-  <Import Project="$(GitVersioningDir)dotnet\Nerdbank.GitVersioning.targets"
+  <Import Project="$(GitVersioningDir)Nerdbank.GitVersioning.targets"
           Condition="'$(MSBuildRuntimeType)' == 'Full' And '$(IsTestProject)' != 'true' " />
   <PropertyGroup Condition="'$(MSBuildRuntimeType)' != 'Full'">
     <DefineConstants>$(DefineConstants);STATIC_VERSION_NUMBER</DefineConstants>
@@ -98,8 +121,17 @@
   <PropertyGroup Condition="'$(NetCoreBuild)' == 'true'">
     <NuGetTargetMoniker>$(TargetFrameworkIdentifier),Version=$(TargetFrameworkVersion)</NuGetTargetMoniker>
   </PropertyGroup>
-  
+
   <Import Project="$(RepoRoot)\targets\GenApi.targets" Condition="'$(OS)' == 'Windows_NT'" />
+
+  <!-- https://github.com/AArnott/PdbGit - stamps the .pdbs with URLs to sources on GitHub
+       so that the debugger can download the exact matching source files during debugging -->
+  <Import Project="$(PackagesDir)\pdbgit\3.0.41\build\PdbGit.targets" Condition="'$(DebugType)' == 'full' And '$(IsTestProject)' != 'true' And Exists('$(PackagesDir)\pdbgit\3.0.41\build\PdbGit.targets')" />
+
+  <!-- https://github.com/ctaggart/SourceLink - stamps portable or embedded .pdbs with URLs to sources on GitHub
+       so that debugger can download the exact matching source files during debugging -->
+  <Import Project="$(PackagesDir)\sourcelink.create.commandline\2.1.2\build\SourceLink.Create.CommandLine.targets" Condition="'$(SourceLinkCreate)' == 'true' And '$(DebugType)' != 'full' And '$(IsTestProject)' != 'true' And Exists('$(PackagesDir)\sourcelink.create.commandline\2.1.2\build\SourceLink.Create.CommandLine.targets')" />
+
 
   <!-- Taken from Microsoft.VisualStudio.SDK.EmbedInteropTypes NuGet package which tries to fix this issue
        (but doesn't include this assembly in their list).  -->
@@ -161,4 +193,5 @@
     </AL>
 
   </Target>
+
 </Project>

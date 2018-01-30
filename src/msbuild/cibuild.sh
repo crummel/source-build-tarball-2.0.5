@@ -322,7 +322,8 @@ restoreBuildTools
 
 echo
 echo "** Rebuilding MSBuild with downloaded binaries"
-runMSBuildWith "$RUNTIME_HOST" "$RUNTIME_HOST_ARGS" "$MSBUILD_EXE" "/t:Rebuild $BUILD_MSBUILD_ARGS $CSC_ARGS" "$BOOTSTRAP_BUILD_LOG_PATH"
+# Avoid SourceLink on our ancient bootstrap binaries
+runMSBuildWith "$RUNTIME_HOST" "$RUNTIME_HOST_ARGS" "$MSBUILD_EXE" "/t:Rebuild $BUILD_MSBUILD_ARGS $CSC_ARGS /p:SourceLinkCreate=false /p:DebugType=portable" "$BOOTSTRAP_BUILD_LOG_PATH"
 
 if [[ $BUILD_ONLY = true ]]; then
     exit $?
@@ -339,7 +340,7 @@ fi
 
 # Microsoft.Net.Compilers package is available now, so we can use the latest csc.exe
 if [ "$host" = "Mono" ]; then
-        CSC_EXE="$PACKAGES_DIR/microsoft.net.compilers/2.0.0-rc3-61110-06/tools/csc.exe"
+        CSC_EXE="$PACKAGES_DIR/microsoft.net.compilers/2.3.1/tools/csc.exe"
         CSC_ARGS="/p:CscToolExe=csc.exe /p:CscToolPath=$(dirname "$CSC_EXE") /p:DebugType=portable"
 fi
 

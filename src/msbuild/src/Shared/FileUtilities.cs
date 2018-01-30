@@ -2,6 +2,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+#if !CLR2COMPATIBILITY
+using System.Collections.Concurrent;
+#endif
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -10,9 +13,11 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Text;
 using System.Threading;
+using Microsoft.Build.Utilities;
 
 namespace Microsoft.Build.Shared
 {
@@ -60,7 +65,7 @@ namespace Microsoft.Build.Shared
         /// MSBuild should support the union of invalid path chars across the supported OSes, so builds can have the same behaviour crossplatform: https://github.com/Microsoft/msbuild/issues/781#issuecomment-243942514
         /// </summary>
 
-        internal static char[] InvalidPathChars => new char[]
+        internal static readonly char[] InvalidPathChars = new char[]
         {
             '|', '\0',
             (char)1, (char)2, (char)3, (char)4, (char)5, (char)6, (char)7, (char)8, (char)9, (char)10,
@@ -73,7 +78,7 @@ namespace Microsoft.Build.Shared
         /// Copied from https://github.com/dotnet/corefx/blob/387cf98c410bdca8fd195b28cbe53af578698f94/src/System.Runtime.Extensions/src/System/IO/Path.Windows.cs#L18
         /// MSBuild should support the union of invalid path chars across the supported OSes, so builds can have the same behaviour crossplatform: https://github.com/Microsoft/msbuild/issues/781#issuecomment-243942514
         /// </summary>
-        internal static char[] InvalidFileNameChars => new char[]
+        internal static readonly char[] InvalidFileNameChars = new char[]
         {
             '\"', '<', '>', '|', '\0',
             (char)1, (char)2, (char)3, (char)4, (char)5, (char)6, (char)7, (char)8, (char)9, (char)10,
@@ -83,6 +88,10 @@ namespace Microsoft.Build.Shared
         };
 
         private static readonly char[] Slashes = { '/', '\\' };
+
+#if !CLR2COMPATIBILITY
+        private static ConcurrentDictionary<string, bool> FileExistenceCache = new ConcurrentDictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
+#endif
 
         /// <summary>
         /// Retrieves the MSBuild runtime cache directory
@@ -390,6 +399,18 @@ namespace Microsoft.Build.Shared
 
         }
 
+        internal static string NormalizePath(string directory, string file)
+        {
+            return NormalizePath(Path.Combine(directory, file));
+        }
+
+#if !CLR2COMPATIBILITY
+        internal static string NormalizePath(params string[] paths)
+        {
+            return NormalizePath(Path.Combine(paths));
+        }
+#endif
+
         internal static string FixFilePath(string path)
         {
             return string.IsNullOrEmpty(path) || Path.DirectorySeparatorChar == '\\' ? path : path.Replace('\\', '/');//.Replace("//", "/");
@@ -511,14 +532,23 @@ namespace Microsoft.Build.Shared
         /// <returns></returns>
         internal static bool HasExtension(string fileName, string[] allowedExtensions)
         {
-            string fileExtension = Path.GetExtension(fileName);
-            foreach (string extension in allowedExtensions)
+            Debug.Assert(allowedExtensions != null && allowedExtensions.Length > 0);
+
+            // Easiest way to invoke invalid path chars
+            // check, which callers are relying on.
+            if (Path.HasExtension(fileName))
             {
-                if (String.Compare(fileExtension, extension, StringComparison.CurrentCultureIgnoreCase) == 0)
+                foreach (string extension in allowedExtensions)
                 {
-                    return true;
+                    Debug.Assert(!String.IsNullOrEmpty(extension) && extension[0] == '.');
+
+                    if (fileName.EndsWith(extension, PathComparison))
+                    {
+                        return true;
+                    }
                 }
             }
+
             return false;
         }
 
@@ -629,19 +659,14 @@ namespace Microsoft.Build.Shared
                 return true;
             }
 
-            var filename = GetFileName(path);
-
-            return filename.IndexOfAny(InvalidFileNameChars) >= 0;
-        }
-
-        // Path.GetFileName does not react well to malformed filenames.
-        // For example, Path.GetFileName("a/b/foo:bar") returns bar instead of foo:bar
-        // It also throws exceptions on illegal path characters
-        private static string GetFileName(string path)
-        {
+            // Path.GetFileName does not react well to malformed filenames.
+            // For example, Path.GetFileName("a/b/foo:bar") returns bar instead of foo:bar
+            // It also throws exceptions on illegal path characters
             var lastDirectorySeparator = path.LastIndexOfAny(Slashes);
-            return lastDirectorySeparator >= 0 ? path.Substring(lastDirectorySeparator + 1) : path;
+
+            return path.IndexOfAny(InvalidFileNameChars, lastDirectorySeparator >= 0 ? lastDirectorySeparator + 1 : 0) >= 0;
         }
+
 
         /// <summary>
         /// A variation on File.Delete that will throw ExceptionHandling.NotExpectedException exceptions
@@ -661,11 +686,8 @@ namespace Microsoft.Build.Shared
         /// A variation on Directory.Delete that will throw ExceptionHandling.NotExpectedException exceptions
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.Int32.TryParse(System.String,System.Int32@)", Justification = "We expect the out value to be 0 if the parse fails and compensate accordingly")]
-        internal static void DeleteDirectoryNoThrow(string path, bool recursive)
+        internal static void DeleteDirectoryNoThrow(string path, bool recursive, int retryCount = 0, int retryTimeOut = 0)
         {
-            int retryCount;
-            int retryTimeOut;
-
             // Try parse will set the out parameter to 0 if the string passed in is null, or is outside the range of an int.
             if (!int.TryParse(Environment.GetEnvironmentVariable("MSBUILDDIRECTORYDELETERETRYCOUNT"), out retryCount))
             {
@@ -849,12 +871,19 @@ namespace Microsoft.Build.Shared
             fullPath = AttemptToShortenPath(fullPath);
             if (NativeMethodsShared.IsWindows)
             {
-                NativeMethodsShared.WIN32_FILE_ATTRIBUTE_DATA data = new NativeMethodsShared.WIN32_FILE_ATTRIBUTE_DATA();
-                bool success = false;
-
-                success = NativeMethodsShared.GetFileAttributesEx(fullPath, 0, ref data);
-
-                return success;
+#if !CLR2COMPATIBILITY
+                if (Traits.Instance.CacheFileExistence)
+                {
+                    // Possible future improvement: make sure file existence caching happens only at evaluation time, and maybe only within a build session. https://github.com/Microsoft/msbuild/issues/2306
+                    return FileExistenceCache.GetOrAdd(fullPath, NativeMethodsShared.FileExists);
+                }
+                else
+                {
+#endif
+                    return NativeMethodsShared.FileExists(fullPath);
+#if !CLR2COMPATIBILITY
+                }
+#endif
             }
             else
             {
@@ -875,7 +904,7 @@ namespace Microsoft.Build.Shared
         /// </summary>
         internal static bool IsSolutionFilename(string filename)
         {
-            return (String.Equals(Path.GetExtension(filename), ".sln", PathComparison));
+            return HasExtension(filename, ".sln");
         }
 
         /// <summary>
@@ -883,7 +912,7 @@ namespace Microsoft.Build.Shared
         /// </summary>
         internal static bool IsVCProjFilename(string filename)
         {
-            return (String.Equals(Path.GetExtension(filename), ".vcproj", PathComparison));
+            return HasExtension(filename, ".vcproj");
         }
 
         /// <summary>
@@ -891,12 +920,20 @@ namespace Microsoft.Build.Shared
         /// </summary>
         internal static bool IsMetaprojectFilename(string filename)
         {
-            return (String.Equals(Path.GetExtension(filename), ".metaproj", PathComparison));
+            return HasExtension(filename, ".metaproj");
         }
 
         internal static bool IsBinaryLogFilename(string filename)
         {
-            return (String.Equals(Path.GetExtension(filename), ".binlog", PathComparison));
+            return HasExtension(filename, ".binlog");
+        }
+
+        private static bool HasExtension(string filename, string extension)
+        {
+            if (String.IsNullOrEmpty(filename))
+                return false;
+
+            return filename.EndsWith(extension, PathComparison);
         }
 
         /// <summary>
@@ -1021,7 +1058,7 @@ namespace Microsoft.Build.Shared
 
         internal static string TrimTrailingSlashes(this string s)
         {
-            return s.TrimEnd('/', '\\');
+            return s.TrimEnd(Slashes);
         }
 
         /// <summary>
@@ -1032,30 +1069,108 @@ namespace Microsoft.Build.Shared
             return s.Replace('\\', '/');
         }
 
+        /// <summary>
+        /// Ensure all slashes are the current platform's slash
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        internal static string ToPlatformSlash(this string s)
+        {
+            var separator = Path.DirectorySeparatorChar;
+
+            return s.Replace(separator == '/' ? '\\' : '/', separator);
+        }
+
         internal static string WithTrailingSlash(this string s)
         {
             return EnsureTrailingSlash(s);
         }
 
-        internal static string NormalizeForPathComparison(this string s) => s.ToSlash().TrimTrailingSlashes();
+        internal static string NormalizeForPathComparison(this string s) => s.ToPlatformSlash().TrimTrailingSlashes();
 
+        // TODO: assumption on file system case sensitivity: https://github.com/Microsoft/msbuild/issues/781
         internal static bool PathsEqual(string path1, string path2)
         {
-            var trim1 = path1.TrimTrailingSlashes();
-            var trim2 = path2.TrimTrailingSlashes();
-
-            if (string.Equals(trim1, trim2, PathComparison))
+            if (path1 == null && path2 == null)
             {
                 return true;
             }
+            if (path1 == null || path2 == null)
+            {
+                return false;
+            }
 
-            var slash1 = trim1.ToSlash();
-            var slash2 = trim2.ToSlash();
+            var endA = path1.Length - 1;
+            var endB = path2.Length - 1;
 
-            return string.Equals(slash1, slash2, PathComparison);
+            // Trim trailing slashes
+            for (var i = endA; i >= 0; i--)
+            {
+                var c = path1[i];
+                if (c == '/' || c == '\\')
+                {
+                    endA--;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            for (var i = endB; i >= 0; i--)
+            {
+                var c = path2[i];
+                if (c == '/' || c == '\\')
+                {
+                    endB--;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (endA != endB)
+            {
+                // Lengths not the same
+                return false;
+            }
+
+            for (var i = 0; i <= endA; i++)
+            {
+                var charA = (uint)path1[i];
+                var charB = (uint)path2[i];
+
+                if ((charA | charB) > 0x7F)
+                {
+                    // Non-ascii chars move to non fast path
+                    return PathsEqualNonAscii(path1, path2, i, endA - i + 1);
+                }
+
+                // uppercase both chars - notice that we need just one compare per char
+                if ((uint)(charA - 'a') <= (uint)('z' - 'a')) charA -= 0x20;
+                if ((uint)(charB - 'a') <= (uint)('z' - 'a')) charB -= 0x20;
+
+                // Set path delimiters the same
+                if (charA == '\\')
+                {
+                    charA = '/';
+                }
+                if (charB == '\\')
+                {
+                    charB = '/';
+                }
+
+                if (charA != charB)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
-		internal static StreamWriter OpenWrite(string path, bool append, Encoding encoding = null)
+        internal static StreamWriter OpenWrite(string path, bool append, Encoding encoding = null)
         {
             const int DefaultFileStreamBufferSize = 4096;
             FileMode mode = append ? FileMode.Append : FileMode.Create;
@@ -1083,5 +1198,93 @@ namespace Microsoft.Build.Shared
                 return new StreamReader(fileStream, encoding, detectEncodingFromByteOrderMarks);
             }
         }
+
+        /// <summary>
+        /// Locate a file in either the directory specified or a location in the
+        /// directory structure above that directory.
+        /// </summary>
+        internal static string GetDirectoryNameOfFileAbove(string startingDirectory, string fileName)
+        {
+            // Canonicalize our starting location
+            string lookInDirectory = Path.GetFullPath(startingDirectory);
+
+            do
+            {
+                // Construct the path that we will use to test against
+                string possibleFileDirectory = Path.Combine(lookInDirectory, fileName);
+
+                // If we successfully locate the file in the directory that we're
+                // looking in, simply return that location. Otherwise we'll
+                // keep moving up the tree.
+                if (File.Exists(possibleFileDirectory))
+                {
+                    // We've found the file, return the directory we found it in
+                    return lookInDirectory;
+                }
+                else
+                {
+                    // GetDirectoryName will return null when we reach the root
+                    // terminating our search
+                    lookInDirectory = Path.GetDirectoryName(lookInDirectory);
+                }
+            }
+            while (lookInDirectory != null);
+
+            // When we didn't find the location, then return an empty string
+            return String.Empty;
+        }
+
+        /// <summary>
+        /// Searches for a file based on the specified starting directory.
+        /// </summary>
+        /// <param name="file">The file to search for.</param>
+        /// <param name="startingDirectory">An optional directory to start the search in.  The default location is the directory
+        /// of the file containing the property function.</param>
+        /// <returns>The full path of the file if it is found, otherwise an empty string.</returns>
+        internal static string GetPathOfFileAbove(string file, string startingDirectory)
+        {
+            // This method does not accept a path, only a file name
+            if (file.Any(i => i.Equals(Path.DirectorySeparatorChar) || i.Equals(Path.AltDirectorySeparatorChar)))
+            {
+                ErrorUtilities.ThrowArgument("InvalidGetPathOfFileAboveParameter", file);
+            }
+
+            // Search for a directory that contains that file
+            string directoryName = GetDirectoryNameOfFileAbove(startingDirectory, file);
+
+            return String.IsNullOrEmpty(directoryName) ? String.Empty : NormalizePath(directoryName, file);
+        }
+
+        // Method is simple set of function calls and may inline;
+        // we don't want it inlining into the tight loop that calls it as an exit case,
+        // so mark as non-inlining
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static bool PathsEqualNonAscii(string strA, string strB, int i, int length)
+        {
+            if (string.Compare(strA, i, strB, i, length, StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                return true;
+            }
+
+            var slash1 = strA.ToSlash();
+            var slash2 = strB.ToSlash();
+
+            if (string.Compare(slash1, i, slash2, i, length, StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+#if !CLR2COMPATIBILITY
+        /// <summary>
+        /// Clears the file existence cache.
+        /// </summary>
+        internal static void ClearFileExistenceCache()
+        {
+            FileExistenceCache.Clear();
+        }
+#endif
     }
 }
