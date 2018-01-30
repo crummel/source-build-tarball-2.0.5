@@ -26,7 +26,8 @@
                 ProjectPath="%(ProjectsToPack.Identity)/%(ProjectsToPack.ProjectName).csproj"
                 ToolPath="$(Stage0Directory)"
                 VersionSuffix="$(VersionSuffix)"
-                Configuration="$(Configuration)" />
+                Configuration="$(Configuration)"
+                Runtime="$(Rid)"  />
   </Target>
 
   <Target Name="BuildProjectsForNuGetPackages"
@@ -36,6 +37,7 @@
 
     <DotNetBuild ToolPath="$(Stage0Directory)"
                  Configuration="$(Configuration)"
-                 ProjectPath="%(ProjectsToPack.Identity)/%(ProjectsToPack.ProjectName).csproj" />
+                 ProjectPath="%(ProjectsToPack.Identity)/%(ProjectsToPack.ProjectName).csproj" 
+                 Runtime="$(Rid)" />
   </Target>
 </Project>
