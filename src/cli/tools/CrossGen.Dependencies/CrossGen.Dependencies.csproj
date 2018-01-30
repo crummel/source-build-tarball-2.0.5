@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <RuntimeIdentifier>$(SharedFrameworkRid)</RuntimeIdentifier>
+    <RuntimeIdentifier>rhel.7.4-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>

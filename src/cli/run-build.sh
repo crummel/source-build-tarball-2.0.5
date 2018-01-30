@@ -155,21 +155,7 @@ export VSTEST_TRACE_BUILD=1
 export DOTNET_MULTILEVEL_LOOKUP=0
 
 # Install a stage 0
-(set -x ; "$REPOROOT/scripts/obtain/dotnet-install.sh" --channel "release/2.0.0" --install-dir "$DOTNET_INSTALL_DIR" --architecture "$ARCHITECTURE" $LINUX_PORTABLE_INSTALL_ARGS)
-
-EXIT_CODE=$?
-if [ $EXIT_CODE != 0 ]; then
-    echo "run-build: Error: installing stage0 with exit code $EXIT_CODE." >&2
-    exit $EXIT_CODE
-fi
-
-# Install a project.json based CLI for use by tests
-(set -x ; "$REPOROOT/scripts/obtain/dotnet-install.sh" --channel "master" --install-dir "$DOTNET_INSTALL_DIR_PJ" --architecture "$ARCHITECTURE" --version "1.0.0-preview2-1-003177")
-EXIT_CODE=$?
-if [ $EXIT_CODE != 0 ]; then
-    echo "run-build: Error: installing project-json based cli failed with exit code $EXIT_CODE." >&2
-    exit $EXIT_CODE
-fi
+cp -r $DOTNET_TOOL_DIR/* $DOTNET_INSTALL_DIR/
 
 # Put stage 0 on the PATH (for this shell only)
 PATH="$DOTNET_INSTALL_DIR:$PATH"

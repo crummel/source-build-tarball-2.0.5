@@ -6,7 +6,7 @@
     <TargetFrameworks>netstandard1.5;net46</TargetFrameworks>
     <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.5</TargetFrameworks>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>$(RuntimeIdentifier)</RuntimeIdentifiers>
     <WarningsAsErrors>true</WarningsAsErrors>
     <AssemblyOriginatorKeyFile>../../tools/Key.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
