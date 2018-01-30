@@ -3,20 +3,20 @@
 
 namespace TestPlatform.Common.UnitTests.Logging
 {
-    using Microsoft.VisualStudio.TestPlatform.Common.Hosting;
-    using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-    using Microsoft.VisualStudio.TestPlatform.ObjectModel.Host;
-    using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
     using System.Threading;
-    using TestPlatform.Common.UnitTests.ExtensionFramework;
     using System.Threading.Tasks;
 
-    using Microsoft.VisualStudio.TestPlatform.CrossPlatEngine;
+    using Microsoft.VisualStudio.TestPlatform.Common.Hosting;
+    using Microsoft.VisualStudio.TestPlatform.ObjectModel;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client.Interfaces;
+    using Microsoft.VisualStudio.TestPlatform.ObjectModel.Host;
+    using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Utilities;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using TestPlatform.Common.UnitTests.ExtensionFramework;
 
     /// <summary>
     /// Tests the behaviors of the TestLoggerManager class.
@@ -46,14 +46,14 @@ namespace TestPlatform.Common.UnitTests.Logging
         [TestMethod]
         public void TestHostProviderManagerShouldReturnTestHostBasedOnRunConfiguration()
         {
-            string runSettingsXml = @"<?xml version=""1.0"" encoding=""utf-8""?> 
-    <RunSettings>     
-      <RunConfiguration> 
-        <MaxCpuCount>0</MaxCpuCount>       
-        <TargetPlatform> x64 </TargetPlatform>     
-        <TargetFrameworkVersion> Framework45 </TargetFrameworkVersion> 
-      </RunConfiguration>     
-    </RunSettings> ";
+            string runSettingsXml = @"<?xml version=""1.0"" encoding=""utf-8""?>
+    <RunSettings>
+      <RunConfiguration>
+        <MaxCpuCount>0</MaxCpuCount>
+        <TargetPlatform> x64 </TargetPlatform>
+        <TargetFrameworkVersion> Framework45 </TargetFrameworkVersion>
+      </RunConfiguration>
+    </RunSettings>";
 
             var manager = TestRuntimeProviderManager.Instance;
             Assert.IsNotNull(manager.GetTestHostManagerByRunConfiguration(runSettingsXml));
@@ -106,7 +106,7 @@ namespace TestPlatform.Common.UnitTests.Logging
             string runSettingsXml = string.Concat(
                 @"<?xml version=""1.0"" encoding=""utf-8""?><RunSettings>
 <RunConfiguration><MaxCpuCount>0</MaxCpuCount><TargetPlatform> x86 </TargetPlatform><TargetFrameworkVersion>",
-                ".NETFramework,Version=v4.6",
+                ".NETFramework,Version=v4.5.1",
                 "</TargetFrameworkVersion></RunConfiguration></RunSettings> ");
 
             var testHostManager = TestRuntimeProviderManager.Instance.GetTestHostManagerByRunConfiguration(runSettingsXml);
@@ -122,7 +122,7 @@ namespace TestPlatform.Common.UnitTests.Logging
             string runSettingsXml = string.Concat(
                 @"<?xml version=""1.0"" encoding=""utf-8""?><RunSettings>
 <RunConfiguration><MaxCpuCount>0</MaxCpuCount><TargetPlatform> x86 </TargetPlatform><TargetFrameworkVersion>",
-                ".NETFramework,Version=v4.6",
+                ".NETFramework,Version=v4.5.1",
                 "</TargetFrameworkVersion><DisableAppDomain>true</DisableAppDomain></RunConfiguration></RunSettings> ");
 
             var testHostManager = TestRuntimeProviderManager.Instance.GetTestHostManagerByRunConfiguration(runSettingsXml);
@@ -130,6 +130,22 @@ namespace TestPlatform.Common.UnitTests.Logging
             Assert.IsNotNull(testHostManager);
 
             Assert.IsFalse(testHostManager.Shared, "Default TestHostManager must NOT be shared if DisableAppDomain is true");
+        }
+
+        [TestMethod]
+        public void TestHostProviderManagerShouldReturnNullIfTargetFrameworkIsPortable()
+        {
+            string runSettingsXml = @"<?xml version=""1.0"" encoding=""utf-8""?>
+    <RunSettings>
+      <RunConfiguration>
+        <MaxCpuCount>0</MaxCpuCount>
+        <TargetPlatform>x64</TargetPlatform>
+        <TargetFrameworkVersion>.NETPortable,Version=v4.5</TargetFrameworkVersion>
+      </RunConfiguration>
+    </RunSettings> ";
+
+            var manager = TestRuntimeProviderManager.Instance;
+            Assert.IsNull(manager.GetTestHostManagerByRunConfiguration(runSettingsXml));
         }
 
         #region implementations
@@ -152,13 +168,12 @@ namespace TestPlatform.Common.UnitTests.Logging
                 this.Shared = !config.DisableAppDomain;
 
                 // This is expected to be called once every run so returning a new instance every time.
-                if (framework.Name.IndexOf("netstandard", StringComparison.OrdinalIgnoreCase) >= 0
-                    || framework.Name.IndexOf("netcoreapp", StringComparison.OrdinalIgnoreCase) >= 0)
+                if (framework.Name.IndexOf("netframework", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    return false;
+                    return true;
                 }
 
-                return true;
+                return false;
             }
 
             public TestProcessStartInfo GetTestHostProcessStartInfo(IEnumerable<string> sources, IDictionary<string, string> environmentVariables, TestRunnerConnectionInfo connectionInfo)
@@ -171,13 +186,18 @@ namespace TestPlatform.Common.UnitTests.Logging
                 throw new NotImplementedException();
             }
 
+            public IEnumerable<string> GetTestSources(IEnumerable<string> sources)
+            {
+                return sources;
+            }
+
             public void Initialize(IMessageLogger logger, string runsettingsXml)
             {
                 var config = XmlRunSettingsUtilities.GetRunConfigurationNode(runsettingsXml);
                 this.Shared = !config.DisableAppDomain;
             }
 
-            public Task<int> LaunchTestHostAsync(TestProcessStartInfo testHostStartInfo)
+            public Task<bool> LaunchTestHostAsync(TestProcessStartInfo testHostStartInfo, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -197,7 +217,12 @@ namespace TestPlatform.Common.UnitTests.Logging
                 throw new NotImplementedException();
             }
 
-            public Task TerminateAsync(int testHostId, CancellationToken cancellationToken)
+            public Task CleanTestHostAsync(CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public TestHostConnectionInfo GetTestHostConnectionInfo()
             {
                 throw new NotImplementedException();
             }
@@ -245,7 +270,7 @@ namespace TestPlatform.Common.UnitTests.Logging
                 this.Shared = !config.DisableAppDomain;
             }
 
-            public Task<int> LaunchTestHostAsync(TestProcessStartInfo testHostStartInfo)
+            public Task<bool> LaunchTestHostAsync(TestProcessStartInfo testHostStartInfo, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -265,9 +290,19 @@ namespace TestPlatform.Common.UnitTests.Logging
                 throw new NotImplementedException();
             }
 
-            public Task TerminateAsync(int testHostId, CancellationToken cancellationToken)
+            public Task CleanTestHostAsync(CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
+            }
+
+            public TestHostConnectionInfo GetTestHostConnectionInfo()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerable<string> GetTestSources(IEnumerable<string> sources)
+            {
+                return sources;
             }
         }
 

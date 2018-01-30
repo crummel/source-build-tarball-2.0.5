@@ -77,5 +77,27 @@ namespace Microsoft.VisualStudio.TestPlatform.Client.Resources {
                 return ResourceManager.GetString("WaitForCompletionOperationIsNotAllowedWhenNoTestRunIsActive", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Aborting test run: test run timeout of {0} milliseconds exceeded..
+        /// </summary>
+        internal static string TestSessionTimeoutMessage
+        {
+            get
+            {
+                return ResourceManager.GetString("TestSessionTimeoutMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No suitable test runtime provider found for this run..
+        /// </summary>
+        internal static string NoTestHostProviderFound
+        {
+            get
+            {
+                return ResourceManager.GetString("NoTestHostProviderFound", resourceCulture);
+            }
+        }
     }
 }

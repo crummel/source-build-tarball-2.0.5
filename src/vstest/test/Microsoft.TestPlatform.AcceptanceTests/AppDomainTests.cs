@@ -6,7 +6,7 @@ namespace Microsoft.TestPlatform.AcceptanceTests
     using System;
     using System.IO;
     using System.Linq;
-#if !NET46
+#if !NET451
     using System.Runtime.Loader;
 #else
     using System.Reflection;
@@ -18,10 +18,10 @@ namespace Microsoft.TestPlatform.AcceptanceTests
     public class AppDomainTests : AcceptanceTestBase
     {
         [CustomDataTestMethod]
-        [NET46TargetFramework]
-        public void RunTestExecutionWithDisableAppDomain(string runnerFramework, string targetFramework, string targetRuntime)
+        [NETFullTargetFramework]
+        public void RunTestExecutionWithDisableAppDomain(RunnerInfo runnerInfo)
         {
-            AcceptanceTestBase.SetTestEnvironment(this.testEnvironment, runnerFramework, targetFramework, targetRuntime);
+            AcceptanceTestBase.SetTestEnvironment(this.testEnvironment, runnerInfo);
 
             var testAppDomainDetailFileName = Path.Combine(Path.GetTempPath(), "appdomain_test.txt");
             var dataCollectorAppDomainDetailFileName = Path.Combine(Path.GetTempPath(), "appdomain_datacollector.txt");
@@ -34,7 +34,7 @@ namespace Microsoft.TestPlatform.AcceptanceTests
                 this.GetSampleTestAssembly(),
                 this.GetTestAdapterPath(),
                 runsettingsFilePath,
-                this.FrameworkArgValue);
+                runnerInfo.InIsolationValue);
 
             this.InvokeVsTest(arguments);
 
@@ -57,7 +57,7 @@ namespace Microsoft.TestPlatform.AcceptanceTests
         {
             var runSettings = Path.Combine(Path.GetTempPath(), "test_" + Guid.NewGuid() + ".runsettings");
             var inprocasm = this.testEnvironment.GetTestAsset("SimpleDataCollector.dll");
-#if !NET46
+#if !NET451
             var assemblyName = AssemblyLoadContext.GetAssemblyName(inprocasm);
 #else
             var assemblyName = AssemblyName.GetAssemblyName(inprocasm);

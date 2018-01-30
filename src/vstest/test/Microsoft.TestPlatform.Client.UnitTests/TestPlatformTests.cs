@@ -29,6 +29,8 @@ namespace Microsoft.VisualStudio.TestPlatform.Client.UnitTests
         private readonly Mock<ITestRuntimeProvider> hostManager;
         private readonly Mock<IProxyExecutionManager> executionManager;
         private readonly Mock<IFileHelper> mockFileHelper;
+        private Mock<IRequestData> mockRequestData;
+        private Mock<IMetricsCollection> mockMetricsCollection;
 
         public TestPlatformTests()
         {
@@ -38,18 +40,24 @@ namespace Microsoft.VisualStudio.TestPlatform.Client.UnitTests
             this.executionManager = new Mock<IProxyExecutionManager>();
             this.hostManager = new Mock<ITestRuntimeProvider>();
             this.mockFileHelper = new Mock<IFileHelper>();
+            this.mockMetricsCollection = new Mock<IMetricsCollection>();
+            this.mockRequestData = new Mock<IRequestData>();
+            this.mockRequestData.Setup(rd => rd.MetricsCollection).Returns(this.mockMetricsCollection.Object);
         }
 
         [TestMethod]
         public void CreateDiscoveryRequestShouldInitializeManagersAndCreateDiscoveryRequestWithGivenCriteriaAndReturnIt()
         {
             this.discoveryManager.Setup(dm => dm.Initialize()).Verifiable();
-            this.testEngine.Setup(te => te.GetDiscoveryManager(this.hostManager.Object, It.IsAny<DiscoveryCriteria>(), It.IsAny<ProtocolConfig>())).Returns(this.discoveryManager.Object);
+            var discoveryCriteria = new DiscoveryCriteria(new List<string> { "foo" }, 1, null);
+            this.hostManager.Setup(hm => hm.GetTestSources(discoveryCriteria.Sources))
+                .Returns(discoveryCriteria.Sources);
+
+            this.testEngine.Setup(te => te.GetDiscoveryManager(this.mockRequestData.Object, this.hostManager.Object, It.IsAny<DiscoveryCriteria>())).Returns(this.discoveryManager.Object);
             this.testEngine.Setup(te => te.GetExtensionManager()).Returns(this.extensionManager.Object);
             var tp = new TestableTestPlatform(this.testEngine.Object, this.hostManager.Object);
-            var discoveryCriteria = new DiscoveryCriteria(new List<string> { "foo" }, 1, null);
 
-            var discoveryRequest = tp.CreateDiscoveryRequest(discoveryCriteria, It.IsAny<ProtocolConfig>());
+            var discoveryRequest = tp.CreateDiscoveryRequest(this.mockRequestData.Object, discoveryCriteria);
 
             this.hostManager.Verify(hm => hm.Initialize(It.IsAny<TestSessionMessageLogger>(), It.IsAny<string>()), Times.Once);
             this.discoveryManager.Verify(dm => dm.Initialize(), Times.Once);
@@ -61,7 +69,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Client.UnitTests
         {
             TestPlatform tp = new TestPlatform();
 
-            Assert.ThrowsException<ArgumentNullException>(() => tp.CreateDiscoveryRequest(null, It.IsAny<ProtocolConfig>()));
+            Assert.ThrowsException<ArgumentNullException>(() => tp.CreateDiscoveryRequest(this.mockRequestData.Object, null));
         }
 
         [TestMethod]
@@ -71,9 +79,48 @@ namespace Microsoft.VisualStudio.TestPlatform.Client.UnitTests
             var tp = new TestableTestPlatform(this.testEngine.Object, this.hostManager.Object);
             var additionalExtensions = new List<string> { "e1.dll", "e2.dll" };
 
-            tp.UpdateExtensions(additionalExtensions, loadOnlyWellKnownExtensions: true);
+            tp.UpdateExtensions(additionalExtensions, skipExtensionFilters: true);
 
             this.extensionManager.Verify(em => em.UseAdditionalExtensions(additionalExtensions, true));
+        }
+
+        [TestMethod]
+        public void ClearExtensionsShouldClearTheExtensionsCachedInEngine()
+        {
+            this.testEngine.Setup(te => te.GetExtensionManager()).Returns(this.extensionManager.Object);
+            var tp = new TestableTestPlatform(this.testEngine.Object, this.hostManager.Object);
+
+            tp.ClearExtensions();
+
+            this.extensionManager.Verify(em => em.ClearExtensions());
+        }
+
+        [TestMethod]
+        public void CreateTestRunRequestShouldThrowExceptionIfNoTestHostproviderFound()
+        {
+            string settingsXml =
+                @"<?xml version=""1.0"" encoding=""utf-8""?>
+                <RunSettings>
+                     <RunConfiguration>
+                       <TargetFrameworkVersion>.NETPortable,Version=v4.5</TargetFrameworkVersion>
+                     </RunConfiguration>
+                </RunSettings>";
+
+            var testRunCriteria = new TestRunCriteria(new List<string> { @"x:dummy\foo.dll" }, 10, false, settingsXml, TimeSpan.Zero);
+            var tp = new TestableTestPlatform(this.testEngine.Object, this.mockFileHelper.Object, null);
+            bool exceptionThrown = false;
+
+            try
+            {
+                tp.CreateTestRunRequest(this.mockRequestData.Object, testRunCriteria);
+            }
+            catch(TestPlatformException ex)
+            {
+                exceptionThrown = true;
+                Assert.AreEqual("No suitable test runtime provider found for this run.", ex.Message);
+            }
+
+            Assert.IsTrue(exceptionThrown, "TestPlatformException should get thrown");
         }
 
         [TestMethod]
@@ -81,13 +128,9 @@ namespace Microsoft.VisualStudio.TestPlatform.Client.UnitTests
         {
             var additionalExtensions = new List<string> { "foo.TestLogger.dll", "Joo.TestLogger.dll" };
             this.mockFileHelper.Setup(fh => fh.DirectoryExists(It.IsAny<string>())).Returns(true);
-            this.mockFileHelper.Setup(fh => fh.EnumerateFiles(It.IsAny<string>(), It.IsAny<string>(), System.IO.SearchOption.TopDirectoryOnly)).Returns(additionalExtensions);
+            this.mockFileHelper.Setup(fh => fh.EnumerateFiles(It.IsAny<string>(), System.IO.SearchOption.TopDirectoryOnly, It.IsAny<string[]>())).Returns(additionalExtensions);
 
             this.executionManager.Setup(dm => dm.Initialize()).Verifiable();
-            this.testEngine.Setup(te => te.GetExecutionManager(this.hostManager.Object, It.IsAny<TestRunCriteria>(), It.IsAny<ProtocolConfig>())).Returns(this.executionManager.Object);
-            this.testEngine.Setup(te => te.GetExtensionManager()).Returns(this.extensionManager.Object);
-
-            var tp = new TestableTestPlatform(this.testEngine.Object, this.mockFileHelper.Object, this.hostManager.Object);
 
             string settingsXml =
                 @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -98,22 +141,26 @@ namespace Microsoft.VisualStudio.TestPlatform.Client.UnitTests
                 </RunSettings>";
 
             var testRunCriteria = new TestRunCriteria(new List<string> { @"x:dummy\foo.dll" }, 10, false, settingsXml, TimeSpan.Zero);
-            var testRunRequest = tp.CreateTestRunRequest(testRunCriteria, It.IsAny<ProtocolConfig>());
-            this.extensionManager.Verify(em => em.UseAdditionalExtensions(additionalExtensions, true));
-        }
+            this.hostManager.Setup(hm => hm.GetTestSources(testRunCriteria.Sources))
+                .Returns(testRunCriteria.Sources);
 
-        [TestMethod]
-        public void CreateTestRunRequestShouldUpdateLoggerExtensionWhenDesingModeIsFalseForRunSelected()
-        {
-            var additionalExtensions = new List<string> { "foo.TestLogger.dll", "Joo.TestLogger.dll" };
-            this.mockFileHelper.Setup(fh => fh.DirectoryExists(It.IsAny<string>())).Returns(true);
-            this.mockFileHelper.Setup(fh => fh.EnumerateFiles(It.IsAny<string>(), It.IsAny<string>(), System.IO.SearchOption.TopDirectoryOnly)).Returns(additionalExtensions);
-
-            this.executionManager.Setup(dm => dm.Initialize()).Verifiable();
-            this.testEngine.Setup(te => te.GetExecutionManager(this.hostManager.Object, It.IsAny<TestRunCriteria>(), It.IsAny<ProtocolConfig>())).Returns(this.executionManager.Object);
+            this.testEngine.Setup(te => te.GetExecutionManager(this.mockRequestData.Object, this.hostManager.Object, It.IsAny<TestRunCriteria>())).Returns(this.executionManager.Object);
             this.testEngine.Setup(te => te.GetExtensionManager()).Returns(this.extensionManager.Object);
 
             var tp = new TestableTestPlatform(this.testEngine.Object, this.mockFileHelper.Object, this.hostManager.Object);
+
+            var testRunRequest = tp.CreateTestRunRequest(this.mockRequestData.Object, testRunCriteria);
+            this.extensionManager.Verify(em => em.UseAdditionalExtensions(additionalExtensions, false));
+        }
+
+        [TestMethod]
+        public void CreateTestRunRequestShouldUpdateLoggerExtensionWhenDesignModeIsFalseForRunSelected()
+        {
+            var additionalExtensions = new List<string> { "foo.TestLogger.dll", "Joo.TestLogger.dll" };
+            this.mockFileHelper.Setup(fh => fh.DirectoryExists(It.IsAny<string>())).Returns(true);
+            this.mockFileHelper.Setup(fh => fh.EnumerateFiles(It.IsAny<string>(), System.IO.SearchOption.TopDirectoryOnly, It.IsAny<string[]>())).Returns(additionalExtensions);
+
+            this.executionManager.Setup(dm => dm.Initialize()).Verifiable();
 
             string settingsXml =
                 @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -124,20 +171,59 @@ namespace Microsoft.VisualStudio.TestPlatform.Client.UnitTests
                 </RunSettings>";
 
             var testRunCriteria = new TestRunCriteria(new List<TestCase> { new TestCase("dll1.class1.test1", new Uri("hello://x/"), "xyz\\1.dll") }, 10, false, settingsXml);
-            var testRunRequest = tp.CreateTestRunRequest(testRunCriteria, It.IsAny<ProtocolConfig>());
-            this.extensionManager.Verify(em => em.UseAdditionalExtensions(additionalExtensions, true));
+
+            this.testEngine.Setup(te => te.GetExecutionManager(this.mockRequestData.Object, this.hostManager.Object, It.IsAny<TestRunCriteria>())).Returns(this.executionManager.Object);
+            this.testEngine.Setup(te => te.GetExtensionManager()).Returns(this.extensionManager.Object);
+
+            var tp = new TestableTestPlatform(this.testEngine.Object, this.mockFileHelper.Object, this.hostManager.Object);
+
+            var testRunRequest = tp.CreateTestRunRequest(this.mockRequestData.Object, testRunCriteria);
+            this.extensionManager.Verify(em => em.UseAdditionalExtensions(additionalExtensions, false));
+        }
+
+        [TestMethod]
+        public void CreateTestRunRequestShouldNotUpdateTestSourcesIfSelectedTestAreRun()
+        {
+            var additionalExtensions = new List<string> { "foo.TestLogger.dll", "Joo.TestLogger.dll" };
+            this.mockFileHelper.Setup(fh => fh.DirectoryExists(It.IsAny<string>())).Returns(true);
+            this.mockFileHelper.Setup(fh => fh.EnumerateFiles(It.IsAny<string>(), System.IO.SearchOption.TopDirectoryOnly, It.IsAny<string[]>())).Returns(additionalExtensions);
+
+            this.executionManager.Setup(dm => dm.Initialize()).Verifiable();
+
+            string settingsXml =
+                @"<?xml version=""1.0"" encoding=""utf-8""?>
+                <RunSettings>
+                     <RunConfiguration>
+                       <DesignMode>false</DesignMode>
+                     </RunConfiguration>
+                </RunSettings>";
+
+            var testRunCriteria = new TestRunCriteria(new List<TestCase> { new TestCase("dll1.class1.test1", new Uri("hello://x/"), "xyz\\1.dll") }, 10, false, settingsXml);
+            this.hostManager.Setup(hm => hm.GetTestSources(It.IsAny<IEnumerable<string>>()))
+                .Returns(new List<string> { "xyz\\1.dll" });
+
+            this.testEngine.Setup(te => te.GetExecutionManager(this.mockRequestData.Object, this.hostManager.Object, It.IsAny<TestRunCriteria>())).Returns(this.executionManager.Object);
+            this.testEngine.Setup(te => te.GetExtensionManager()).Returns(this.extensionManager.Object);
+
+            var tp = new TestableTestPlatform(this.testEngine.Object, this.mockFileHelper.Object, this.hostManager.Object);
+
+            tp.CreateTestRunRequest(this.mockRequestData.Object, testRunCriteria);
+            this.extensionManager.Verify(em => em.UseAdditionalExtensions(additionalExtensions, false));
+            this.hostManager.Verify(hm => hm.GetTestSources(It.IsAny<IEnumerable<string>>()), Times.Never);
         }
 
         [TestMethod]
         public void CreateTestRunRequestShouldInitializeManagersAndCreateTestRunRequestWithSpecifiedCriteria()
         {
             this.executionManager.Setup(dm => dm.Initialize()).Verifiable();
-            this.testEngine.Setup(te => te.GetExecutionManager(this.hostManager.Object, It.IsAny<TestRunCriteria>(), It.IsAny<ProtocolConfig>())).Returns(this.executionManager.Object);
+            this.testEngine.Setup(te => te.GetExecutionManager(this.mockRequestData.Object, this.hostManager.Object, It.IsAny<TestRunCriteria>())).Returns(this.executionManager.Object);
             this.testEngine.Setup(te => te.GetExtensionManager()).Returns(this.extensionManager.Object);
             var tp = new TestableTestPlatform(this.testEngine.Object, this.hostManager.Object);
             var testRunCriteria = new TestRunCriteria(new List<string> { "foo" }, 10);
+            this.hostManager.Setup(hm => hm.GetTestSources(testRunCriteria.Sources))
+                .Returns(testRunCriteria.Sources);
 
-            var testRunRequest = tp.CreateTestRunRequest(testRunCriteria, It.IsAny<ProtocolConfig>());
+            var testRunRequest = tp.CreateTestRunRequest(this.mockRequestData.Object, testRunCriteria);
 
             var actualTestRunRequest = testRunRequest as TestRunRequest;
 
@@ -151,12 +237,14 @@ namespace Microsoft.VisualStudio.TestPlatform.Client.UnitTests
         {
             var mockCustomLauncher = new Mock<ITestHostLauncher>();
             this.executionManager.Setup(dm => dm.Initialize()).Verifiable();
-            this.testEngine.Setup(te => te.GetExecutionManager(this.hostManager.Object, It.IsAny<TestRunCriteria>(), It.IsAny<ProtocolConfig>())).Returns(this.executionManager.Object);
+            this.testEngine.Setup(te => te.GetExecutionManager(this.mockRequestData.Object, this.hostManager.Object, It.IsAny<TestRunCriteria>())).Returns(this.executionManager.Object);
             this.testEngine.Setup(te => te.GetExtensionManager()).Returns(this.extensionManager.Object);
             var tp = new TestableTestPlatform(this.testEngine.Object, this.hostManager.Object);
             var testRunCriteria = new TestRunCriteria(new List<string> { "foo" }, 10, false, null, TimeSpan.Zero, mockCustomLauncher.Object);
+            this.hostManager.Setup(hm => hm.GetTestSources(testRunCriteria.Sources))
+                .Returns(testRunCriteria.Sources);
 
-            var testRunRequest = tp.CreateTestRunRequest(testRunCriteria, It.IsAny<ProtocolConfig>());
+            var testRunRequest = tp.CreateTestRunRequest(this.mockRequestData.Object, testRunCriteria);
 
             var actualTestRunRequest = testRunRequest as TestRunRequest;
             Assert.AreEqual(testRunCriteria, actualTestRunRequest.TestRunCriteria);
@@ -168,7 +256,71 @@ namespace Microsoft.VisualStudio.TestPlatform.Client.UnitTests
         {
             var tp = new TestPlatform();
 
-            Assert.ThrowsException<ArgumentNullException>(() => tp.CreateTestRunRequest(null, It.IsAny<ProtocolConfig>()));
+            Assert.ThrowsException<ArgumentNullException>(() => tp.CreateTestRunRequest(this.mockRequestData.Object, null));
+        }
+
+
+        [TestMethod]
+        public void CreateDiscoveryRequestShouldThrowExceptionIfNoTestHostproviderFound()
+        {
+            string settingsXml =
+                @"<?xml version=""1.0"" encoding=""utf-8""?>
+                <RunSettings>
+                     <RunConfiguration>
+                       <TargetFrameworkVersion>.NETPortable,Version=v4.5</TargetFrameworkVersion>
+                     </RunConfiguration>
+                </RunSettings>";
+
+            var discoveryCriteria = new DiscoveryCriteria(new List<string> { @"x:dummy\foo.dll" }, 1, settingsXml);
+            var tp = new TestableTestPlatform(this.testEngine.Object, this.mockFileHelper.Object, null);
+            bool exceptionThrown = false;
+
+            try
+            {
+                tp.CreateDiscoveryRequest(this.mockRequestData.Object, discoveryCriteria);
+            }
+            catch (TestPlatformException ex)
+            {
+                exceptionThrown = true;
+                Assert.AreEqual("No suitable test runtime provider found for this run.", ex.Message);
+            }
+
+            Assert.IsTrue(exceptionThrown, "TestPlatformException should get thrown");
+        }
+
+        /// <summary>
+        /// Logger extensions should be updated when design mode is false.
+        /// </summary>
+        [TestMethod]
+        public void CreateDiscoveryRequestShouldUpdateLoggerExtensionWhenDesignModeIsFalse()
+        {
+            var additionalExtensions = new List<string> { "foo.TestLogger.dll", "Joo.TestLogger.dll" };
+            this.mockFileHelper.Setup(fh => fh.DirectoryExists(It.IsAny<string>())).Returns(true);
+            this.mockFileHelper.Setup(fh => fh.EnumerateFiles(It.IsAny<string>(), System.IO.SearchOption.TopDirectoryOnly, It.IsAny<string[]>())).Returns(additionalExtensions);
+
+            this.discoveryManager.Setup(dm => dm.Initialize()).Verifiable();
+
+            string settingsXml =
+                @"<?xml version=""1.0"" encoding=""utf-8""?>
+                <RunSettings>
+                     <RunConfiguration>
+                       <DesignMode>false</DesignMode>
+                     </RunConfiguration>
+                </RunSettings>";
+
+            var discoveryCriteria = new DiscoveryCriteria(new List<string> { @"x:dummy\foo.dll" }, 1, settingsXml);
+            this.hostManager.Setup(hm => hm.GetTestSources(discoveryCriteria.Sources))
+                .Returns(discoveryCriteria.Sources);
+
+            this.testEngine.Setup(te => te.GetDiscoveryManager(It.IsAny<IRequestData>(), this.hostManager.Object, It.IsAny<DiscoveryCriteria>())).Returns(this.discoveryManager.Object);
+            this.testEngine.Setup(te => te.GetExtensionManager()).Returns(this.extensionManager.Object);
+            var tp = new TestableTestPlatform(this.testEngine.Object, this.mockFileHelper.Object, this.hostManager.Object);
+
+            // Action
+            var discoveryRequest = tp.CreateDiscoveryRequest(this.mockRequestData.Object, discoveryCriteria);
+
+            // Verify
+            this.extensionManager.Verify(em => em.UseAdditionalExtensions(additionalExtensions, false));
         }
 
         private class TestableTestPlatform : TestPlatform

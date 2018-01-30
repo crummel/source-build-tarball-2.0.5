@@ -5,13 +5,11 @@ namespace Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
 
     using Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework.Utilities;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-    using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-    using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
-    using Microsoft.VisualStudio.TestPlatform.ObjectModel.Host;
 
     /// <summary>
     /// Manages test plugins information.
@@ -94,7 +92,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework
                     }
                     throw;
                 }
-#if NET46
+#if NET451
                 else if (ex is SystemException)
                 {
                     if (EqtTrace.IsErrorEnabled)
@@ -129,8 +127,8 @@ namespace Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework
         /// <typeparam name="TMetadata">
         /// Concrete type of metadata
         /// </typeparam>
-        /// <param name="regexPattern">
-        /// The regex Pattern.
+        /// <param name="endsWithPattern">
+        /// Pattern used to select files using String.EndsWith
         /// </param>
         /// <param name="unfiltered">
         /// Receives unfiltered list of test extensions
@@ -139,11 +137,11 @@ namespace Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework
         /// Receives test extensions filtered by Identifier data
         /// </param>
         public void GetSpecificTestExtensions<TPluginInfo, IExtension, IMetadata, TMetadata>(
-            string regexPattern,
+            string endsWithPattern,
             out IEnumerable<LazyExtension<IExtension, Dictionary<string, object>>> unfiltered,
             out IEnumerable<LazyExtension<IExtension, IMetadata>> filtered) where TMetadata : IMetadata where TPluginInfo : TestPluginInformation
         {
-            var extensions = TestPluginCache.Instance.DiscoverTestExtensions<TPluginInfo, IExtension>(regexPattern);
+            var extensions = TestPluginCache.Instance.DiscoverTestExtensions<TPluginInfo, IExtension>(endsWithPattern);
             this.GetExtensions<TPluginInfo, IExtension, IMetadata, TMetadata>(extensions, out unfiltered, out filtered);
         }
 
@@ -235,14 +233,13 @@ namespace Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework
             var testPlugins = this.GetValuesFromDictionary(testPluginInfo);
             foreach (var plugin in testPlugins)
             {
-                var testExtension = new LazyExtension<IExtension, IMetadata>(plugin, typeof(TMetadata));
                 if (!string.IsNullOrEmpty(plugin.IdentifierData))
                 {
+                    var testExtension = new LazyExtension<IExtension, IMetadata>(plugin, typeof(TMetadata));
                     filteredExtensions.Add(testExtension);
                 }
 
-                unfilteredExtensions.Add(
-                    new LazyExtension<IExtension, Dictionary<string, object>>(plugin, new Dictionary<string, object>()));
+                unfilteredExtensions.Add(new LazyExtension<IExtension, Dictionary<string, object>>(plugin, new Dictionary<string, object>()));
             }
 
             unfiltered = unfilteredExtensions;

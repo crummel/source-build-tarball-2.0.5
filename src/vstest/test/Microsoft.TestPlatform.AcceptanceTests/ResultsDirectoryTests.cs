@@ -10,12 +10,12 @@ namespace Microsoft.TestPlatform.AcceptanceTests
     public class ResultsDirectoryTests : AcceptanceTestBase
     {
         [CustomDataTestMethod]
-        [NET46TargetFramework]
+        [NETFullTargetFramework]
         [NETCORETargetFramework]
-        public void TrxFileShouldBeCreatedInResultsDirectory(string runnerFramework, string targetFramework, string targetRuntime)
+        public void TrxFileShouldBeCreatedInResultsDirectory(RunnerInfo runnerInfo)
         {
-            AcceptanceTestBase.SetTestEnvironment(this.testEnvironment, runnerFramework, targetFramework, targetRuntime);
-            var arguments = PrepareArguments(this.GetSampleTestAssembly(), this.GetTestAdapterPath(), string.Empty, this.FrameworkArgValue);
+            AcceptanceTestBase.SetTestEnvironment(this.testEnvironment, runnerInfo);
+            var arguments = PrepareArguments(this.GetSampleTestAssembly(), this.GetTestAdapterPath(), string.Empty, runnerInfo.InIsolationValue);
             var trxFileName = "TestResults.trx";
             var resultsDir = Path.GetTempPath();
             var trxFilePath = Path.Combine(resultsDir, trxFileName);
@@ -31,12 +31,13 @@ namespace Microsoft.TestPlatform.AcceptanceTests
         }
 
         [CustomDataTestMethod]
-        [NET46TargetFramework]
+        [NETFullTargetFramework]
         [NETCORETargetFramework]
-        public void ResultsDirectoryRelativePathShouldWork(string runnerFramework, string targetFramework, string targetRuntime)
+        public void ResultsDirectoryRelativePathShouldWork(RunnerInfo runnerInfo)
         {
-            AcceptanceTestBase.SetTestEnvironment(this.testEnvironment, runnerFramework, targetFramework, targetRuntime);
-            var arguments = PrepareArguments(this.GetSampleTestAssembly(), this.GetTestAdapterPath(), string.Empty, this.FrameworkArgValue);
+            AcceptanceTestBase.SetTestEnvironment(this.testEnvironment, runnerInfo);
+
+            var arguments = PrepareArguments(this.GetSampleTestAssembly(), this.GetTestAdapterPath(), string.Empty, runnerInfo.InIsolationValue);
             var trxFileName = "TestResults.trx";
             var relativeDirectory = @"relative\directory";
             var resultsDirectory = Path.Combine(Directory.GetCurrentDirectory(), relativeDirectory);

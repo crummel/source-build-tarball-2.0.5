@@ -9,10 +9,9 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.UnitTests.Processors
     using System.Reflection;
 
     using Microsoft.VisualStudio.TestPlatform.CommandLine.Processors;
-    using Microsoft.VisualStudio.TestPlatform.CommandLine.Processors.Utilities;
     using Microsoft.VisualStudio.TestPlatform.Common;
     using Microsoft.VisualStudio.TestPlatform.Common.Interfaces;
-    using Microsoft.VisualStudio.TestPlatform.CoreUtilities.Extensions;
+    using Microsoft.VisualStudio.TestPlatform.Common.Utilities;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Utilities;
     using Microsoft.VisualStudio.TestPlatform.Utilities;
     using Microsoft.VisualStudio.TestPlatform.Utilities.Helpers;
@@ -24,6 +23,21 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.UnitTests.Processors
     [TestClass]
     public class TestAdapterPathArgumentProcessorTests
     {
+        RunSettings currentActiveSetting;
+
+        [TestInitialize]
+        public void TestInit()
+        {
+            currentActiveSetting = RunSettingsManager.Instance.ActiveRunSettings;
+        }
+
+        [TestCleanup]
+        public void TestClean()
+        {
+            RunSettingsManager.Instance.SetActiveRunSettings(currentActiveSetting);
+        }
+
+
         [TestMethod]
         public void GetMetadataShouldReturnTestAdapterPathArgumentProcessorCapabilities()
         {
@@ -130,7 +144,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.UnitTests.Processors
 
             try
             {
-                executor.Initialize(folder.AddDoubleQuote());
+                executor.Initialize(folder);
             }
             catch (Exception ex)
             {
@@ -143,23 +157,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.UnitTests.Processors
         }
 
         [TestMethod]
-        public void InitializeShouldUpdatTestAdapterPathInRunSettings()
-        {
-            RunSettingsManager.Instance.AddDefaultRunSettings();
-
-            var mockOutput = new Mock<IOutput>();
-            var executor = new TestAdapterPathArgumentExecutor(CommandLineOptions.Instance, RunSettingsManager.Instance, mockOutput.Object, new FileHelper());
-
-            var currentAssemblyPath = typeof(TestAdapterPathArgumentExecutor).GetTypeInfo().Assembly.Location;
-            var currentFolder = Path.GetDirectoryName(currentAssemblyPath);
-
-            executor.Initialize(currentFolder);
-            var runConfiguration = XmlRunSettingsUtilities.GetRunConfigurationNode(RunSettingsManager.Instance.ActiveRunSettings.SettingsXml);
-            Assert.AreEqual(currentFolder, runConfiguration.TestAdaptersPaths);
-        }
-
-        [TestMethod]
-        public void InitializeShouldUpdatTestAdapterPathsInRunSettings()
+        public void InitializeShouldUpdateTestAdapterPathInRunSettings()
         {
             RunSettingsManager.Instance.AddDefaultRunSettings();
 
@@ -208,6 +206,59 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.UnitTests.Processors
             executor.Initialize("c:\\users");
             var runConfiguration = XmlRunSettingsUtilities.GetRunConfigurationNode(RunSettingsManager.Instance.ActiveRunSettings.SettingsXml);
             Assert.AreEqual("d:\\users;c:\\users", runConfiguration.TestAdaptersPaths);
+        }
+
+        [TestMethod]
+        public void InitializeShouldAddRightAdapterPathInErrorMessage()
+        {
+            var runSettingsXml = "<RunSettings><RunConfiguration><TestAdaptersPaths>d:\\users</TestAdaptersPaths></RunConfiguration></RunSettings>";
+            var runSettings = new RunSettings();
+            runSettings.LoadSettingsXml(runSettingsXml);
+            RunSettingsManager.Instance.SetActiveRunSettings(runSettings);
+            var mockFileHelper = new Mock<IFileHelper>();
+            var mockOutput = new Mock<IOutput>();
+
+            mockFileHelper.Setup(x => x.DirectoryExists("d:\\users")).Returns(false);
+            mockFileHelper.Setup(x => x.DirectoryExists("c:\\users")).Returns(true);
+            var executor = new TestAdapterPathArgumentExecutor(CommandLineOptions.Instance, RunSettingsManager.Instance, mockOutput.Object, mockFileHelper.Object);
+
+            var message = string.Format(
+                @"The path '{0}' specified in the 'TestAdapterPath' is invalid. Error: {1}",
+                "d:\\users",
+                "The custom test adapter search path provided was not found, provide a valid path and try again.");
+
+            var isExceptionThrown = false;
+            try
+            {
+                executor.Initialize("c:\\users");
+            }
+            catch (Exception ex)
+            {
+                isExceptionThrown = true;
+                Assert.IsTrue(ex is CommandLineException);
+                Assert.AreEqual(message, ex.Message);
+            }
+
+            Assert.IsTrue(isExceptionThrown);
+        }
+
+        [TestMethod]
+        public void InitializeShouldTrimTrailingAndLeadingDoubleQuotes()
+        {
+            var runSettingsXml = "<RunSettings><RunConfiguration><TestAdaptersPaths>d:\\users</TestAdaptersPaths></RunConfiguration></RunSettings>";
+            var runSettings = new RunSettings();
+            runSettings.LoadSettingsXml(runSettingsXml);
+            RunSettingsManager.Instance.SetActiveRunSettings(runSettings);
+            var mockFileHelper = new Mock<IFileHelper>();
+            var mockOutput = new Mock<IOutput>();
+
+            mockFileHelper.Setup(x => x.DirectoryExists(It.IsAny<string>())).Returns(true);
+            var executor = new TestAdapterPathArgumentExecutor(CommandLineOptions.Instance, RunSettingsManager.Instance, mockOutput.Object, mockFileHelper.Object);
+
+            executor.Initialize("\"c:\\users\"");
+            var runConfiguration = XmlRunSettingsUtilities.GetRunConfigurationNode(RunSettingsManager.Instance.ActiveRunSettings.SettingsXml);
+            Assert.AreEqual("d:\\users;c:\\users", runConfiguration.TestAdaptersPaths);
+
         }
 
         #endregion

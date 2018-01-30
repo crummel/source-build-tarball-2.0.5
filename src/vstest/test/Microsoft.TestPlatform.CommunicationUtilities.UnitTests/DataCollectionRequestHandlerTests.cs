@@ -5,6 +5,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.UnitTests
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.Net;
 
     using Microsoft.TestPlatform.CommunicationUtilities.UnitTests.TestDoubles;
     using Microsoft.VisualStudio.TestPlatform.Common.DataCollection;
@@ -27,15 +28,17 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.UnitTests
         private Mock<IDataCollectionManager> mockDataCollectionManager;
         private Mock<IDataCollectionTestCaseEventHandler> mockDataCollectionTestCaseEventHandler;
         private TestableDataCollectionRequestHandler requestHandler;
+        private Mock<IDataSerializer> mockDataSerializer;
 
         public DataCollectionRequestHandlerTests()
         {
             this.mockCommunicationManager = new Mock<ICommunicationManager>();
             this.mockMessageSink = new Mock<IMessageSink>();
             this.mockDataCollectionManager = new Mock<IDataCollectionManager>();
+            this.mockDataSerializer = new Mock<IDataSerializer>();
             this.mockDataCollectionTestCaseEventHandler = new Mock<IDataCollectionTestCaseEventHandler>();
             this.mockDataCollectionTestCaseEventHandler.Setup(x => x.WaitForRequestHandlerConnection(It.IsAny<int>())).Returns(true);
-            this.requestHandler = new TestableDataCollectionRequestHandler(this.mockCommunicationManager.Object, this.mockMessageSink.Object, this.mockDataCollectionManager.Object, this.mockDataCollectionTestCaseEventHandler.Object);
+            this.requestHandler = new TestableDataCollectionRequestHandler(this.mockCommunicationManager.Object, this.mockMessageSink.Object, this.mockDataCollectionManager.Object, this.mockDataCollectionTestCaseEventHandler.Object, this.mockDataSerializer.Object);
         }
 
         [TestMethod]
@@ -69,13 +72,13 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.UnitTests
         {
             this.requestHandler.InitializeCommunication(123);
 
-            this.mockCommunicationManager.Verify(x => x.SetupClientAsync(123), Times.Once);
+            this.mockCommunicationManager.Verify(x => x.SetupClientAsync(new IPEndPoint(IPAddress.Loopback, 123)), Times.Once);
         }
 
         [TestMethod]
         public void InitializeCommunicationShouldThrowExceptionIfThrownByCommunicationManager()
         {
-            this.mockCommunicationManager.Setup(x => x.SetupClientAsync(It.IsAny<int>())).Throws<Exception>();
+            this.mockCommunicationManager.Setup(x => x.SetupClientAsync(It.IsAny<IPEndPoint>())).Throws<Exception>();
 
             Assert.ThrowsException<Exception>(() =>
                 {

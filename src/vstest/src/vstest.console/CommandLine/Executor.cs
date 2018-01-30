@@ -20,6 +20,7 @@
 //   Help output.
 //   Required
 //   Single or multiple
+
 namespace Microsoft.VisualStudio.TestPlatform.CommandLine
 {
     using System;
@@ -27,21 +28,20 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
-    using System.Reflection;
 
+    using Microsoft.VisualStudio.TestPlatform.CommandLine.Internal;
     using Microsoft.VisualStudio.TestPlatform.CommandLine.Processors;
+    using Microsoft.VisualStudio.TestPlatform.CommandLine.TestPlatformHelpers;
+    using Microsoft.VisualStudio.TestPlatform.Common;
+    using Microsoft.VisualStudio.TestPlatform.Common.Utilities;
     using Microsoft.VisualStudio.TestPlatform.CoreUtilities.Tracing;
     using Microsoft.VisualStudio.TestPlatform.CoreUtilities.Tracing.Interfaces;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel;
     using Microsoft.VisualStudio.TestPlatform.Utilities;
-    using Microsoft.VisualStudio.TestPlatform.CommandLine.Processors.Utilities;
-    using Microsoft.VisualStudio.TestPlatform.Common;
 
     using CommandLineResources = Microsoft.VisualStudio.TestPlatform.CommandLine.Resources.Resources;
-    using Microsoft.VisualStudio.TestPlatform.Utilities.Helpers;
-    using System.IO;
-    using Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework;
 
     /// <summary>
     /// Performs the execution based on the arguments provided.
@@ -49,6 +49,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine
     internal class Executor
     {
         private ITestPlatformEventSource testPlatformEventSource;
+        private bool showHelp;
 
         #region Constructor
 
@@ -63,6 +64,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine
         {
             this.Output = output;
             this.testPlatformEventSource = testPlatformEventSource;
+            this.showHelp = true;
         }
 
         #endregion
@@ -91,22 +93,25 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine
         {
             this.testPlatformEventSource.VsTestConsoleStart();
 
+            this.PrintSplashScreen();
+
             int exitCode = 0;
 
             // If we have no arguments, set exit code to 1, add a message, and include the help processor in the args.
             if (args == null || args.Length == 0 || args.Any(string.IsNullOrWhiteSpace))
             {
-                args = args ?? new string[0];
+                this.Output.Error(true, CommandLineResources.NoArgumentsProvided);
+                args = new string[] { HelpArgumentProcessor.CommandName };
                 exitCode = 1;
-
-                // Do not add help processor as we will go and try to check for project.json files in current dir
             }
 
-            this.PrintSplashScreen();
+            // Flatten arguments and process response files.
+            string[] flattenedArguments;
+            exitCode |= this.FlattenArguments(args, out flattenedArguments);
 
             // Get the argument processors for the arguments.
             List<IArgumentProcessor> argumentProcessors;
-            exitCode |= this.GetArgumentProcessors(args, out argumentProcessors);
+            exitCode |= this.GetArgumentProcessors(flattenedArguments, out argumentProcessors);
 
             // Verify that the arguments are valid.
             exitCode |= this.IdentifyDuplicateArguments(argumentProcessors);
@@ -136,6 +141,12 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine
 
             this.testPlatformEventSource.VsTestConsoleStop();
 
+            this.testPlatformEventSource.MetricsDisposeStart();
+
+            // Disposing Metrics Publisher when VsTestConsole ends
+            TestRequestManager.Instance.Dispose();
+
+            this.testPlatformEventSource.MetricsDisposeStop();
             return exitCode;
         }
 
@@ -178,7 +189,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine
                 else
                 {
                     // No known processor was found, report an error and continue
-                    this.Output.Error(string.Format(CultureInfo.CurrentCulture, CommandLineResources.NoArgumentProcessorFound, arg));
+                    this.Output.Error(false, string.Format(CultureInfo.CurrentCulture, CommandLineResources.NoArgumentProcessorFound, arg));
 
                     // Add the help processor
                     if (result == 0)
@@ -212,13 +223,33 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine
                     // the argument processor, but also initializes it.
                     executorInstance = processor.Executor.Value;
                 }
-                catch (CommandLineException e)
+                catch (Exception ex)
                 {
-                    this.Output.Error(e.Message);
-                    result = 1;
+                    if (ex is CommandLineException || ex is TestPlatformException)
+                    {
+                        this.Output.Error(false, ex.Message);
+                        result = 1;
+                    }
+                    else if (ex is SettingsException)
+                    {
+                        this.Output.Error(false, ex.Message);
+                        result = 1;
+                        this.showHelp = false;
+                    }
+                    else
+                    {
+                        // Let it throw - User must see crash and report it with stack trace!
+                        // No need for recoverability as user will start a new vstest.console anwyay
+                        throw;
+                    }
                 }
             }
 
+            // If some argument was invalid, add help argument processor in beginning(i.e. at highest priority) 
+            if (result == 1 && this.showHelp && processors.First<IArgumentProcessor>().Metadata.Value.CommandName != HelpArgumentProcessor.CommandName)
+            {
+                processors.Insert(0, processorFactory.CreateArgumentProcessor(HelpArgumentProcessor.CommandName));
+            }
             return result;
         }
 
@@ -254,7 +285,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine
 
                         // Update the count so we do not print the error out for this argument multiple times.
                         commandSeenCount[processor.Metadata.Value.CommandName] = ++count;
-                        this.Output.Error(string.Format(CultureInfo.CurrentCulture, CommandLineResources.DuplicateArgumentError, processor.Metadata.Value.CommandName));
+                        this.Output.Error(false, string.Format(CultureInfo.CurrentCulture, CommandLineResources.DuplicateArgumentError, processor.Metadata.Value.CommandName));
                     }
                 }
             }
@@ -298,10 +329,10 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine
             }
             catch (Exception ex)
             {
-                if (ex is CommandLineException || ex is TestPlatformException)
+                if (ex is CommandLineException || ex is TestPlatformException || ex is SettingsException)
                 {
                     EqtTrace.Error("ExecuteArgumentProcessor: failed to execute argument process: {0}", ex);
-                    this.Output.Error(ex.Message);
+                    this.Output.Error(false, ex.Message);
                     result = ArgumentProcessorResult.Fail;
                 }
                 else
@@ -334,15 +365,94 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine
         /// </summary>
         private void PrintSplashScreen()
         {
-            var assembly = typeof(Executor).GetTypeInfo().Assembly;
             string assemblyVersion = string.Empty;
+            assemblyVersion = Product.Version;
 
-            assemblyVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
             string commandLineBanner = string.Format(CultureInfo.CurrentUICulture, CommandLineResources.MicrosoftCommandLineTitle, assemblyVersion);
             this.Output.WriteLine(commandLineBanner, OutputLevel.Information);
 
             this.Output.WriteLine(CommandLineResources.CopyrightCommandLineTitle, OutputLevel.Information);
             this.Output.WriteLine(string.Empty, OutputLevel.Information);
+        }
+
+        /// <summary>
+        /// Flattens command line arguments by processing response files.
+        /// </summary>
+        /// <param name="arguments">Arguments provided to perform execution with.</param>
+        /// <param name="flattenedArguments">Array of flattened arguments.</param>
+        /// <returns>0 if successful and 1 otherwise.</returns>
+        private int FlattenArguments(IEnumerable<string> arguments, out string[] flattenedArguments)
+        {
+            List<string> outputArguments = new List<string>();
+            int result = 0;
+
+            foreach (var arg in arguments)
+            {
+                if (arg.StartsWith("@", StringComparison.Ordinal))
+                {
+                    // response file:
+                    string path = arg.Substring(1).TrimEnd(null);
+                    var hadError = this.ReadArgumentsAndSanitize(path, out var responseFileArgs, out var nestedArgs);
+
+                    if (hadError)
+                    {
+                        result |= 1;
+                    }
+                    else
+                    {
+                        this.Output.WriteLine(string.Format("vstest.console.exe {0}", responseFileArgs), OutputLevel.Information);
+                        outputArguments.AddRange(nestedArgs);
+                    }
+                }
+                else
+                {
+                    outputArguments.Add(arg);
+                }
+            }
+
+            flattenedArguments = outputArguments.ToArray();
+            return result;
+        }
+
+        /// <summary>
+        /// Read and sanitize the arguments.
+        /// </summary>
+        /// <param name="fileName">File provided by user.</param>
+        /// <param name="args">argument in the file as string.</param>
+        /// <param name="arguments">Modified argument after sanitizing the contents of the file.</param>
+        /// <returns>0 if successful and 1 otherwise.</returns>
+        public bool ReadArgumentsAndSanitize(string fileName, out string args, out string[] arguments)
+        {
+            arguments = null;
+            if (GetContentUsingFile(fileName, out args))
+            {
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(args))
+            {
+                return false;
+            }
+
+            return CommandLineUtilities.SplitCommandLineIntoArguments(args, out arguments);
+        }
+
+        private bool GetContentUsingFile(string fileName, out string contents)
+        {
+            contents = null;
+            try
+            {
+                contents = File.ReadAllText(fileName);
+            }
+            catch (Exception e)
+            {
+                EqtTrace.Verbose("Executor.Execute: Exiting with exit code of {0}", 1);
+                EqtTrace.Error(string.Format(CultureInfo.InvariantCulture, "Error: Can't open command line argument file '{0}' : '{1}'", fileName, e.Message));
+                this.Output.Error(false, string.Format(CultureInfo.CurrentCulture, CommandLineResources.OpenResponseFileError, fileName));
+                return true;
+            }
+
+            return false;
         }
 
         #endregion
