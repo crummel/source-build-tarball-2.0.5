@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
+// Copyright (c) Microsoft Corporation.  All Rights Reserved.  See License.txt in the project root for license information.
 
 namespace Microsoft.VisualStudio.FSharp.Editor
 
@@ -73,7 +73,7 @@ type internal InlineRenameLocationSet(locationsByDocument: DocumentLocations [],
 type internal InlineRenameInfo
     (
         checker: FSharpChecker,
-        projectInfoManager: ProjectInfoManager,
+        projectInfoManager: FSharpProjectOptionsManager,
         document: Document,
         triggerSpan: TextSpan, 
         lexerSymbol: LexerSymbol,
@@ -141,13 +141,13 @@ type internal InlineRenameInfo
 type internal InlineRenameService 
     [<ImportingConstructor>]
     (
-        projectInfoManager: ProjectInfoManager,
+        projectInfoManager: FSharpProjectOptionsManager,
         checkerProvider: FSharpCheckerProvider,
         [<ImportMany>] _refactorNotifyServices: seq<IRefactorNotifyService>
     ) =
 
     static let userOpName = "InlineRename"
-    static member GetInlineRenameInfo(checker: FSharpChecker, projectInfoManager: ProjectInfoManager, document: Document, sourceText: SourceText, position: int, 
+    static member GetInlineRenameInfo(checker: FSharpChecker, projectInfoManager: FSharpProjectOptionsManager, document: Document, sourceText: SourceText, position: int, 
                                       defines: string list, options: FSharpProjectOptions) : Async<IInlineRenameInfo option> = 
         asyncMaybe {
             let textLine = sourceText.Lines.GetLineFromPosition(position)
@@ -167,10 +167,10 @@ type internal InlineRenameService
     interface IEditorInlineRenameService with
         member __.GetRenameInfoAsync(document: Document, position: int, cancellationToken: CancellationToken) : Task<IInlineRenameInfo> =
             asyncMaybe {
-                let! options = projectInfoManager.TryGetOptionsForEditingDocumentOrProject(document)
+                let! parsingOptions, projectOptions = projectInfoManager.TryGetOptionsForEditingDocumentOrProject(document)
                 let! sourceText = document.GetTextAsync(cancellationToken)
-                let defines = CompilerEnvironment.GetCompilationDefinesForEditing(document.Name, options.OtherOptions |> Seq.toList)
-                return! InlineRenameService.GetInlineRenameInfo(checkerProvider.Checker, projectInfoManager, document, sourceText, position, defines, options)
+                let defines = CompilerEnvironment.GetCompilationDefinesForEditing(document.Name, parsingOptions)
+                return! InlineRenameService.GetInlineRenameInfo(checkerProvider.Checker, projectInfoManager, document, sourceText, position, defines, projectOptions)
             }
             |> Async.map (Option.defaultValue FailureInlineRenameInfo.Instance)
             |> RoslynHelpers.StartAsyncAsTask(cancellationToken)
