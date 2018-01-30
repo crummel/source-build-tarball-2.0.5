@@ -8,10 +8,10 @@ namespace Microsoft.VisualStudio.TestPlatform.ObjectModel.Utilities
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
-    using System.Runtime.InteropServices;
     using System.Xml;
     using System.Xml.XPath;
 
+    using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions;
     using ObjectModelResources = Microsoft.VisualStudio.TestPlatform.ObjectModel.Resources.Resources;
 
     /// <summary>
@@ -26,22 +26,17 @@ namespace Microsoft.VisualStudio.TestPlatform.ObjectModel.Utilities
         {
             get
             {
-#if NET46
-                // This is a workaround for https://github.com/dotnet/corefx/issues/13566
-                return WindowsSystemInformation.GetArchitecture();
-#else
-                var arch = RuntimeInformation.OSArchitecture;
+                var arch = new PlatformEnvironment().Architecture;
 
                 switch (arch)
                 {
-                    case Architecture.X64:
+                    case PlatformArchitecture.X64:
                         return ObjectModel.Architecture.X64;
-                    case Architecture.X86:
+                    case PlatformArchitecture.X86:
                         return ObjectModel.Architecture.X86;
                     default:
                         return ObjectModel.Architecture.ARM;
                 }
-#endif
             }
         }
 
@@ -89,6 +84,36 @@ namespace Microsoft.VisualStudio.TestPlatform.ObjectModel.Utilities
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Get the list of friendly name of all data collector present in runsettings.
+        /// </summary>
+        /// <param name="runsettingsXml">runsettings xml string</param>
+        /// <returns>List of friendly name</returns>
+        public static IList<string> GetDataCollectorsFriendlyName(string runsettingsXml)
+        {
+            var friendlyNameList = new List<string>();
+            if (!string.IsNullOrWhiteSpace(runsettingsXml))
+            {
+                using (var stream = new StringReader(runsettingsXml))
+                using (var reader = XmlReader.Create(stream, XmlRunSettingsUtilities.ReaderSettings))
+                {
+                    var document = new XmlDocument();
+                    document.Load(reader);
+
+                    var runSettingsNavigator = document.CreateNavigator();
+                    var nodes = runSettingsNavigator.Select("/RunSettings/DataCollectionRunSettings/DataCollectors/DataCollector");
+
+                    foreach (XPathNavigator dataCollectorNavigator in nodes)
+                    {
+                        var friendlyName = dataCollectorNavigator.GetAttribute("friendlyName", string.Empty);
+                        friendlyNameList.Add(friendlyName);
+                    }
+                }
+            }
+
+            return friendlyNameList;
         }
 
         /// <summary>
@@ -184,7 +209,7 @@ namespace Microsoft.VisualStudio.TestPlatform.ObjectModel.Utilities
             var dataCollectorsNode = doc.CreateElement(Constants.DataCollectorsSettingName);
             dataCollectionRunSettingsNode.AppendChild(dataCollectorsNode);
 
-#if NET46
+#if NET451
             return doc;
 #else
             return doc.ToXPathNavigable();
@@ -240,31 +265,85 @@ namespace Microsoft.VisualStudio.TestPlatform.ObjectModel.Utilities
                 return null;
             }
 
-            using (var stringReader = new StringReader(runSettingsXml))
+            try
             {
-                var reader = XmlReader.Create(stringReader, ReaderSettings);
-
-                // read to the fist child
-                XmlReaderUtilities.ReadToRootNode(reader);
-                reader.ReadToNextElement();
-
-                // Read till we reach DC element or reach EOF
-                while (!string.Equals(reader.Name, Constants.DataCollectionRunSettingsName)
-                       &&
-                       !reader.EOF)
+                using (var stringReader = new StringReader(runSettingsXml))
                 {
-                    reader.SkipToNextElement();
-                }
+                    var reader = XmlReader.Create(stringReader, ReaderSettings);
 
-                // If reached EOF => DC element not there
-                if (reader.EOF)
-                {
-                    return null;
-                }
+                    // read to the fist child
+                    XmlReaderUtilities.ReadToRootNode(reader);
+                    reader.ReadToNextElement();
 
-                // Reached here => DC element present. 
-                return DataCollectionRunSettings.FromXml(reader);
+                    // Read till we reach DC element or reach EOF
+                    while (!string.Equals(reader.Name, Constants.DataCollectionRunSettingsName)
+                           &&
+                           !reader.EOF)
+                    {
+                        reader.SkipToNextElement();
+                    }
+
+                    // If reached EOF => DC element not there
+                    if (reader.EOF)
+                    {
+                        return null;
+                    }
+
+                    // Reached here => DC element present. 
+                    return DataCollectionRunSettings.FromXml(reader);
+                }
             }
+            catch (XmlException ex)
+            {
+                throw new SettingsException(
+                    string.Format(CultureInfo.CurrentCulture, "{0} {1}", Resources.CommonResources.MalformedRunSettingsFile, ex.Message),
+                    ex);
+            }
+        }
+
+        /// <summary>
+        /// Get InProc DataCollection Run settings
+        /// </summary>
+        /// <param name="runSettingsXml">
+        /// The run Settings Xml.
+        /// </param>
+        /// <returns>Data collection run settings.</returns>
+        [SuppressMessage("Microsoft.Security.Xml", "CA3053:UseXmlSecureResolver",
+            Justification = "XmlReaderSettings.XmlResolver is not available in core. Suppress until fxcop issue is fixed.")]
+        public static DataCollectionRunSettings GetInProcDataCollectionRunSettings(string runSettingsXml)
+        {
+            // use XmlReader to avoid loading of the plugins in client code (mainly from VS).
+            if (!string.IsNullOrWhiteSpace(runSettingsXml))
+            {
+                runSettingsXml = runSettingsXml.Trim();
+                using (StringReader stringReader1 = new StringReader(runSettingsXml))
+                {
+                    XmlReader reader = XmlReader.Create(stringReader1, ReaderSettings);
+
+                    // read to the fist child
+                    XmlReaderUtilities.ReadToRootNode(reader);
+                    reader.ReadToNextElement();
+
+                    // Read till we reach In Proc IDC element or reach EOF
+                    while (!string.Equals(reader.Name, Constants.InProcDataCollectionRunSettingsName)
+                           &&
+                           !reader.EOF)
+                    {
+                        reader.SkipToNextElement();
+                    }
+
+                    // If reached EOF => IDC element not there
+                    if (reader.EOF)
+                    {
+                        return null;
+                    }
+
+                    // Reached here => In Proc IDC element present.
+                    return DataCollectionRunSettings.FromXml(reader, Constants.InProcDataCollectionRunSettingsName, Constants.InProcDataCollectorsSettingName, Constants.InProcDataCollectorSettingName);
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -292,27 +371,36 @@ namespace Microsoft.VisualStudio.TestPlatform.ObjectModel.Utilities
             // use XmlReader to avoid loading of the plugins in client code (mainly from VS).
             if (!string.IsNullOrWhiteSpace(settingsXml))
             {
-                using (var stringReader = new StringReader(settingsXml))
+                try
                 {
-                    XmlReader reader = XmlReader.Create(stringReader, ReaderSettings);
-
-                    // read to the fist child
-                    XmlReaderUtilities.ReadToRootNode(reader);
-                    reader.ReadToNextElement();
-
-                    // Read till we reach nodeName element or reach EOF
-                    while (!string.Equals(reader.Name, nodeName, StringComparison.OrdinalIgnoreCase)
-                            &&
-                            !reader.EOF)
+                    using (var stringReader = new StringReader(settingsXml))
                     {
-                        reader.SkipToNextElement();
-                    }
+                        XmlReader reader = XmlReader.Create(stringReader, ReaderSettings);
 
-                    if (!reader.EOF)
-                    {
-                        // read nodeName element.
-                        return nodeParser(reader);
+                        // read to the fist child
+                        XmlReaderUtilities.ReadToRootNode(reader);
+                        reader.ReadToNextElement();
+
+                        // Read till we reach nodeName element or reach EOF
+                        while (!string.Equals(reader.Name, nodeName, StringComparison.OrdinalIgnoreCase)
+                                &&
+                                !reader.EOF)
+                        {
+                            reader.SkipToNextElement();
+                        }
+
+                        if (!reader.EOF)
+                        {
+                            // read nodeName element.
+                            return nodeParser(reader);
+                        }
                     }
+                }
+                catch (XmlException ex)
+                {
+                    throw new SettingsException(
+                    string.Format(CultureInfo.CurrentCulture, "{0} {1}", Resources.CommonResources.MalformedRunSettingsFile, ex.Message),
+                        ex);
                 }
             }
 
@@ -344,106 +432,5 @@ namespace Microsoft.VisualStudio.TestPlatform.ObjectModel.Utilities
                 runSettingsNavigator.MoveToChild("DataCollectors", string.Empty);
             }
         }
-
-        /// <summary>
-        /// Get InProc DataCollection Run settings
-        /// </summary>
-        /// <param name="runSettingsXml">
-        /// The run Settings Xml.
-        /// </param>
-        /// <returns>Data collection run settings.</returns>
-        [SuppressMessage("Microsoft.Security.Xml", "CA3053:UseXmlSecureResolver",
-            Justification = "XmlReaderSettings.XmlResolver is not available in core. Suppress until fxcop issue is fixed.")]
-        public static DataCollectionRunSettings GetInProcDataCollectionRunSettings(string runSettingsXml)
-        {
-            // use XmlReader to avoid loading of the plugins in client code (mainly from VS).            
-            if (!string.IsNullOrWhiteSpace(runSettingsXml))
-            {
-                runSettingsXml = runSettingsXml.Trim();
-                using (StringReader stringReader1 = new StringReader(runSettingsXml))
-                {
-                    XmlReader reader = XmlReader.Create(stringReader1, ReaderSettings);
-
-                    // read to the fist child
-                    XmlReaderUtilities.ReadToRootNode(reader);
-                    reader.ReadToNextElement();
-
-                    // Read till we reach In Proc IDC element or reach EOF
-                    while (!string.Equals(reader.Name, Constants.InProcDataCollectionRunSettingsName)
-                            &&
-                            !reader.EOF)
-                    {
-                        reader.SkipToNextElement();
-                    }
-
-                    // If reached EOF => IDC element not there
-                    if (reader.EOF)
-                    {
-                        return null;
-                    }
-
-                    // Reached here => In Proc IDC element present. 
-                    return DataCollectionRunSettings.FromXml(reader, Constants.InProcDataCollectionRunSettingsName, Constants.InProcDataCollectorsSettingName, Constants.InProcDataCollectorSettingName);
-                }
-            }
-
-            return null;
-        }
     }
-
-#if NET46
-    internal static class WindowsSystemInformation
-    {
-        internal const ushort PROCESSOR_ARCHITECTURE_INTEL = 0;
-        internal const ushort PROCESSOR_ARCHITECTURE_ARM = 5;
-        internal const ushort PROCESSOR_ARCHITECTURE_IA64 = 6;
-        internal const ushort PROCESSOR_ARCHITECTURE_AMD64 = 9;
-        internal const ushort PROCESSOR_ARCHITECTURE_UNKNOWN = 0xFFFF;
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct SYSTEM_INFO
-        {
-            public ushort wProcessorArchitecture;
-            public ushort wReserved;
-            public uint dwPageSize;
-            public IntPtr lpMinimumApplicationAddress;
-            public IntPtr lpMaximumApplicationAddress;
-            public UIntPtr dwActiveProcessorMask;
-            public uint dwNumberOfProcessors;
-            public uint dwProcessorType;
-            public uint dwAllocationGranularity;
-            public ushort wProcessorLevel;
-            public ushort wProcessorRevision;
-        };
-
-        [DllImport("kernel32.dll")]
-        internal static extern void GetNativeSystemInfo(ref SYSTEM_INFO lpSystemInfo);
-
-        public static ObjectModel.Architecture GetArchitecture()
-        {
-            SYSTEM_INFO sysInfo = new SYSTEM_INFO();
-
-            // GetNativeSystemInfo is supported from Windows XP onwards. Since test platform
-            // requires Windows 7 OS at the minimum, we don't require a fallback.
-            GetNativeSystemInfo(ref sysInfo);
-
-            switch (sysInfo.wProcessorArchitecture)
-            {
-                case PROCESSOR_ARCHITECTURE_INTEL:
-                    return ObjectModel.Architecture.X86;
-                case PROCESSOR_ARCHITECTURE_ARM:
-                    return ObjectModel.Architecture.ARM;
-                case PROCESSOR_ARCHITECTURE_IA64:
-                    return ObjectModel.Architecture.X64;
-                case PROCESSOR_ARCHITECTURE_AMD64:
-                    return ObjectModel.Architecture.X64;
-                case PROCESSOR_ARCHITECTURE_UNKNOWN:
-                    EqtTrace.Error("WindowsSystemInformation.GetArchitecture: Unknown architecture found, will use default.");
-                    break;
-            }
-
-            return ObjectModel.Architecture.Default;
-        }
-    }
-#endif
 }

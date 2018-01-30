@@ -32,11 +32,11 @@ namespace Microsoft.TestPlatform.AcceptanceTests
         }
 
         [CustomDataTestMethod]
-        [NET46TargetFramework]
+        [NETFullTargetFramework]
         [NETCORETargetFramework]
-        public void ExecuteTestsWithDataCollection(string runnerFramework, string targetFramework, string targetRuntime)
+        public void ExecuteTestsWithDataCollection(RunnerInfo runnerInfo)
         {
-            SetTestEnvironment(this.testEnvironment, runnerFramework, targetFramework, targetRuntime);
+            AcceptanceTestBase.SetTestEnvironment(this.testEnvironment, runnerInfo);
 
             var assemblyPaths = this.BuildMultipleAssemblyPath("SimpleTestProject2.dll").Trim('\"');
             string runSettings = this.GetRunsettingsFilePath();
@@ -47,7 +47,7 @@ namespace Microsoft.TestPlatform.AcceptanceTests
                 "bin",
                 this.testEnvironment.BuildConfiguration,
                 this.testEnvironment.RunnerFramework);
-            var arguments = PrepareArguments(assemblyPaths, this.GetTestAdapterPath(), runSettings, this.FrameworkArgValue);
+            var arguments = PrepareArguments(assemblyPaths, this.GetTestAdapterPath(), runSettings, runnerInfo.InIsolationValue);
             arguments = string.Concat(arguments, $" /ResultsDirectory:{resultsDir}", $" /Diag:{diagFileName}", $" /TestAdapterPath:{extensionsPath}");
 
             this.InvokeVsTest(arguments);
@@ -57,11 +57,11 @@ namespace Microsoft.TestPlatform.AcceptanceTests
         }
 
         [CustomDataTestMethod]
-        [NET46TargetFramework]
+        [NETFullTargetFramework]
         [NETCORETargetFramework]
-        public void ExecuteTestsWithDataCollectionUsingCollectArgument(string runnerFramework, string targetFramework, string targetRuntime)
+        public void ExecuteTestsWithDataCollectionUsingCollectArgument(RunnerInfo runnerInfo)
         {
-            SetTestEnvironment(this.testEnvironment, runnerFramework, targetFramework, targetRuntime);
+            AcceptanceTestBase.SetTestEnvironment(this.testEnvironment, runnerInfo);
 
             var assemblyPaths = this.BuildMultipleAssemblyPath("SimpleTestProject2.dll").Trim('\"');
             string diagFileName = Path.Combine(this.resultsDir, "diaglog.txt");
@@ -72,7 +72,7 @@ namespace Microsoft.TestPlatform.AcceptanceTests
                 this.testEnvironment.BuildConfiguration,
                 this.testEnvironment.RunnerFramework);
 
-            var arguments = PrepareArguments(assemblyPaths, this.GetTestAdapterPath(), null, this.FrameworkArgValue);
+            var arguments = PrepareArguments(assemblyPaths, this.GetTestAdapterPath(), null, runnerInfo.InIsolationValue);
             arguments = string.Concat(arguments, $" /ResultsDirectory:{resultsDir}", $" /Diag:{diagFileName}", $" /Collect:SampleDataCollector", $" /TestAdapterPath:{extensionsPath}");
 
             this.InvokeVsTest(arguments);
@@ -113,6 +113,8 @@ namespace Microsoft.TestPlatform.AcceptanceTests
             this.StdOutputContains("filename.txt");
             this.StdOutputContains("TestCaseStarted");
             this.StdOutputContains("TestCaseEnded");
+            this.StdOutputContains("SampleUnitTestProject2.UnitTest1.PassingTest2");
+            this.StdOutputContains("SampleUnitTestProject2.UnitTest1.FailingTest2");
             this.StdOutputContains("Data collector 'SampleDataCollector' message: SessionStarted");
             this.StdOutputContains("Data collector 'SampleDataCollector' message: SessionEnded");
             this.StdOutputContains("Data collector 'SampleDataCollector' message: my warning");

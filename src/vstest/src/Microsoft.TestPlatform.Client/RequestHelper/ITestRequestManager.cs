@@ -3,22 +3,24 @@
 
 namespace Microsoft.VisualStudio.TestPlatform.Client.RequestHelper
 {
+    using System;
     using System.Collections.Generic;
 
     using Microsoft.VisualStudio.TestPlatform.Common.Interfaces;
-    using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client.Interfaces;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
+    using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client.Interfaces;
 
     /// <summary>
     /// Defines the contract that commandline 
     /// </summary>
-    public interface ITestRequestManager
+    public interface ITestRequestManager : IDisposable
     {
         /// <summary>
         /// Initializes the extensions while probing additional paths
         /// </summary>
         /// <param name="pathToAdditionalExtensions">Paths to Additional extensions</param>
-        void InitializeExtensions(IEnumerable<string> pathToAdditionalExtensions);
+        /// <param name="skipExtensionFilters">Skip extension filtering by name (if true)</param>
+        void InitializeExtensions(IEnumerable<string> pathToAdditionalExtensions, bool skipExtensionFilters);
 
         /// <summary>
         /// Resets Vstest.console.exe Options

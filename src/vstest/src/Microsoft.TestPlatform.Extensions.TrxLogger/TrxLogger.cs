@@ -36,7 +36,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Extensions.TrxLogger
         /// <summary>
         /// Uri used to uniquely identify the TRX logger.
         /// </summary>
-        public const string ExtensionUri = "logger://Microsoft/TestPlatform/TrxLogger/v2";
+        public const string ExtensionUri = "logger://Microsoft/TestPlatform/TrxLogger/v1";
 
         /// <summary>
         /// Alternate user friendly string to uniquely identify the console logger.
@@ -405,7 +405,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Extensions.TrxLogger
                 {
                     var overwriteWarningMsg = string.Format(CultureInfo.CurrentCulture,
                         TrxLoggerResources.TrxLoggerResultsFileOverwriteWarning, trxFileName);
-                    ConsoleOutput.Instance.Warning(overwriteWarningMsg);
+                    ConsoleOutput.Instance.Warning(false, overwriteWarningMsg);
                     EqtTrace.Warning(overwriteWarningMsg);
                 }
 
@@ -414,12 +414,12 @@ namespace Microsoft.VisualStudio.TestPlatform.Extensions.TrxLogger
                     rootElement.OwnerDocument.Save(fs);
                 }
                 String resultsFileMessage = String.Format(CultureInfo.CurrentCulture, TrxLoggerResources.TrxLoggerResultsFile, trxFileName);
-                ConsoleOutput.Instance.Information(resultsFileMessage);
+                ConsoleOutput.Instance.Information(false, resultsFileMessage);
                 EqtTrace.Info(resultsFileMessage);
             }
             catch (System.UnauthorizedAccessException fileWriteException)
             {
-                ConsoleOutput.Instance.Error(fileWriteException.Message);
+                ConsoleOutput.Instance.Error(false, fileWriteException.Message);
             }
         }
 
@@ -486,8 +486,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Extensions.TrxLogger
         /// </summary>
         private void SetDefaultTrxFilePath()
         {
-            // [RunDeploymentRootDirectory] Replace white space with underscore from trx file name to make it command line friendly
-            var defaultTrxFileName = this.testRun.RunConfiguration.RunDeploymentRootDirectory.Replace(' ', '_') + ".trx";
+            var defaultTrxFileName = this.testRun.RunConfiguration.RunDeploymentRootDirectory + ".trx";
             this.trxFilePath = FileHelper.GetNextIterationFileName(this.testResultsDirPath, defaultTrxFileName, false);
         }
 

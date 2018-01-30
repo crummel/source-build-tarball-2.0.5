@@ -23,14 +23,12 @@ namespace TestPlatform.Common.UnitTests.ExtensionFramework
         private IEnumerable<LazyExtension<ITestLogger, ITestLoggerCapabilities>> filteredTestExtensions;
         private IEnumerable<LazyExtension<ITestLogger, Dictionary<string, object>>> unfilteredTestExtensions;
 
-
-        [TestInitialize]
-        public void Initialize()
+        public TestExtensionManagerTests()
         {
             TestPluginCacheTests.SetupMockExtensions();
             messageLogger = TestSessionMessageLogger.Instance;
             TestPluginManager.Instance.GetSpecificTestExtensions<TestLoggerPluginInformation, ITestLogger, ITestLoggerCapabilities, TestLoggerMetadata>
-                (TestPlatformConstants.TestLoggerRegexPattern, out unfilteredTestExtensions, out filteredTestExtensions);
+                (TestPlatformConstants.TestLoggerEndsWithPattern, out unfilteredTestExtensions, out filteredTestExtensions);
         }
 
         [TestCleanup]

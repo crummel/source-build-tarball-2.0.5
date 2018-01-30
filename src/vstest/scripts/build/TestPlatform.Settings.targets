@@ -6,7 +6,7 @@
   <PropertyGroup>
     <!-- Versioning is defined from the build script. Use a default dev build if it's not defined.
          Sets the AssemblyVersion, AssemblyFileVersion and AssemblyInformationalVersion -->
-    <Version Condition="'$(Version)' == ''">15.3.0-dev</Version>
+    <Version Condition="'$(Version)' == ''">15.5.0-dev</Version>
 
     <!-- Override the AssemblyVersion as 15.0.0 since protocol depends on this version for
          serialization. This is also defined in build script. -->
@@ -25,6 +25,9 @@
     <!-- Disable default inclusion of .resx file. We generate files in the Resources directory only
          if localization is enabled, default inclusion ends up including the generated files by default. -->
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <!-- .NetStandardLibrary1.6.0 brings in dependencies which are supported in UWP,
+         any higher version will bring in dependencies which are not supported by current UWP version -->
+    <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -51,6 +54,11 @@
       <PropertyGroup>
         <GenerateDocumentationFile>false</GenerateDocumentationFile>
       </PropertyGroup>
+
+      <!-- Test projects are not discovered in test window without test container capability -->
+      <ItemGroup>
+        <ProjectCapability Include="TestContainer" />
+      </ItemGroup>
 
       <!-- Test project references -->
       <ItemGroup>
@@ -83,15 +91,10 @@
           <Version>$(MSTestAdapterVersion)</Version>
         </PackageReference>
         <PackageReference Include="Moq">
-          <Version>4.6.38-*</Version>
+          <Version>$(MoqVersion)</Version>
         </PackageReference>
         <PackageReference Include="MSTest.Assert.Extensions">
           <Version>$(MSTestAssertExtensionVersion)</Version>
-        </PackageReference>
-
-        <!-- Workaround for https://github.com/castleproject/Core/issues/239 -->
-        <PackageReference Include="System.ComponentModel.TypeConverter">
-          <Version>4.3.0</Version>
         </PackageReference>
       </ItemGroup>
     </When>

@@ -4,20 +4,26 @@
 namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Net;
     using System.Net.Sockets;
     using System.Threading;
     using System.Threading.Tasks;
-
     using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.Interfaces;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+    using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions;
 
     /// <summary>
     /// Facilitates communication using sockets
     /// </summary>
     public class SocketCommunicationManager : ICommunicationManager
     {
+        /// <summary>
+        /// Time for which the client wait for executor/runner process to start, and host server
+        /// </summary>
+        private const int CONNECTIONRETRYTIMEOUT = 50 * 1000;
+
         /// <summary>
         /// The server stream read timeout constant (in microseconds).
         /// </summary>
@@ -64,11 +70,6 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
         /// </summary>
         private object sendSyncObject = new object();
 
-        /// <summary>
-        /// Stream to use read timeout
-        /// </summary>
-        private NetworkStream stream;
-
         private Socket socket;
 
         /// <summary>
@@ -89,18 +90,15 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
         /// <summary>
         /// Host TCP Socket Server and start listening
         /// </summary>
+        /// <param name="endpoint">End point where server is hosted</param>
         /// <returns>Port of the listener</returns>
-        public int HostServer()
+        public IPEndPoint HostServer(IPEndPoint endpoint)
         {
-            var endpoint = new IPEndPoint(IPAddress.Loopback, 0);
             this.tcpListener = new TcpListener(endpoint);
-
             this.tcpListener.Start();
+            EqtTrace.Info("Listening on Endpoint : {0}", (IPEndPoint)this.tcpListener.LocalEndpoint);
 
-            var portNumber = ((IPEndPoint)this.tcpListener.LocalEndpoint).Port;
-            EqtTrace.Info("Listening on port : {0}", portNumber);
-
-            return portNumber;
+            return (IPEndPoint)this.tcpListener.LocalEndpoint;
         }
 
         /// <summary>
@@ -115,13 +113,20 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
 
                 var client = await this.tcpListener.AcceptTcpClientAsync();
                 this.socket = client.Client;
-                this.stream = client.GetStream();
-                this.binaryReader = new BinaryReader(this.stream);
-                this.binaryWriter = new BinaryWriter(this.stream);
+                this.socket.NoDelay = true;
+
+                // Using Buffered stream only in case of write, and Network stream in case of read.
+                var bufferedStream = new PlatformStream().CreateBufferedStream(client.GetStream(), SocketConstants.BufferSize);
+                var networkStream = client.GetStream();
+                this.binaryReader = new BinaryReader(networkStream);
+                this.binaryWriter = new BinaryWriter(bufferedStream);
 
                 this.clientConnectedEvent.Set();
-
-                EqtTrace.Info("Accepted Client request and set the flag");
+                if (EqtTrace.IsInfoEnabled)
+                {
+                    EqtTrace.Info("Using the buffer size of {0} bytes", SocketConstants.BufferSize);
+                    EqtTrace.Info("Accepted Client request and set the flag");
+                }
             }
         }
 
@@ -153,20 +158,48 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
         /// <summary>
         /// Connects to server async
         /// </summary>
-        /// <param name="portNumber">Port number for client to connect</param>
+        /// <param name="endpoint">EndPointAddress for client to connect</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task SetupClientAsync(int portNumber)
+        public async Task SetupClientAsync(IPEndPoint endpoint)
         {
+            // ToDo: pass cancellationtoken, if user cancels the operation, so we don't wait 50 secs to connect
+            // for now added a check for validation of this.tcpclient
             this.clientConnectionAcceptedEvent.Reset();
-            EqtTrace.Info("Trying to connect to server on port : {0}", portNumber);
-            this.tcpClient = new TcpClient();
+            EqtTrace.Info("Trying to connect to server on socket : {0} ", endpoint);
+            this.tcpClient = new TcpClient { NoDelay = true };
             this.socket = this.tcpClient.Client;
-            await this.tcpClient.ConnectAsync(IPAddress.Loopback, portNumber);
-            this.stream = this.tcpClient.GetStream();
-            this.binaryReader = new BinaryReader(this.stream);
-            this.binaryWriter = new BinaryWriter(this.stream);
-            this.clientConnectionAcceptedEvent.Set();
-            EqtTrace.Info("Connected to the server successfully ");
+
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            do
+            {
+                try
+                {
+                    await this.tcpClient.ConnectAsync(endpoint.Address, endpoint.Port);
+
+                    if (this.tcpClient.Connected)
+                    {
+                        // Using Buffered stream only in case of write, and Network stream in case of read.
+                        var bufferedStream = new PlatformStream().CreateBufferedStream(this.tcpClient.GetStream(), SocketConstants.BufferSize);
+                        var networkStream = this.tcpClient.GetStream();
+                        this.binaryReader = new BinaryReader(networkStream);
+                        this.binaryWriter = new BinaryWriter(bufferedStream);
+
+                        if (EqtTrace.IsInfoEnabled)
+                        {
+                            EqtTrace.Info("Connected to the server successfully ");
+                            EqtTrace.Info("Using the buffer size of {0} bytes", SocketConstants.BufferSize);
+                        }
+
+                        this.clientConnectionAcceptedEvent.Set();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    EqtTrace.Verbose("Connection Failed with error {0}, retrying", ex.Message);
+                }
+            }
+            while ((this.tcpClient != null) && !this.tcpClient.Connected && watch.ElapsedMilliseconds < CONNECTIONRETRYTIMEOUT);
         }
 
         /// <summary>
@@ -186,7 +219,13 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
         /// </summary>
         public void StopClient()
         {
+#if NET451
+            // tcpClient.Close() calls tcpClient.Dispose().
+            this.tcpClient?.Close();
+#else
+            // tcpClient.Close() not available for netstandard1.5.
             this.tcpClient?.Dispose();
+#endif
             this.tcpClient = null;
             this.binaryReader?.Dispose();
             this.binaryWriter?.Dispose();
