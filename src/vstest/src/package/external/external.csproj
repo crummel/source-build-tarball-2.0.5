@@ -46,7 +46,7 @@
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Internal.TestPlatform.Extensions">
-      <Version>15.6.0-preview-1121756</Version>
+      <Version>15.1.0-preview-745112</Version>
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.QualityTools">
@@ -61,8 +61,8 @@
       <Version>14.0.0</Version>
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools ">
-      <Version>15.0.26201</Version>
+    <PackageReference Include="Microsoft.VSSDK.BuildTools">
+      <Version>15.1.192</Version>
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <Reference Include="System" />
