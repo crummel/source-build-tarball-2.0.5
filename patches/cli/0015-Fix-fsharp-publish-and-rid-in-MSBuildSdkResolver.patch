@@ -1,0 +1,40 @@
+From 42efbdf9785f4b4e6515006e1a50fde40e32c04e Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Tue, 17 Oct 2017 19:30:47 -0400
+Subject: [PATCH 1/1] Fix-fsharp-publish-and-rid-in-MSBuildSdkResolver
+
+---
+ .../Microsoft.DotNet.MSBuildSdkResolver.csproj                         | 2 +-
+ src/redist/redist.csproj                                               | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/src/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj b/src/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj
+index ca8867c..14aa0dd 100644
+--- a/src/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj
++++ b/src/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj
+@@ -6,7 +6,7 @@
+     <TargetFrameworks>netstandard1.5;net46</TargetFrameworks>
+     <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.5</TargetFrameworks>
+     <PlatformTarget>AnyCPU</PlatformTarget>
+-    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
++    <RuntimeIdentifiers>$(RuntimeIdentifier)</RuntimeIdentifiers>
+     <WarningsAsErrors>true</WarningsAsErrors>
+     <AssemblyOriginatorKeyFile>../../tools/Key.snk</AssemblyOriginatorKeyFile>
+     <SignAssembly>true</SignAssembly>
+diff --git a/src/redist/redist.csproj b/src/redist/redist.csproj
+index edeff14..9fe1aca 100644
+--- a/src/redist/redist.csproj
++++ b/src/redist/redist.csproj
+@@ -105,7 +105,8 @@
+           
+     <DotNetPublish ToolPath="$(Stage0Directory)"
+                    Configuration="$(Configuration)"
+-                   ProjectPath="$(SrcDirectory)/tool_fsharp/tool_fsc.csproj" />
++                   ProjectPath="$(SrcDirectory)/tool_fsharp/tool_fsc.csproj" 
++                   MSBuildArgs="/p:Rid=$(Rid)" />
+   </Target>
+ 
+   <Target Name="GenerateCliRuntimeConfigurationFiles"
+-- 
+1.8.3.1
+

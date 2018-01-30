@@ -1,12 +1,10 @@
 <Project ToolsVersion="15.0">
   <Target Name="WriteDynamicPropsToStaticPropsFiles"
-          DependsOnTargets="WriteNugetConfigFile;
-                            BuildDotnetCliBuildFramework;
+          DependsOnTargets="BuildDotnetCliBuildFramework;
                             EnsureGeneratedPropsDirectory;
                             WriteGitCommitInfoProps;
                             WriteHostInfoProps;
-                            WriteBuildInfoProps;
-                            DownloadPackageVersionsProps"/>
+                            WriteBuildInfoProps"/>
 
   <Target Name="EnsureGeneratedPropsDirectory">
     <MakeDir Condition=" !Exists('$(GeneratedPropsDir)') "

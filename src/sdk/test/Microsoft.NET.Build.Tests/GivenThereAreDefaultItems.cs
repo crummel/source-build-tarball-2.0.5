@@ -13,7 +13,6 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using Xunit;
-using static Microsoft.NET.TestFramework.Commands.MSBuildTest;
 using Microsoft.NET.TestFramework.ProjectConstruction;
 using Xunit.Abstractions;
 
@@ -30,7 +29,7 @@ namespace Microsoft.NET.Build.Tests
         {
             Action<GetValuesCommand> setup = getValuesCommand =>
             {
-                foreach (string folder in new[] { "bin", "obj", "packages", ".vscode" })
+                foreach (string folder in new[] { "bin", "obj", ".vscode" })
                 {
                     WriteFile(Path.Combine(getValuesCommand.ProjectRootPath, folder, "source.cs"),
                         "!InvalidCSharp!");
@@ -38,6 +37,9 @@ namespace Microsoft.NET.Build.Tests
 
                 WriteFile(Path.Combine(getValuesCommand.ProjectRootPath, "Code", "Class1.cs"),
                     "public class Class1 {}");
+
+                WriteFile(Path.Combine(getValuesCommand.ProjectRootPath, "Packages", "Package.cs"),
+                    "public class Package {}");
             };
 
             var compileItems = GivenThatWeWantToBuildALibrary.GetValuesFromTestLibrary(Log, _testAssetsManager, "Compile", setup);
@@ -47,7 +49,8 @@ namespace Microsoft.NET.Build.Tests
             var expectedItems = new[]
             {
                 "Helper.cs",
-                @"Code\Class1.cs"
+                @"Code\Class1.cs",
+                @"Packages\Package.cs"
             }
             .Select(item => item.Replace('\\', Path.DirectorySeparatorChar))
             .ToArray();

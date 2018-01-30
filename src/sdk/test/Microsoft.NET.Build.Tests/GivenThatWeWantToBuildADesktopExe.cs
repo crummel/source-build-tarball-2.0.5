@@ -16,7 +16,6 @@ using Microsoft.NET.TestFramework.ProjectConstruction;
 using FluentAssertions;
 using Xunit;
 
-using static Microsoft.NET.TestFramework.Commands.MSBuildTest;
 using Xunit.Abstractions;
 using System.Text.RegularExpressions;
 
@@ -460,6 +459,38 @@ namespace DefaultReferences
                 .Pass()
                 .And
                 .NotHaveStdOutMatching("Encountered conflict", System.Text.RegularExpressions.RegexOptions.CultureInvariant | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        }
+
+        [Fact]
+        public void It_does_not_report_conflicts_when_with_http_4_1_package()
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return;
+            }
+
+            var testProject = new TestProject()
+            {
+                Name = "DesktopConflictsHttp4_1",
+                TargetFrameworks = "net461",
+                IsSdkProject = true,
+                IsExe = true
+            };
+
+            testProject.PackageReferences.Add(new TestPackageReference("System.Net.Http", "4.1.0"));
+
+            var testAsset = _testAssetsManager.CreateTestProject(testProject, testProject.Name)
+                .Restore(Log, testProject.Name);
+
+            var buildCommand = new BuildCommand(Log, Path.Combine(testAsset.TestRoot, testProject.Name));
+
+            //  Verify that ResolveAssemblyReference doesn't generate any conflicts
+            buildCommand
+                .Execute("/v:normal")
+                .Should()
+                .Pass()
+                .And
+                .NotHaveStdOutMatching("MSB3243", System.Text.RegularExpressions.RegexOptions.CultureInvariant | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         }
 
         [WindowsOnlyFact]

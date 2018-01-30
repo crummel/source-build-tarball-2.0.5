@@ -178,6 +178,9 @@
   <data name="Class1" xml:space="preserve">
     <value>clase</value>
   </data>
+  <data name="EmbeddedTextsRequirePdb" xml:space="preserve">
+    <value>Solo se admiten textos insertados cuando se emite un archivo PDB.</value>
+  </data>
   <data name="ModuleCopyCannotBeUsedToCreateAssemblyMetadata" xml:space="preserve">
     <value>No se puede usar una copia de módulo para crear metadatos de ensamblado.</value>
   </data>
@@ -231,9 +234,6 @@
   </data>
   <data name="KeepAliveIsTooSmall" xml:space="preserve">
     <value>Los argumentos para la opción "/keepalive" inferiores a -1 no son válidos.</value>
-  </data>
-  <data name="IOperationFeatureDisabled" xml:space="preserve">
-    <value>La característica 'IOperation' está deshabilitada.</value>
   </data>
   <data name="AbsolutePathExpected" xml:space="preserve">
     <value>Ruta de acceso absoluta esperada.</value>
@@ -497,9 +497,6 @@
   </data>
   <data name="TupleElementNameEmpty" xml:space="preserve">
     <value>El nombre del elemento de tupla no puede ser una cadena vacía.</value>
-  </data>
-  <data name="EmbeddedTextsRequirePortablePdb" xml:space="preserve">
-    <value>Solo se admiten textos insertados cuando se emite un archivo PDB portátil.</value>
   </data>
   <data name="InvalidOutputKindForSubmission" xml:space="preserve">
     <value>Tipo de salida no válida para el envío. DynamicallyLinkedLibrary esperado.</value>
