@@ -4,7 +4,7 @@
     <CLI_SharedFrameworkVersion>2.0.5</CLI_SharedFrameworkVersion>
     <CLI_MSBuild_Version>15.5.180</CLI_MSBuild_Version>
     <ClI_MSBUILD_Runtime_Version>15.5.180</ClI_MSBUILD_Runtime_Version>
-    <CLI_Roslyn_Version>2.6.0-beta3-62309-01</CLI_Roslyn_Version>
+    <CLI_Roslyn_Version>2.3.1-beta1-61919-13</CLI_Roslyn_Version>
     <CLI_DiaSymNative_Version>1.6.0-beta2-25304</CLI_DiaSymNative_Version>
     <CLI_FSharp_Version>4.2.0-rtm-171104-0</CLI_FSharp_Version>
     <CLI_Deps_Satellites_Build>pre-20171122-1</CLI_Deps_Satellites_Build>
