@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
+// Copyright (c) Microsoft Corporation.  All Rights Reserved.  See License.txt in the project root for license information.
 
 namespace Microsoft.VisualStudio.FSharp.Editor
 
@@ -20,7 +20,7 @@ type internal FSharpFindUsagesService
     [<ImportingConstructor>]
     (
         checkerProvider: FSharpCheckerProvider,
-        projectInfoManager: ProjectInfoManager
+        projectInfoManager: FSharpProjectOptionsManager
     ) =
     
     static let userOpName = "FindUsages"
@@ -51,11 +51,11 @@ type internal FSharpFindUsagesService
         asyncMaybe {
             let! sourceText = document.GetTextAsync(context.CancellationToken) |> Async.AwaitTask |> liftAsync
             let checker = checkerProvider.Checker
-            let! options = projectInfoManager.TryGetOptionsForDocumentOrProject(document)
-            let! _, _, checkFileResults = checker.ParseAndCheckDocument(document, options, sourceText = sourceText, allowStaleResults = true, userOpName = userOpName)
+            let! parsingOptions, _, projectOptions = projectInfoManager.TryGetOptionsForDocumentOrProject(document)
+            let! _, _, checkFileResults = checker.ParseAndCheckDocument(document, projectOptions, sourceText = sourceText, allowStaleResults = true, userOpName = userOpName)
             let textLine = sourceText.Lines.GetLineFromPosition(position).ToString()
             let lineNumber = sourceText.Lines.GetLinePosition(position).Line + 1
-            let defines = CompilerEnvironment.GetCompilationDefinesForEditing(document.FilePath, options.OtherOptions |> Seq.toList)
+            let defines = CompilerEnvironment.GetCompilationDefinesForEditing(document.FilePath, parsingOptions)
             
             let! symbol = Tokenizer.getSymbolAtPosition(document.Id, sourceText, position, document.FilePath, defines, SymbolLookupKind.Greedy, false)
             let! symbolUse = checkFileResults.GetSymbolUseAtLocation(lineNumber, symbol.Ident.idRange.EndColumn, textLine, symbol.FullIsland, userOpName=userOpName)
@@ -112,8 +112,8 @@ type internal FSharpFindUsagesService
                             projectsToCheck
                             |> Seq.map (fun project ->
                                 asyncMaybe {
-                                    let! options = projectInfoManager.TryGetOptionsForProject(project.Id)
-                                    let! projectCheckResults = checker.ParseAndCheckProject(options, userOpName = userOpName) |> liftAsync
+                                    let! _parsingOptions, _site, projectOptions = projectInfoManager.TryGetOptionsForProject(project.Id)
+                                    let! projectCheckResults = checker.ParseAndCheckProject(projectOptions, userOpName = userOpName) |> liftAsync
                                     return! projectCheckResults.GetUsesOfSymbol(symbolUse.Symbol) |> liftAsync
                                 } |> Async.map (Option.defaultValue [||]))
                             |> Async.Parallel
@@ -136,7 +136,7 @@ type internal FSharpFindUsagesService
                         | _ ->
                             for referenceDocSpan in referenceDocSpans do
                                 for definitionItem in definitionItems do
-                                    let referenceItem = SourceReferenceItem(definitionItem, referenceDocSpan)
+                                    let referenceItem = SourceReferenceItem(definitionItem, referenceDocSpan, true) // defaulting to `true` until we can officially determine if this usage is a write
                                     do! context.OnReferenceFoundAsync(referenceItem) |> Async.AwaitTask |> liftAsync
             
             ()

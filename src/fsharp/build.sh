@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
+# Copyright (c) Microsoft Corporation.  All Rights Reserved.  See License.txt in the project root for license information.
 
 # Helper function to print an error message and exit with a non-zero error code.
 failwith () {
@@ -137,6 +137,11 @@ do
             ;;
         "nobuild")
             export BUILD_PHASE=0
+            ;;
+        "none")
+            _autoselect=0
+            export _buildexit=1
+            export _buildexitVALUE=0
             ;;
         "all")
             _autoselect=0
@@ -320,6 +325,10 @@ do
     esac
 done
 
+if [ $_buildexit -eq 1 ]; then
+    exit $_buildexitvalue
+fi
+
 # Apply defaults, if necessary.
 if [ $_autoselect -eq 1 ]; then
     export BUILD_NET40=1
@@ -388,7 +397,7 @@ printf "\n"
 
 build_status "Done with arguments, starting preparation"
 
-_msbuildexe="xbuild"
+_msbuildexe="msbuild"
 msbuildflags=""
 
 # Perform any necessary setup and system configuration prior to running builds.
@@ -466,7 +475,7 @@ if [ "$BUILD_PROTO" = '1' ]; then
         { pushd ./lkg/fsc && eval "$_dotnetexe publish project.json --no-build -o ${_scriptdir}Tools/lkg -r $_architecture" && popd; } || failwith "dotnet publish failed"
         { pushd ./lkg/fsi && eval "$_dotnetexe publish project.json --no-build -o ${_scriptdir}Tools/lkg -r $_architecture" && popd; } || failwith "dotnet publish failed"
 
-        { printeval "$_msbuildexe $msbuildflags src/fsharp-proto-build.proj"; } || failwith "compiler proto build failed"
+        { printeval "$_msbuildexe $msbuildflags src/fsharp-proto-build.proj /p:Configuration=Proto"; } || failwith "compiler proto build failed"
 
 #        { printeval "$_ngenexe install Proto/net40/bin/fsc-proto.exe /nologo"; } || failwith "NGen of proto failed"
     else
