@@ -12,8 +12,8 @@
   <ItemGroup>
     <EnvironmentVariables Include="BuildRevision=$(BuildRevision)" />
     <EnvironmentVariables Include="PATH=$(DotNetCliToolDir):$(PATH)" />
-<!--    <RepositoryReference Include="core-setup" />
+    <RepositoryReference Include="core-setup" />
     <RepositoryReference Include="symreader" />
-    <RepositoryReference Include="symreader-portable" /> -->
+    <RepositoryReference Include="symreader-portable" />
   </ItemGroup>
 </Project>
