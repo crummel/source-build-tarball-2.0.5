@@ -33,24 +33,31 @@ while [ $# -gt 0 ]; do
             ;;
         -c)
             CONFIGURATION=$2
+            shift
             ;;
         -r)
             TARGET_RUNTIME=$2
+            shift
             ;;
         -v)
             VERSION=$2
+            shift
             ;;
         -vs)
             VERSION_SUFFIX=$2
+            shift
             ;;
         -noloc)
             DISABLE_LOCALIZED_BUILD=$2
+            shift
             ;;
         -ci)
             CI_BUILD=$2
+            shift
             ;;
         -p)
             PROJECT_NAME_PATTERNS=$2
+            shift
             ;;
         -verbose)
             VERBOSE=true
@@ -92,7 +99,7 @@ TPB_TargetFrameworkCore="netcoreapp2.0"
 TPB_TargetFrameworkCore10="netcoreapp1.0"
 TPB_Configuration=$CONFIGURATION
 TPB_TargetRuntime=$TARGET_RUNTIME
-TPB_Version=$(test -z $VERSION_SUFFIX && echo $VERSION || echo $VERSION-$VERSION_SUFFIX)
+TPB_Version=$VERSION
 TPB_CIBuild=$CI_BUILD
 TPB_LocalizedBuild=$DISABLE_LOCALIZED_BUILD
 TPB_Verbose=$VERBOSE
@@ -138,33 +145,15 @@ function usage()
 #
 function install_cli()
 {
-    local failed=false
-    local install_script="$TP_TOOLS_DIR/dotnet-install.sh"
-    local remote_path="https://raw.githubusercontent.com/dotnet/cli/master/scripts/obtain/dotnet-install.sh"
-
     log "Installing dotnet cli..."
     local start=$SECONDS
 
-    # Install the latest version of dotnet-cli
-    curl --retry 10 -sSL --create-dirs -o $install_script $remote_path || failed=true
-    if [ "$failed" = true ]; then
-        error "Failed to download dotnet-install.sh script."
-        return 1
+    if [ ! -e "$TP_TOOLS_DIR/dotnet" ];
+    then
+        mkdir -p "$TP_TOOLS_DIR/dotnet"
     fi
-    chmod u+x $install_script
 
-    log "install_cli: Get the latest dotnet cli toolset..."
-    $install_script --install-dir "$TP_TOOLS_DIR/dotnet" --no-path --channel "master" --version $DOTNET_CLI_VERSION
-
-    # Get netcoreapp1.1 shared components
-    log "install_cli: Get the shared netcoreapp1.0 runtime..."
-    $install_script --install-dir "$TP_TOOLS_DIR/dotnet" --no-path --channel "preview" --version "1.0.5" --shared-runtime
-    log "install_cli: Get the shared netcoreapp1.1 runtime..."
-    $install_script --install-dir "$TP_TOOLS_DIR/dotnet" --no-path --channel "release/1.1.0" --version "1.1.2" --shared-runtime
-    log "install_cli: Get the shared netcoreapp2.0 runtime..."
-    $install_script --install-dir "$TP_TOOLS_DIR/dotnet" --no-path --channel "release/2.0.0" --version "2.0.0" --shared-runtime
-    #log "install_cli: Get shared components which is compatible with dotnet cli version $DOTNET_CLI_VERSION..."
-    #$install_script --install-dir "$TP_TOOLS_DIR/dotnet" --no-path --channel "master" --version $DOTNET_RUNTIME_VERSION --shared-runtime
+    cp -r $DOTNET_TOOL_DIR/* "$TP_TOOLS_DIR/dotnet/"
 
     log "install_cli: Complete. Elapsed $(( SECONDS - start ))s."
     return 0
