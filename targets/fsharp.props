@@ -4,7 +4,7 @@
     <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <PackagesOutput>$(ProjectDirectory)/BuildFromSource/release/bin</PackagesOutput>
-    <BuildRevision>170630</BuildRevision>
+    <BuildRevision>171104</BuildRevision>
     <BuildCommand>$(ProjectDirectory)/src/buildfromsource.sh</BuildCommand>
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.Config</NuGetConfigFile>
   </PropertyGroup>
@@ -12,8 +12,8 @@
   <ItemGroup>
     <EnvironmentVariables Include="BuildRevision=$(BuildRevision)" />
     <EnvironmentVariables Include="PATH=$(DotNetCliToolDir):$(PATH)" />
-    <RepositoryReference Include="core-setup" />
+<!--    <RepositoryReference Include="core-setup" />
     <RepositoryReference Include="symreader" />
-    <RepositoryReference Include="symreader-portable" />
+    <RepositoryReference Include="symreader-portable" /> -->
   </ItemGroup>
 </Project>
