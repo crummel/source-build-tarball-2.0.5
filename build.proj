@@ -87,7 +87,6 @@
       <DummyPackage Include="Microsoft.NETCore.Platforms" Version="1.1.0" />
       <DummyPackage Include="Microsoft.NETCore.Platforms" Version="2.0.0-preview3-25519-01" />
       <DummyPackage Include="Microsoft.NETCore.Platforms" Version="2.0.0" />
-      <DummyPackage Include="Microsoft.NETCore.Platforms" Version="2.0.1" />
       <DummyPackage Include="Microsoft.NETCore.Targets" Version="1.0.1" />
       <DummyPackage Include="Microsoft.NETCore.Targets" Version="1.0.3" />
       <DummyPackage Include="Microsoft.NETCore.Targets" Version="1.1.0" />
