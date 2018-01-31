@@ -3,7 +3,7 @@
   <PropertyGroup>
     <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <PackagesOutput>$(ProjectDirectory)/BuildFromSource/Release/bin</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)/BuildFromSource/release/bin</PackagesOutput>
     <BuildRevision>170630</BuildRevision>
     <BuildCommand>$(ProjectDirectory)/src/buildfromsource.sh</BuildCommand>
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.Config</NuGetConfigFile>

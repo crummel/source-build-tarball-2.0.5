@@ -9,7 +9,7 @@
     <CLI_FSharp_Version>4.2.0-rtm-171104-0</CLI_FSharp_Version>
     <CLI_Deps_Satellites_Build>pre-20171122-1</CLI_Deps_Satellites_Build>
     <CLI_Roslyn_Satellites_Version>2.6.0-$(CLI_Deps_Satellites_Build)</CLI_Roslyn_Satellites_Version>
-    <CLI_FSharp_Satellites_Version>4.4.1-$(CLI_Deps_Satellites_Build)</CLI_FSharp_Satellites_Version>
+    <CLI_FSharp_Satellites_Version>4.4.1-pre-20170727-1</CLI_FSharp_Satellites_Version>
 
     <!-- We'll usually want to keep these versions in sync, but we may want to diverge in some
          cases, so use separate properties but derive one from the other unless we want to

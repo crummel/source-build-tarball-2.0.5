@@ -3,10 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <DefineConstants>COMPILED;$(DefineConstant)</DefineConstants>
+    <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="fssrgen.fsx" />
+    <ProjectReference Include="../../fsharp/FSharp.Core/FSharp.Core.BuildFromSource.fsproj" />
   </ItemGroup>
 
 </Project>
