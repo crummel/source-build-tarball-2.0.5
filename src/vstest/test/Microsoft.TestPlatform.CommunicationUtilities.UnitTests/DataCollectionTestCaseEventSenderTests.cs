@@ -5,6 +5,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.UnitTests
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.Net;
 
     using Microsoft.TestPlatform.CommunicationUtilities.UnitTests.TestDoubles;
     using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
@@ -28,7 +29,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.UnitTests
         public DataCollectionTestCaseEventSenderTests()
         {
             this.mockCommunicationManager = new Mock<ICommunicationManager>();
-            this.dataCollectionTestCaseEventSender = new TestableDataCollectionTestCaseEventSender(this.mockCommunicationManager.Object);
+            this.dataCollectionTestCaseEventSender = new TestableDataCollectionTestCaseEventSender(this.mockCommunicationManager.Object, JsonDataSerializer.Instance);
         }
 
         [TestMethod]
@@ -36,13 +37,13 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.UnitTests
         {
             this.dataCollectionTestCaseEventSender.InitializeCommunication(123);
 
-            this.mockCommunicationManager.Verify(x => x.SetupClientAsync(123), Times.Once);
+            this.mockCommunicationManager.Verify(x => x.SetupClientAsync(new IPEndPoint(IPAddress.Loopback, 123)), Times.Once);
         }
 
         [TestMethod]
         public void InitializeShouldThrowExceptionIfThrownByCommunicationManager()
         {
-            this.mockCommunicationManager.Setup(x => x.SetupClientAsync(It.IsAny<int>())).Throws<Exception>();
+            this.mockCommunicationManager.Setup(x => x.SetupClientAsync(It.IsAny<IPEndPoint>())).Throws<Exception>();
 
             Assert.ThrowsException<Exception>(() =>
                 {
@@ -91,10 +92,12 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.UnitTests
         [TestMethod]
         public void SendTestCaseStartShouldSendMessageThroughCommunicationManager()
         {
+            this.mockCommunicationManager.Setup(x => x.ReceiveMessage()).Returns(new Message() { MessageType = MessageType.DataCollectionTestStartAck });
             var testcaseStartEventArgs = new TestCaseStartEventArgs(this.testCase);
             this.dataCollectionTestCaseEventSender.SendTestCaseStart(testcaseStartEventArgs);
 
             this.mockCommunicationManager.Verify(x => x.SendMessage(MessageType.DataCollectionTestStart, testcaseStartEventArgs), Times.Once);
+            this.mockCommunicationManager.Verify(x => x.ReceiveMessage(), Times.Once);
         }
 
         [TestMethod]

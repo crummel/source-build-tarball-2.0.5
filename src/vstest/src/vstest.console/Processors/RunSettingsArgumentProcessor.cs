@@ -7,17 +7,19 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.Processors
     using System.Diagnostics.CodeAnalysis;
     using System.Diagnostics.Contracts;
     using System.Globalization;
+    using System.IO;
+    using System.Text;
     using System.Xml;
     using System.Xml.XPath;
 
     using Microsoft.VisualStudio.TestPlatform.Common;
     using Microsoft.VisualStudio.TestPlatform.Common.Interfaces;
+    using Microsoft.VisualStudio.TestPlatform.Common.Utilities;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Utilities;
     using Microsoft.VisualStudio.TestPlatform.Utilities;
     using Microsoft.VisualStudio.TestPlatform.Utilities.Helpers;
     using Microsoft.VisualStudio.TestPlatform.Utilities.Helpers.Interfaces;
-    using Microsoft.VisualStudio.TestPlatform.CommandLine.Processors.Utilities;
 
     using CommandLineResources = Microsoft.VisualStudio.TestPlatform.CommandLine.Resources.Resources;
 
@@ -125,7 +127,11 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.Processors
             try
             {
                 IXPathNavigable document = this.GetRunSettingsDocument(argument);
+
                 this.runSettingsManager.UpdateRunSettings(document.CreateNavigator().OuterXml);
+
+                // To determine whether to infer framework and platform.
+                ExtractFrameworkAndPlatform();
 
                 //Add default runsettings values if not exists in given runsettings file.
                 this.runSettingsManager.AddDefaultRunSettings();
@@ -134,11 +140,25 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.Processors
             }
             catch (XmlException exception)
             {
-                throw new CommandLineException(CommandLineResources.MalformedRunSettingsFile, exception);
+                throw new SettingsException(
+                        string.Format(CultureInfo.CurrentCulture, "{0} {1}", ObjectModel.Resources.CommonResources.MalformedRunSettingsFile, exception.Message),
+                        exception);
             }
-            catch (SettingsException exception)
+        }
+
+        private void ExtractFrameworkAndPlatform()
+        {
+            var framworkStr = this.runSettingsManager.QueryRunSettingsNode(FrameworkArgumentExecutor.RunSettingsPath);
+            Framework framework = Framework.FromString(framworkStr);
+            if (framework != null)
             {
-                throw new CommandLineException(exception.Message, exception);
+                this.commandLineOptions.TargetFrameworkVersion = framework;
+            }
+
+            var platformStr = this.runSettingsManager.QueryRunSettingsNode(PlatformArgumentExecutor.RunSettingsPath);
+            if (Enum.TryParse<Architecture>(platformStr, true, out var architecture))
+            {
+                this.commandLineOptions.TargetArchitecture = architecture;
             }
         }
 
@@ -146,7 +166,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.Processors
             Justification = "XmlReaderSettings.XmlResolver is not available in core. Suppress until fxcop issue is fixed.")]
         protected virtual XmlReader GetReaderForFile(string runSettingsFile)
         {
-            return XmlReader.Create(runSettingsFile, XmlRunSettingsUtilities.ReaderSettings);
+            return XmlReader.Create(new StringReader(File.ReadAllText(runSettingsFile, Encoding.UTF8)), XmlRunSettingsUtilities.ReaderSettings);
         }
 
         [SuppressMessage("Microsoft.Security.Xml", "CA3053:UseXmlSecureResolver",
@@ -162,7 +182,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.Processors
                     var settingsDocument = new XmlDocument();
                     settingsDocument.Load(reader);
                     ClientUtilities.FixRelativePathsInRunSettings(settingsDocument, runSettingsFile);
-#if NET46
+#if NET451
                     runSettingsDocument = settingsDocument;
 #else
                     runSettingsDocument = settingsDocument.ToXPathNavigable();
@@ -173,18 +193,6 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.Processors
             {
                 runSettingsDocument = XmlRunSettingsUtilities.CreateDefaultRunSettings();
                 runSettingsDocument = MSTestSettingsUtilities.Import(runSettingsFile, runSettingsDocument, Architecture.X86, FrameworkVersion.Framework45);
-            }
-
-            if (this.commandLineOptions.EnableCodeCoverage == true)
-            {
-                try
-                {
-                    CodeCoverageDataAdapterUtilities.UpdateWithCodeCoverageSettingsIfNotConfigured(runSettingsDocument);
-                }
-                catch (XPathException e)
-                {
-                    throw new SettingsException(CommandLineResources.MalformedRunSettingsFile, e);
-                }
             }
 
             return runSettingsDocument;

@@ -392,15 +392,6 @@
         </alt-trans>
         <note from="bb-metadata">fuzzyMatch="15" wordcount="22" adjWordcount="18.7" curWordcount="18.7"</note>
       </trans-unit>
-      <trans-unit id="SuggestUseVsixExtensionsIfNoTestsIsFound">
-        <source>Additionally, you can try specifying '/UseVsixExtensions' command if the test discoverer &amp; executor is installed on the machine as vsix extensions and your installation supports vsix extensions. Example: vstest.console.exe myTests.dll /UseVsixExtensions:true</source>
-        <target state="translated">此外，如果已在電腦上將測試探索程式及執行程式安裝為 VSIX 延伸模組，而且您的安裝支援 VSIX 延伸模組，您可以嘗試指定 '/UseVsixExtensions' 命令。例如: vstest.console.exe myTests.dll /UseVsixExtensions:true</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">此外，您可以尝试指定 UseVsixExtensions 命令如果测试 discoverer &amp; 执行器安装在机器上为 vsix 扩展和安装支持 vsix 扩展 /。例如︰ vstest.console.exe myTests.dll /UseVsixExtensions:true</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="31" adjWordcount="26.35" curWordcount="26.35"</note>
-      </trans-unit>
       <trans-unit id="UseVsixExtensionsValueRequired">
         <source>The /UseVsixExtensions parameter requires a value. If 'true', the installed VSIX extensions (if any) will be used in the test run. If false, they will be ignored.   Example:  /UseVsixExtensions:true</source>
         <target state="translated">/UseVsixExtensions 參數需要一個值。如果為 'true'，已安裝的 VSIX 延伸模組 (如果有的話) 將用於測試回合。如果為 false，則會加以忽略。範例:  /UseVsixExtensions:true</target>
@@ -420,14 +411,14 @@
         <note from="bb-metadata">fuzzyMatch="15" wordcount="29" adjWordcount="24.65" curWordcount="24.65"</note>
       </trans-unit>
       <trans-unit id="InIsolationHelp">
-        <source>/InIsolation
+        <source>--InIsolation|/InIsolation
       Runs the tests in an isolated process. This makes vstest.console.exe 
       process less likely to be stopped on an error in the tests, but tests 
       may run slower.</source>
-        <target state="translated">/InIsolation
-      在獨立的處理序中執行測試。這樣會降低 vstest.console.exe 
-      處理序在測試中錯誤處於停止狀態的可能性，但是測試 
-      的執行速度可能會比較慢。</target>
+        <target state="translated">--InIsolation|/InIsolation
+      在隔離的處理序中執行測試。這樣會降低 vstest.console.exe 
+      處理序在測試中發生錯誤而停止的可能性，但是測試 
+      可能會執行得較慢。</target>
         <note />
         <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
           <target state-qualifier="mt-suggestion">/ InIsolation
@@ -637,15 +628,6 @@
         </alt-trans>
         <note from="bb-metadata">fuzzyMatch="15" wordcount="21" adjWordcount="17.85" curWordcount="17.85"</note>
       </trans-unit>
-      <trans-unit id="NoTestsFoundWarningMessageWithSuggestionToUseVsix">
-        <source>{0} {1}</source>
-        <target state="translated">{0} {1}</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">{0} {1}</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="2" adjWordcount="1.7" curWordcount="1.7"</note>
-      </trans-unit>
       <trans-unit id="LoggerFriendlyNameFormat">
         <source>        FriendlyName: {0}</source>
         <target state="translated">        FriendlyName: {0}</target>
@@ -663,42 +645,6 @@
           <target state-qualifier="mt-suggestion">Uri: {0}</target>
         </alt-trans>
         <note from="bb-metadata">fuzzyMatch="15" wordcount="2" adjWordcount="1.7" curWordcount="1.7"</note>
-      </trans-unit>
-      <trans-unit id="SuggestUseVsixExtensionsInListLoggersCommand">
-        <source>The Test Logger Add-Ins installed through a VSIX installation are ignored. Use the /UseVsixExtensions parameter to include them, if your installation supports vsix extensions. Example: vstest.console.exe {0} /UseVsixExtensions:true</source>
-        <target state="translated">已忽略透過 VSIX 安裝所安裝的測試記錄器增益集。如果您的安裝支援 VSIX 延伸模組，請使用 /UseVsixExtensions 參數加以包含。範例: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">测试记录器插件安装到 VSIX 安装将被忽略。使用 /UseVsixExtensions 参数中包含这些信息，如果您的安装支持 vsix 扩展。示例︰ {0} /UseVsixExtensions:true vstest.console.exe</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="28" adjWordcount="23.8" curWordcount="23.8"</note>
-      </trans-unit>
-      <trans-unit id="SuggestUseVsixExtensionsInListExecutorsCommand">
-        <source>The Test Executor Add-Ins installed through a VSIX installation are ignored. Use the /UseVsixExtensions parameter to include them, if your installation supports vsix extensions. Example: vstest.console.exe {0} /UseVsixExtensions:true</source>
-        <target state="translated">已忽略透過 VSIX 安裝所安裝的測試執行程式增益集。如果您的安裝支援 VSIX 延伸模組，請使用 /UseVsixExtensions 參數加以包含。範例: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">测试执行器加载项安装通过 VSIX 安装将被忽略。使用 /UseVsixExtensions 参数中包含这些信息，如果您的安装支持 vsix 扩展。示例︰ {0} /UseVsixExtensions:true vstest.console.exe</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="28" adjWordcount="23.8" curWordcount="23.8"</note>
-      </trans-unit>
-      <trans-unit id="SuggestUseVsixExtensionsInListDiscoverersCommand">
-        <source>The Test Discovery Add-Ins installed through a VSIX installation are ignored. Use the /UseVsixExtensions parameter to include them, if your installation supports vsix extensions. Example: vstest.console.exe {0} /UseVsixExtensions:true</source>
-        <target state="translated">已忽略透過 VSIX 安裝所安裝的測試探索增益集。如果您的安裝支援 VSIX 延伸模組，請使用 /UseVsixExtensions 參數加以包含。範例: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">测试发现外接通过 VSIX 安装安装将被忽略。使用 /UseVsixExtensions 参数中包含这些信息，如果您的安装支持 vsix 扩展。示例︰ {0} /UseVsixExtensions:true vstest.console.exe</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="28" adjWordcount="23.8" curWordcount="23.8"</note>
-      </trans-unit>
-      <trans-unit id="SuggestUseVsixExtensionsInListSettingsProviderCommand">
-        <source>The Settings Providers Add-Ins installed through a VSIX installation are ignored. Use the /UseVsixExtensions parameter to include them, if your installation supports vsix extensions. Example: vstest.console.exe {0} /UseVsixExtensions:true</source>
-        <target state="translated">已忽略透過 VSIX 安裝所安裝的設定提供者增益集。如果您的安裝支援 VSIX 延伸模組，請使用 /UseVsixExtensions 參數加以包含。範例: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">设置提供程序加载项安装通过 VSIX 安装将被忽略。使用 /UseVsixExtensions 参数中包含这些信息，如果您的安装支持 vsix 扩展。示例︰ {0} /UseVsixExtensions:true vstest.console.exe</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="28" adjWordcount="23.8" curWordcount="23.8"</note>
       </trans-unit>
       <trans-unit id="SettingFormat">
         <source>        SettingName: {0}</source>
@@ -799,11 +745,11 @@
       <trans-unit id="FrameworkArgumentHelp">
         <source>--Framework|/Framework:&lt;Framework Version&gt;
       Target .Net Framework version to be used for test execution. 
-      Valid values are ".NETFramework,Version=v4.6", ".NETCoreApp,Version=v1.0" etc.
+      Valid values are ".NETFramework,Version=v4.5.1", ".NETCoreApp,Version=v1.0" etc.
       Other supported values are Framework35, Framework40, Framework45 and FrameworkCore10.</source>
         <target state="translated">--Framework|/Framework:&lt;Framework 版本&gt;
-      要用於測試執行的目標 .Net Framework 版本。
-      有效值為 ".NETFramework,Version=v4.6"、".NETCoreApp,Version=v1.0" 等
+      要用於測試執行的目標 .Net Framework 版本。 
+      有效值為 ".NETFramework,Version=v4.5.1"、".NETCoreApp,Version=v1.0" 等
       其他支援的值為 Framework35、Framework40、Framework45 和 FrameworkCore10。</target>
         <note />
         <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
@@ -815,8 +761,8 @@
         <note from="bb-metadata">fuzzyMatch="15" wordcount="31" adjWordcount="26.35" curWordcount="26.35"</note>
       </trans-unit>
       <trans-unit id="FrameworkVersionRequired">
-        <source>The /Framework argument requires the target .Net Framework version for the test run.   Example:  /Framework:".NETFramework,Version=v4.6"</source>
-        <target state="translated">/Framework 引數需要測試回合的目標 .NET Framework 版本。範例:  /Framework:".NETFramework,Version=v4.6"</target>
+        <source>The /Framework argument requires the target .Net Framework version for the test run.   Example:  /Framework:".NETFramework,Version=v4.5.1"</source>
+        <target state="translated">/Framework 引數需要測試回合的目標 .NET Framework 版本。   範例: /Framework:".NETFramework,Version=v4.5.1"</target>
         <note />
         <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
           <target state-qualifier="mt-suggestion">/Framework 参数要求目标.Net Framework 版本的测试运行。  例如︰ /Framework:"。NETFramework、 版本 = v4.6"</target>
@@ -824,8 +770,8 @@
         <note from="bb-metadata">fuzzyMatch="15" wordcount="16" adjWordcount="13.6" curWordcount="13.6"</note>
       </trans-unit>
       <trans-unit id="InvalidFrameworkVersion">
-        <source>Invalid .Net Framework version:{0}. Please give the fullname of the TargetFramework. Other supported .Net Framework versions are Framework35, Framework40 and Framework45.</source>
-        <target state="translated">.NET Framework 版本無效: {0}。請指定 TargetFramework 的全名。其他支援的 .Net Framework 版本為 Framework35、Framework40 和 Framework45。</target>
+        <source>Invalid .Net Framework version:{0}. Please give the fullname of the TargetFramework. Other supported .Net Framework versions are Framework35, Framework40, Framework45 and FrameworkCore10.</source>
+        <target state="translated">.NET Framework 版本無效: {0}。請指定 TargetFramework 的全名。其他支援的 .Net Framework 版本為 Framework35、Framework40、Framework45 和 FrameworkCore10。</target>
         <note />
         <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
           <target state-qualifier="mt-suggestion">无效的.Net Framework 版本︰ {0}。 请给 TargetFramework 的全名。其他受支持的.Net Framework 版本是 Framework35、 Framework40 和 Framework45。</target>
@@ -963,15 +909,6 @@
           <target state-qualifier="mt-suggestion">参数 {0} 不应在 EnableCodeCoverage 命令。指定不带参数的命令 (示例︰ vstest.console.exe myTests.dll /EnableCodeCoverage)，然后重试。</target>
         </alt-trans>
         <note from="bb-metadata">fuzzyMatch="15" wordcount="22" adjWordcount="18.7" curWordcount="18.7"</note>
-      </trans-unit>
-      <trans-unit id="MalformedRunSettingsFile">
-        <source>Settings file provided do not confirm to required format. </source>
-        <target state="translated">提供的設定檔不符合必要的格式。</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">设置文件提供所需的格式为未确认。</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="9" adjWordcount="7.65" curWordcount="7.65"</note>
       </trans-unit>
       <trans-unit id="NoTestEntryPoint">
         <source>App package '{0}' does not has test executor entry point. For running unit tests for Windows Store apps, create app package using Windows Store app Unit Test Library project.</source>
@@ -1549,8 +1486,74 @@
       </trans-unit>
       <trans-unit id="DbgTrcMessagesBanner">
         <source>Debug Traces Messages:</source>
-        <target state="new">Debug Traces Messages:</target>
-        <note></note>
+        <target state="translated">偵錯追蹤訊息:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EnableBlameUsage">
+        <source>--Blame|/Blame
+      Runs the test in blame mode. This option is helpful in isolating the problematic test causing test host crash. It creates an output file in the current directory as "Sequence.xml", that captures the order of execution of test before the crash.</source>
+        <target state="translated">--Blame|/Blame
+      在 Blame 模式中執行測試。此選項有助於隔離造成測試主機損毀的問題測試。其會在目前的目錄中建立 "Sequence.xml" 這樣的輸出檔案，以擷取損毀前執行測試的順序。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TestRunAborted">
+        <source>Test Run Aborted.</source>
+        <target state="translated">測試回合已中止。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TestRunCanceled">
+        <source>Test Run Canceled.</source>
+        <target state="translated">測試回合已取消。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="OpenResponseFileError">
+        <source>Error opening response file '{0}'</source>
+        <target state="translated">開啟回應檔案 '{0}' 時發生錯誤</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ResponseFileArgumentHelp">
+        <source>@&lt;file&gt;
+      Read response file for more options.</source>
+        <target state="translated">@&lt;檔案&gt;
+      讀取回應檔以取得更多選項。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TestRunSummaryForCanceledOrAbortedRun">
+        <source>Total tests: Unknown. Passed: {0}. Failed: {1}. Skipped: {2}.</source>
+        <target state="translated">測試總數: 未知。已通過: {0}。失敗: {1}。已跳過: {2}。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StringFormatToJoinTwoStrings">
+        <source>{0} {1}</source>
+        <target state="translated">{0} {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SuggestTestAdapterPathIfNoTestsIsFound">
+        <source>Additionally, path to test adapters can be specified using /TestAdapterPath command. Example  /TestAdapterPath:&lt;pathToCustomAdapters&gt;.</source>
+        <target state="translated">此外還可使用 /TestAdapterPath 命令，指定測試配接器的路徑。範例: /TestAdapterPath:&lt;自訂配接器的路徑&gt;。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="UseVsixExtensionsDeprecation">
+        <source>/UseVsixExtensions is getting deprecated. Please use /TestAdapterPath instead.</source>
+        <target state="translated">/UseVsixExtensions 即將淘汰。請改用 /TestAdapterPath。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DisableAutoFakesUsage">
+        <source>--DisableAutoFakes|/DisableAutoFakes:&lt;true/false&gt;
+     Example: /DisableAutoFakes:true</source>
+        <target state="translated">--DisableAutoFakes|/DisableAutoFakes:&lt;true/false&gt;
+     Example: /DisableAutoFakes:true</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CollectWithTestSettingErrorMessage">
+        <source>--Collect|/Collect:"{0}" is not supported if test run is configured using testsettings.</source>
+        <target state="translated">若使用測試設定來設定測試回合，則不支援 --Collect|/Collect:"{0}"。</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="RunsettingsWithDCErrorMessage">
+        <source>Data collectors configured via run settings are not supported with embedded test settings. Please see https://aka.ms/vstest-configure-datacollector for more information. Run settings: {0}.</source>
+        <target state="translated">內嵌測試設定不支援透過回合設定來設定的資料收集器。如需詳細資訊，請參閱 https://aka.ms/vstest-configure-datacollector。回合設定: 0}。</target>
+        <note />
       </trans-unit>
     </body>
   </file>

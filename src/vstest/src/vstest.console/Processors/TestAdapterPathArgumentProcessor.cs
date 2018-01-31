@@ -10,9 +10,9 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.Processors
     using System.IO;
     using System.Linq;
 
-    using Microsoft.VisualStudio.TestPlatform.CommandLine.Processors.Utilities;
     using Microsoft.VisualStudio.TestPlatform.Common;
     using Microsoft.VisualStudio.TestPlatform.Common.Interfaces;
+    using Microsoft.VisualStudio.TestPlatform.Common.Utilities;
     using Microsoft.VisualStudio.TestPlatform.Utilities;
     using Microsoft.VisualStudio.TestPlatform.Utilities.Helpers;
     using Microsoft.VisualStudio.TestPlatform.Utilities.Helpers.Interfaces;
@@ -149,6 +149,8 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.Processors
         /// <param name="argument">Argument that was provided with the command.</param>
         public void Initialize(string argument)
         {
+            string invalidAdapterPathArgument = argument;
+
             if (string.IsNullOrWhiteSpace(argument))
             {
                 throw new CommandLineException(
@@ -159,9 +161,10 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.Processors
 
             try
             {
+                // VSTS task add double quotes around TestAdapterpath. For example if user has given TestAdapter path C:\temp,
+                // Then VSTS task will add TestAdapterPath as "/TestAdapterPath:\"C:\Temp\"".
                 // Remove leading and trailing ' " ' chars...
                 argument = argument.Trim().Trim(new char[] { '\"' });
-
                 customAdaptersPath = Path.GetFullPath(argument);
                 if (!fileHelper.DirectoryExists(customAdaptersPath))
                 {
@@ -184,6 +187,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.Processors
 
                         if (!this.fileHelper.DirectoryExists(testAdapterFullPath))
                         {
+                            invalidAdapterPathArgument = testadapterPath;
                             throw new DirectoryNotFoundException(CommandLineResources.TestAdapterPathDoesNotExist);
                         }
 
@@ -200,7 +204,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.Processors
             catch (Exception e)
             {
                 throw new CommandLineException(
-                    string.Format(CultureInfo.CurrentCulture, CommandLineResources.InvalidTestAdapterPathCommand, argument, e.Message));
+                    string.Format(CultureInfo.CurrentCulture, CommandLineResources.InvalidTestAdapterPathCommand, invalidAdapterPathArgument, e.Message));
             }
 
             this.commandLineOptions.TestAdapterPath = customAdaptersPath;

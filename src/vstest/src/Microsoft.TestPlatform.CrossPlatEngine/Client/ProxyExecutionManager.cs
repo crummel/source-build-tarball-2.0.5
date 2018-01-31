@@ -7,8 +7,11 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Client
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Threading;
 
+    using Microsoft.VisualStudio.TestPlatform.Common;
     using Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework;
+    using Microsoft.VisualStudio.TestPlatform.Common.Telemetry;
     using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
     using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.Interfaces;
     using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.ObjectModel;
@@ -20,29 +23,32 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Client
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 
     using Constants = Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Constants;
-    using System.Text.RegularExpressions;
-    using Microsoft.VisualStudio.TestPlatform.Common;
 
     /// <summary>
     /// Orchestrates test execution operations for the engine communicating with the client.
     /// </summary>
-    internal class ProxyExecutionManager : ProxyOperationManager, IProxyExecutionManager
+    internal class ProxyExecutionManager : ProxyOperationManager, IProxyExecutionManager, ITestRunEventsHandler
     {
         private readonly ITestRuntimeProvider testHostManager;
         private IDataSerializer dataSerializer;
+        private CancellationTokenSource cancellationTokenSource;
+        private bool isCommunicationEstablished;
+        private IRequestData requestData;
+        private ITestRunEventsHandler baseTestRunEventsHandler;
 
         /// <inheritdoc/>
         public bool IsInitialized { get; private set; } = false;
-
 
         #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProxyExecutionManager"/> class. 
         /// </summary>
-        /// <param name="testRequestSender">Test request sender instance.</param>
+        /// <param name="requestData">The Request Data for providing services and data for Run.</param>
+        /// <param name="requestSender">Test request sender instance.</param>
         /// <param name="testHostManager">Test host manager for this proxy.</param>
-        public ProxyExecutionManager(ITestRequestSender requestSender, ITestRuntimeProvider testHostManager) : this(requestSender, testHostManager, JsonDataSerializer.Instance, Constants.ClientConnectionTimeout)
+        public ProxyExecutionManager(IRequestData requestData, ITestRequestSender requestSender, ITestRuntimeProvider testHostManager) : 
+            this(requestData, requestSender, testHostManager, JsonDataSerializer.Instance, Constants.ClientConnectionTimeout)
         {
         }
 
@@ -50,14 +56,19 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Client
         /// Initializes a new instance of the <see cref="ProxyExecutionManager"/> class. 
         /// Constructor with Dependency injection. Used for unit testing.
         /// </summary>
+        /// <param name="requestData">The Request Data for Common services and data for Run.</param>
         /// <param name="requestSender">Request Sender instance</param>
         /// <param name="testHostManager">Test host manager instance</param>
+        /// <param name="dataSerializer"></param>
         /// <param name="clientConnectionTimeout">The client Connection Timeout</param>
-        internal ProxyExecutionManager(ITestRequestSender requestSender, ITestRuntimeProvider testHostManager, IDataSerializer dataSerializer, int clientConnectionTimeout)
-            : base(requestSender, testHostManager, clientConnectionTimeout)
+        internal ProxyExecutionManager(IRequestData requestData, ITestRequestSender requestSender, ITestRuntimeProvider testHostManager, IDataSerializer dataSerializer, int clientConnectionTimeout)
+            : base(requestData, requestSender, testHostManager, clientConnectionTimeout)
         {
             this.testHostManager = testHostManager;
             this.dataSerializer = dataSerializer;
+            this.cancellationTokenSource = new CancellationTokenSource();
+            this.isCommunicationEstablished = false;
+            this.requestData = requestData;
         }
 
         #endregion
@@ -69,13 +80,6 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Client
         /// </summary>
         public virtual void Initialize()
         {
-            if (this.testHostManager.Shared)
-            {
-                // Shared test hosts don't require test source information to launch. Start them early
-                // to allow fail fast.
-                EqtTrace.Verbose("ProxyExecutionManager: Test host is shared. SetupChannel it early.");
-                this.InitializeExtensions(Enumerable.Empty<string>());
-            }
             this.IsInitialized = true;
         }
 
@@ -87,70 +91,75 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Client
         /// <returns> The process id of the runner executing tests. </returns>
         public virtual int StartTestRun(TestRunCriteria testRunCriteria, ITestRunEventsHandler eventHandler)
         {
+            this.baseTestRunEventsHandler = eventHandler;
+
             try
             {
-                if (!this.testHostManager.Shared)
+                if (EqtTrace.IsVerboseEnabled)
                 {
-                    // Non shared test host requires test source information to launch. Provide the sources
-                    // information and create the channel.
-                    EqtTrace.Verbose("ProxyExecutionManager: Test host is non shared. Lazy initialize.");
-                    var testSources = testRunCriteria.Sources;
+                    EqtTrace.Verbose("ProxyExecutionManager: Test host is always Lazy initialize.");
+                }
 
-                    // If the test execution is with a test filter, group them by sources
-                    if (testRunCriteria.HasSpecificTests)
+                var testPackages = new List<string>(testRunCriteria.HasSpecificSources ? testRunCriteria.Sources :
+                                                    // If the test execution is with a test filter, group them by sources
+                                                    testRunCriteria.Tests.GroupBy(tc => tc.Source).Select(g => g.Key));
+
+                this.isCommunicationEstablished = this.SetupChannel(testPackages, this.cancellationTokenSource.Token);
+
+                if (this.isCommunicationEstablished)
+                {
+                    if (this.cancellationTokenSource.IsCancellationRequested)
                     {
-                        testSources = testRunCriteria.Tests.GroupBy(tc => tc.Source).Select(g => g.Key);
+                        if (EqtTrace.IsVerboseEnabled)
+                        {
+                            EqtTrace.Verbose("ProxyExecutionManager.StartTestRun: Canceling the current run after getting cancelation request.");
+                        }
+                        throw new TestPlatformException(Resources.Resources.CancelationRequested);
                     }
 
-                    this.InitializeExtensions(testSources);
-                }
+                    this.InitializeExtensions(testPackages);
 
-                this.SetupChannel(testRunCriteria.Sources);
+                    // This code should be in sync with InProcessProxyExecutionManager.StartTestRun executionContext
+                    var executionContext = new TestExecutionContext(
+                        testRunCriteria.FrequencyOfRunStatsChangeEvent,
+                        testRunCriteria.RunStatsChangeEventTimeout,
+                        inIsolation: false,
+                        keepAlive: testRunCriteria.KeepAlive,
+                        isDataCollectionEnabled: false,
+                        areTestCaseLevelEventsRequired: false,
+                        hasTestRun: true,
+                        isDebug: (testRunCriteria.TestHostLauncher != null && testRunCriteria.TestHostLauncher.IsDebug),
+                        testCaseFilter: testRunCriteria.TestCaseFilter,
+                        filterOptions: testRunCriteria.FilterOptions);
 
-                var executionContext = new TestExecutionContext(
-                    testRunCriteria.FrequencyOfRunStatsChangeEvent,
-                    testRunCriteria.RunStatsChangeEventTimeout,
-                    inIsolation: false,
-                    keepAlive: testRunCriteria.KeepAlive,
-                    isDataCollectionEnabled: false,
-                    areTestCaseLevelEventsRequired: false,
-                    hasTestRun: true,
-                    isDebug: (testRunCriteria.TestHostLauncher != null && testRunCriteria.TestHostLauncher.IsDebug),
-                    testCaseFilter: testRunCriteria.TestCaseFilter);
+                    // This is workaround for the bug https://github.com/Microsoft/vstest/issues/970
+                    var runsettings = this.RemoveNodesFromRunsettingsIfRequired(testRunCriteria.TestRunSettings, (testMessageLevel, message) => { this.LogMessage(testMessageLevel, message); });
 
-                if (testRunCriteria.HasSpecificSources)
-                {
-                    var runRequest = new TestRunCriteriaWithSources(
-                        testRunCriteria.AdapterSourceMap,
-                        testRunCriteria.TestRunSettings,
-                        executionContext);
+                    if (testRunCriteria.HasSpecificSources)
+                    {
+                        var runRequest = testRunCriteria.CreateTestRunCriteriaForSources(testHostManager, runsettings, executionContext, testPackages);
 
-                    this.RequestSender.StartTestRun(runRequest, eventHandler);
-                }
-                else
-                {
-                    var runRequest = new TestRunCriteriaWithTests(
-                        testRunCriteria.Tests,
-                        testRunCriteria.TestRunSettings,
-                        executionContext);
+                        this.RequestSender.StartTestRun(runRequest, this);
+                    }
+                    else
+                    {
+                        var runRequest = testRunCriteria.CreateTestRunCriteriaForTests(testHostManager, runsettings, executionContext, testPackages);
 
-                    this.RequestSender.StartTestRun(runRequest, eventHandler);
+                        this.RequestSender.StartTestRun(runRequest, this);
+                    }
                 }
             }
             catch (Exception exception)
             {
                 EqtTrace.Error("ProxyExecutionManager.StartTestRun: Failed to start test run: {0}", exception);
+                this.LogMessage(TestMessageLevel.Error, exception.Message);
 
-                // Log to vs ide test output
-                var testMessagePayload = new TestMessagePayload { MessageLevel = TestMessageLevel.Error, Message = exception.Message };
-                var rawMessage = this.dataSerializer.SerializePayload(MessageType.TestMessage, testMessagePayload);
-                eventHandler.HandleRawMessage(rawMessage);
-
-                // Log to vstest.console
-                eventHandler.HandleLogMessage(TestMessageLevel.Error, exception.Message);
-
-                var completeArgs = new TestRunCompleteEventArgs(null, false, false, exception, new Collection<AttachmentSet>(), TimeSpan.Zero);
-                eventHandler.HandleTestRunComplete(completeArgs, null, null, null);
+                // Send a run complete to caller. Similar logic is also used in ParallelProxyExecutionManager.StartTestRunOnConcurrentManager
+                // Aborted is `true`: in case of parallel run (or non shared host), an aborted message ensures another execution manager
+                // created to replace the current one. This will help if the current execution manager is aborted due to irreparable error
+                // and the test host is lost as well.
+                var completeArgs = new TestRunCompleteEventArgs(null, false, true, exception, new Collection<AttachmentSet>(), TimeSpan.Zero);
+                this.HandleTestRunComplete(completeArgs, null, null, null);
             }
 
             return 0;
@@ -161,7 +170,12 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Client
         /// </summary>
         public virtual void Cancel()
         {
-            this.RequestSender.SendTestRunCancel();
+            // Cancel fast, try to stop testhost deployment/launch
+            this.cancellationTokenSource.Cancel();
+            if (this.isCommunicationEstablished)
+            {
+                this.RequestSender.SendTestRunCancel();
+            }
         }
 
         /// <summary>
@@ -172,28 +186,65 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Client
             this.RequestSender.SendTestRunAbort();
         }
 
+        /// <inheritdoc/>
+        public void HandleTestRunComplete(TestRunCompleteEventArgs testRunCompleteArgs, TestRunChangedEventArgs lastChunkArgs, ICollection<AttachmentSet> runContextAttachments, ICollection<string> executorUris)
+        {
+            this.baseTestRunEventsHandler.HandleTestRunComplete(testRunCompleteArgs, lastChunkArgs, runContextAttachments, executorUris);
+        }
+
+        /// <inheritdoc/>
+        public void HandleTestRunStatsChange(TestRunChangedEventArgs testRunChangedArgs)
+        {
+            this.baseTestRunEventsHandler.HandleTestRunStatsChange(testRunChangedArgs);
+        }
+
+        /// <inheritdoc/>
+        public int LaunchProcessWithDebuggerAttached(TestProcessStartInfo testProcessStartInfo)
+        {
+            return this.baseTestRunEventsHandler.LaunchProcessWithDebuggerAttached(testProcessStartInfo);
+        }
+
+        /// <inheritdoc/>
+        public void HandleRawMessage(string rawMessage)
+        {
+            var message = this.dataSerializer.DeserializeMessage(rawMessage);
+
+            if(string.Equals(message.MessageType, MessageType.ExecutionComplete))
+            {
+                this.Close();
+            }
+
+            this.baseTestRunEventsHandler.HandleRawMessage(rawMessage);
+        }
+
+        public void HandleLogMessage(TestMessageLevel level, string message)
+        {
+            this.baseTestRunEventsHandler.HandleLogMessage(level, message);
+        }
+
         #endregion
+
+        private void LogMessage(TestMessageLevel testMessageLevel, string message)
+        {
+            // Log to vs ide test output
+            var testMessagePayload = new TestMessagePayload { MessageLevel = testMessageLevel, Message = message };
+            var rawMessage = this.dataSerializer.SerializePayload(MessageType.TestMessage, testMessagePayload);
+            this.HandleRawMessage(rawMessage);
+
+            // Log to vstest.console
+            this.HandleLogMessage(testMessageLevel, message);
+        }
 
         private void InitializeExtensions(IEnumerable<string> sources)
         {
-            var extensions = new List<string>();
-
-            if (TestPluginCache.Instance.PathToExtensions != null)
-            {
-                var regex = new Regex(TestPlatformConstants.TestAdapterRegexPattern, RegexOptions.IgnoreCase);
-                extensions.AddRange(TestPluginCache.Instance.PathToExtensions.Where(ext => regex.IsMatch(ext)));
-            }
-
-            extensions.AddRange(TestPluginCache.Instance.DefaultExtensionPaths);
+            var extensions = TestPluginCache.Instance.GetExtensionPaths(TestPlatformConstants.TestAdapterEndsWithPattern);
             var sourceList = sources.ToList();
             var platformExtensions = this.testHostManager.GetTestPlatformExtensions(sourceList, extensions).ToList();
 
             // Only send this if needed.
             if (platformExtensions.Any())
             {
-                this.SetupChannel(sourceList);
-
-                this.RequestSender.InitializeExecution(platformExtensions, TestPluginCache.Instance.LoadOnlyWellKnownExtensions);
+                this.RequestSender.InitializeExecution(platformExtensions);
             }
         }
     }

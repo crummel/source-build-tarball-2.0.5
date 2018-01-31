@@ -13,15 +13,34 @@ namespace Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework
 
     using Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework.Utilities;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-#if !NET46
-    using System.Runtime.Loader;
-#endif
+    using Microsoft.VisualStudio.TestPlatform.Utilities.Helpers;
+    using Microsoft.VisualStudio.TestPlatform.Utilities.Helpers.Interfaces;
 
     /// <summary>
     /// Discovers test extensions in a directory.
     /// </summary>
     internal class TestPluginDiscoverer
     {
+        private IFileHelper fileHelper;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestPluginDiscoverer"/> class. 
+        /// </summary>
+        public TestPluginDiscoverer() : this(new FileHelper())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestPluginDiscoverer"/> class. 
+        /// </summary>
+        /// <param name="fileHelper">
+        /// The file Helper.
+        /// </param>
+        internal TestPluginDiscoverer(IFileHelper fileHelper)
+        {
+            this.fileHelper = fileHelper;
+        }
+
         #region Fields
 
 #if WINDOWS_UAP
@@ -31,7 +50,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework
             "MICROSOFT.VISUALSTUDIO.TESTPLATFORM.OBJECTMODEL.DLL",
             "VSTEST_EXECUTIONENGINE_PLATFORMBRIDGE.DLL",
             "VSTEST_EXECUTIONENGINE_PLATFORMBRIDGE.WINMD",
-            "VSTEST.EXECUTIONENGINE.WINDOWSPHONE.DLL", 
+            "VSTEST.EXECUTIONENGINE.WINDOWSPHONE.DLL",
             "MICROSOFT.CSHARP.DLL",
             "MICROSOFT.VISUALBASIC.DLL",
             "CLRCOMPRESSION.DLL",
@@ -48,61 +67,46 @@ namespace Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework
         /// Gets information about each of the test extensions available.
         /// </summary>
         /// <param name="extensionPaths">
-        /// The path to the extensions.
-        /// </param>
-        /// <param name="loadOnlyWellKnownExtensions">
-        /// Should load only well known extensions or all. 
+        ///     The path to the extensions.
         /// </param>
         /// <returns>
-        /// The <see cref="Dictionary"/>` of assembly qualified name and testplugin information.
+        /// A dictionary of assembly qualified name and testplugin information.
         /// </returns>
-        public Dictionary<string, TPluginInfo> GetTestExtensionsInformation<TPluginInfo, TExtension>(
-            IEnumerable<string> extensionPaths,
-            bool loadOnlyWellKnownExtensions) where TPluginInfo : TestPluginInformation
+        public Dictionary<string, TPluginInfo> GetTestExtensionsInformation<TPluginInfo, TExtension>(IEnumerable<string> extensionPaths) where TPluginInfo : TestPluginInformation
         {
             Debug.Assert(extensionPaths != null);
 
             var pluginInfos = new Dictionary<string, TPluginInfo>();
 
-#if !WINDOWS_UAP
-
-            this.GetTestExtensionsFromFiles<TPluginInfo, TExtension>(extensionPaths.ToArray(), loadOnlyWellKnownExtensions, pluginInfos);
-
-#else
-            var fileSearchTask = Windows.ApplicationModel.Package.Current.InstalledLocation.GetFilesAsync().AsTask();
-            fileSearchTask.Wait();
-
-            var binaries = fileSearchTask.Result.Where(storageFile =>
-                                
-                                (storageFile.Name.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) 
-                                || storageFile.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
-                                && !storageFile.Name.StartsWith(SYSTEM_ASSEMBLY_PREFIX, StringComparison.OrdinalIgnoreCase)
-                                && !platformAssemblies.Contains(storageFile.Name.ToUpperInvariant())
-
-                                ).
-                                Select<IStorageFile, string>(file => file.Name);
-
-            GetTestExtensionsFromFiles<TPluginInfo, TExtension>(binaries.ToArray(), loadOnlyWellKnownExtensions, pluginInfos);
-
-            // In Release mode - managed dlls are packaged differently
-            // So, file search will not find them - do it manually
-            if (testDiscoverers.Count < 1)
+            // C++ UWP adapters do not follow TestAdapater naming convention, so making this exception
+            if (!extensionPaths.Any())
             {
-                GetTestExtensionsFromFiles<TPluginInfo, TExtension>(
-                        new string[3] {
-                        "Microsoft.VisualStudio.TestPlatform.Extensions.MSAppContainerAdapter.dll",
-                        "Microsoft.VisualStudio.TestTools.CppUnitTestFramework.CppUnitTestExtension.dll",
-                        "Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll",},
-                        loadOnlyWellKnownExtensions,
-                        pluginInfos);
+                this.AddKnownExtensions(ref extensionPaths);
             }
-#endif
+
+            this.GetTestExtensionsFromFiles<TPluginInfo, TExtension>(extensionPaths.ToArray(), pluginInfos);
+
             return pluginInfos;
         }
 
         #endregion
 
         #region Private Methods
+
+        private void AddKnownExtensions(ref IEnumerable<string> extensionPaths)
+        {
+            // For C++ UWP adatper
+            if(this.fileHelper.Exists("Microsoft.VisualStudio.TestTools.CppUnitTestFramework.CppUnitTestExtension.dll"))
+            {
+                extensionPaths = extensionPaths.Concat(new[] { "Microsoft.VisualStudio.TestTools.CppUnitTestFramework.CppUnitTestExtension.dll" });
+            }
+
+            // For OLD C# UWP(MSTest V1) adatper
+            if (this.fileHelper.Exists("Microsoft.VisualStudio.TestPlatform.Extensions.MSAppContainerAdapter.dll"))
+            {
+                extensionPaths = extensionPaths.Concat(new[]{ "Microsoft.VisualStudio.TestPlatform.Extensions.MSAppContainerAdapter.dll" });
+            }
+        }
 
         /// <summary>
         /// Gets test extension information from the given colletion of files.
@@ -116,9 +120,6 @@ namespace Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework
         /// <param name="files">
         /// List of dll's to check for test extension availability
         /// </param>
-        /// <param name="loadOnlyWellKnownExtensions">
-        /// Should load only well known extensions or all.
-        /// </param>
         /// <param name="pluginInfos">
         /// Test plugins collection to add to.
         /// </param>
@@ -126,48 +127,28 @@ namespace Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "We would like to continue discovering all plugins even if some dll in Extensions folder is not able to be load properly")]
         private void GetTestExtensionsFromFiles<TPluginInfo, TExtension>(
             string[] files,
-            bool loadOnlyWellKnownExtensions,
             Dictionary<string, TPluginInfo> pluginInfos) where TPluginInfo : TestPluginInformation
         {
             Debug.Assert(files != null, "null files");
             Debug.Assert(pluginInfos != null, "null pluginInfos");
 
-            // TODO: Do not see why loadOnlyWellKnowExtensions is still needed.
-            //AssemblyName executingAssemblyName = null;
-            //if (loadOnlyWellKnownExtensions)
-            //{
-            //    executingAssemblyName = new AssemblyName(typeof(TestPluginDiscoverer).GetTypeInfo().Assembly.FullName);
-            //}
-
             // Scan each of the files for data extensions.
             foreach (var file in files)
             {
-                Assembly assembly = null;
                 try
                 {
+                    Assembly assembly = null;
                     var assemblyName = Path.GetFileNameWithoutExtension(file);
                     assembly = Assembly.Load(new AssemblyName(assemblyName));
-
-                    // Check whether this assembly is known or not. 
-                    //if (loadOnlyWellKnownExtensions && assembly != null)
-                    //{
-                    //    var extensionAssemblyName = new AssemblyName(assembly.FullName);
-                    //    if (!AssemblyUtilities.PublicKeyTokenMatches(extensionAssemblyName, executingAssemblyName))
-                    //    {
-                    //        EqtTrace.Warning("TestPluginDiscoverer: Ignoring extensions in assembly {0} as it is not a known assembly.", assembly.FullName);
-                    //        continue;
-                    //    }
-                    //}
+                    if (assembly != null)
+                    {
+                        this.GetTestExtensionsFromAssembly<TPluginInfo, TExtension>(assembly, pluginInfos);
+                    }
                 }
                 catch (Exception e)
                 {
-                    EqtTrace.Warning("TestPluginDiscoverer: Failed to load file '{0}'.  Skipping test extension scan for this file.  Error: {1}", file, e.ToString());
+                    EqtTrace.Warning("TestPluginDiscoverer: Failed to load extensions from file '{0}'.  Skipping test extension scan for this file.  Error: {1}", file, e);
                     continue;
-                }
-
-                if (assembly != null)
-                {
-                    this.GetTestExtensionsFromAssembly<TPluginInfo, TExtension>(assembly, pluginInfos);
                 }
             }
         }
@@ -245,6 +226,17 @@ namespace Microsoft.VisualStudio.TestPlatform.Common.ExtensionFramework
             {
                 var rawPluginInfo = Activator.CreateInstance(typeof(TPluginInfo), type);
                 var pluginInfo = (TPluginInfo)rawPluginInfo;
+
+                if (pluginInfo == null || pluginInfo.IdentifierData == null)
+                {
+                    if (EqtTrace.IsErrorEnabled)
+                    {
+                        EqtTrace.Error(
+                        "TryGetTestExtensionFromType: Either PluginInformation is null or PluginInformation doesn't contain IdentifierData for type {0}.", type.FullName);
+                    }
+
+                    return;
+                }
 
                 if (extensionCollection.ContainsKey(pluginInfo.IdentifierData))
                 {

@@ -4,6 +4,7 @@
 namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
 {
     using System.Collections.ObjectModel;
+    using System.Net;
 
     using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.Interfaces;
     using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.ObjectModel;
@@ -16,11 +17,13 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
 
         private readonly ICommunicationManager communicationManager;
 
+        private IDataSerializer dataSerializer;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DataCollectionTestCaseEventSender"/> class.
         /// </summary>
         protected DataCollectionTestCaseEventSender()
-            : this(new SocketCommunicationManager())
+            : this(new SocketCommunicationManager(), JsonDataSerializer.Instance)
         {
         }
 
@@ -28,9 +31,11 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
         /// Initializes a new instance of the <see cref="DataCollectionTestCaseEventSender"/> class.
         /// </summary>
         /// <param name="communicationManager">Communication manager.</param>
-        protected DataCollectionTestCaseEventSender(ICommunicationManager communicationManager)
+        /// <param name="dataSerializer">Serializer for serialization and deserialization of the messages.</param>
+        protected DataCollectionTestCaseEventSender(ICommunicationManager communicationManager, IDataSerializer dataSerializer)
         {
             this.communicationManager = communicationManager;
+            this.dataSerializer = dataSerializer;
         }
 
         /// <summary>
@@ -62,7 +67,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
         /// <inheritdoc />
         public void InitializeCommunication(int port)
         {
-            this.communicationManager.SetupClientAsync(port);
+            this.communicationManager.SetupClientAsync(new IPEndPoint(IPAddress.Loopback, port));
         }
 
         /// <inheritdoc />
@@ -85,6 +90,15 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
         public void SendTestCaseStart(TestCaseStartEventArgs e)
         {
             this.communicationManager.SendMessage(MessageType.DataCollectionTestStart, e);
+
+            var message = this.communicationManager.ReceiveMessage();
+            if (message.MessageType != MessageType.DataCollectionTestStartAck)
+            {
+                if (EqtTrace.IsErrorEnabled)
+                {
+                    EqtTrace.Error("DataCollectionTestCaseEventSender.SendTestCaseStart : MessageType.DataCollectionTestStartAck not received.");
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -97,7 +111,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities
 
             if (message.MessageType == MessageType.DataCollectionTestEndResult)
             {
-                attachmentSets = message.Payload.ToObject<Collection<AttachmentSet>>();
+                attachmentSets = this.dataSerializer.DeserializePayload<Collection<AttachmentSet>>(message);
             }
 
             return attachmentSets;

@@ -5,6 +5,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.UnitTests
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.Net;
 
     using Microsoft.VisualStudio.TestPlatform.Common.DataCollector.Interfaces;
     using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
@@ -16,6 +17,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.UnitTests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
+
     using Newtonsoft.Json.Linq;
 
     [TestClass]
@@ -24,28 +26,30 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.UnitTests
         private Mock<ICommunicationManager> mockCommunicationManager;
         private Mock<IDataCollectionManager> mockDataCollectionManager;
         private DataCollectionTestCaseEventHandler requestHandler;
+        private Mock<IDataSerializer> dataSerializer;
 
         public DataCollectionTestCaseEventHandlerTests()
         {
             this.mockCommunicationManager = new Mock<ICommunicationManager>();
             this.mockDataCollectionManager = new Mock<IDataCollectionManager>();
-            this.requestHandler = new DataCollectionTestCaseEventHandler(this.mockCommunicationManager.Object, new Mock<IDataCollectionManager>().Object);
+            this.dataSerializer = new Mock<IDataSerializer>();
+            this.requestHandler = new DataCollectionTestCaseEventHandler(this.mockCommunicationManager.Object, new Mock<IDataCollectionManager>().Object, this.dataSerializer.Object);
         }
 
         [TestMethod]
         public void InitializeShouldInitializeConnection()
         {
-            this.mockCommunicationManager.Setup(x => x.HostServer()).Returns(1);
+            this.mockCommunicationManager.Setup(x => x.HostServer(new IPEndPoint(IPAddress.Loopback, 0))).Returns(new IPEndPoint(IPAddress.Loopback, 1));
             this.requestHandler.InitializeCommunication();
 
-            this.mockCommunicationManager.Verify(x => x.HostServer(), Times.Once);
+            this.mockCommunicationManager.Verify(x => x.HostServer(new IPEndPoint(IPAddress.Loopback, 0)), Times.Once);
             this.mockCommunicationManager.Verify(x => x.AcceptClientAsync(), Times.Once);
         }
 
         [TestMethod]
         public void InitializeShouldThrowExceptionIfExceptionIsThrownByCommunicationManager()
         {
-            this.mockCommunicationManager.Setup(x => x.HostServer()).Throws<Exception>();
+            this.mockCommunicationManager.Setup(x => x.HostServer(new IPEndPoint(IPAddress.Loopback, 0))).Throws<Exception>();
             Assert.ThrowsException<Exception>(() =>
             {
                 this.requestHandler.InitializeCommunication();
@@ -96,7 +100,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.UnitTests
         [TestMethod]
         public void CloseShouldNotThrowExceptionIfCommunicationManagerIsNull()
         {
-            var requestHandler = new DataCollectionTestCaseEventHandler(null, new Mock<IDataCollectionManager>().Object);
+            var requestHandler = new DataCollectionTestCaseEventHandler(null, new Mock<IDataCollectionManager>().Object, this.dataSerializer.Object);
 
             requestHandler.Close();
 
@@ -112,7 +116,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.UnitTests
 
             this.mockCommunicationManager.SetupSequence(x => x.ReceiveMessage()).Returns(message).Returns(new Message() { MessageType = MessageType.SessionEnd, Payload = "false" });
 
-            var requestHandler = new DataCollectionTestCaseEventHandler(this.mockCommunicationManager.Object, this.mockDataCollectionManager.Object);
+            var requestHandler = new DataCollectionTestCaseEventHandler(this.mockCommunicationManager.Object, this.mockDataCollectionManager.Object, this.dataSerializer.Object);
 
             requestHandler.ProcessRequests();
 
@@ -129,7 +133,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.UnitTests
 
             this.mockCommunicationManager.SetupSequence(x => x.ReceiveMessage()).Returns(message).Returns(new Message() { MessageType = MessageType.SessionEnd, Payload = "false" });
 
-            var requestHandler = new DataCollectionTestCaseEventHandler(this.mockCommunicationManager.Object, this.mockDataCollectionManager.Object);
+            var requestHandler = new DataCollectionTestCaseEventHandler(this.mockCommunicationManager.Object, this.mockDataCollectionManager.Object, this.dataSerializer.Object);
 
             requestHandler.ProcessRequests();
 

@@ -1,31 +1,50 @@
-﻿// Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
+﻿// Copyright (c) Microsoft Corporation.  All Rights Reserved.  See License.txt in the project root for license information.
+
+//------- DEPRECATED CODE ONLY ACTIVE IN UNIT TESTING VIA "UNROSLYNIZED" UNIT TESTS ---------------
+
+//------- DEPRECATED CODE ONLY ACTIVE IN UNIT TESTING VIA "UNROSLYNIZED" UNIT TESTS ---------------
 
 namespace Microsoft.VisualStudio.FSharp.LanguageService
 
 open System
-open System.Runtime.InteropServices
-open Microsoft.VisualStudio
 open Microsoft.VisualStudio.TextManager.Interop 
 open Microsoft.VisualStudio.Text
-open Microsoft.VisualStudio.OLE.Interop
-open Microsoft.VisualStudio.Shell.Interop
-open Microsoft.FSharp.Compiler
 open Microsoft.FSharp.Compiler.SourceCodeServices
+open Microsoft.VisualStudio.FSharp.LanguageService.SiteProvider
 
-type internal FSharpBackgroundRequestExtraData =
+
+#nowarn "44" // use of obsolete CheckFileInProjectAllowingStaleCachedResults
+
+//
+// Note: DEPRECATED CODE ONLY ACTIVE IN UNIT TESTING VIA "UNROSLYNIZED" UNIT TESTS. 
+//
+// Note: Tests using this code should either be adjusted to test the corresponding feature in
+// FSharp.Editor, or deleted.  However, the tests may be exercising underlying F# Compiler 
+// functionality and thus have considerable value, they should ony be deleted if we are sure this 
+// is not the case.
+//
+type internal FSharpBackgroundRequestExtraData_DEPRECATED =
     { ProjectSite : IProjectSite
       CheckOptions : FSharpProjectOptions
       ProjectFileName : string
       FSharpChecker : FSharpChecker
-      Colorizer : Lazy<FSharpColorizer> }
+      Colorizer : Lazy<FSharpColorizer_DEPRECATED> }
 
-type internal FSharpBackgroundRequest
+//
+// Note: DEPRECATED CODE ONLY ACTIVE IN UNIT TESTING VIA "UNROSLYNIZED" UNIT TESTS. 
+//
+// Note: Tests using this code should either be adjusted to test the corresponding feature in
+// FSharp.Editor, or deleted.  However, the tests may be exercising underlying F# Compiler 
+// functionality and thus have considerable value, they should ony be deleted if we are sure this 
+// is not the case.
+//
+type internal FSharpBackgroundRequest_DEPRECATED
            (line, col, info, sourceText, snapshot : ITextSnapshot, 
-            methodTipMiscellany : MethodTipMiscellany, fileName, reason, view, sink, 
+            methodTipMiscellany : MethodTipMiscellany_DEPRECATED, fileName, reason, view, sink, 
             source:ISource, timestamp:int, synchronous:bool,
-            extraData : Lazy<FSharpBackgroundRequestExtraData> option) = 
+            extraData : Lazy<FSharpBackgroundRequestExtraData_DEPRECATED> option) = 
 
-    inherit BackgroundRequest(line, col, info, sourceText, snapshot, methodTipMiscellany, fileName, reason, view, sink, source, timestamp, synchronous)
+    inherit BackgroundRequest_DEPRECATED(line, col, info, sourceText, snapshot, methodTipMiscellany, fileName, reason, view, sink, source, timestamp, synchronous)
 
     member this.ExtraData = extraData
 
@@ -34,17 +53,23 @@ type internal FSharpBackgroundRequest
         | None -> None 
         | Some data -> Some (data.Force().Colorizer.Force())
 
-/// The slice of the language service that looks after making requests to the FSharpChecker,
-/// It also keeps and maintains parsing results for navigation bar, regions and brekpoint validation.
-type internal FSharpLanguageServiceBackgroundRequests
-                (getColorizer: IVsTextView -> FSharpColorizer, 
+//
+// Note: DEPRECATED CODE ONLY ACTIVE IN UNIT TESTING VIA "UNROSLYNIZED" UNIT TESTS. 
+//
+// Note: Tests using this code should either be adjusted to test the corresponding feature in
+// FSharp.Editor, or deleted.  However, the tests may be exercising underlying F# Compiler 
+// functionality and thus have considerable value, they should ony be deleted if we are sure this 
+// is not the case.
+//
+type internal FSharpLanguageServiceBackgroundRequests_DEPRECATED
+                (getColorizer: IVsTextView -> FSharpColorizer_DEPRECATED, 
                  getInteractiveChecker: unit -> FSharpChecker, 
                  getProjectSitesAndFiles : unit -> ProjectSitesAndFiles,
                  getServiceProvider: unit -> System.IServiceProvider,
-                 getDocumentationBuilder: unit -> IDocumentationBuilder) =    
+                 getDocumentationBuilder: unit -> IDocumentationBuilder_DEPRECATED) =    
 
     let mutable parseFileResults : FSharpParseFileResults option = None
-    let mutable lastParseFileRequest : BackgroundRequest = null
+    let mutable lastParseFileRequest : BackgroundRequest_DEPRECATED = null
 
     let outOfDateProjectFileNames = new System.Collections.Generic.HashSet<string>()
 
@@ -53,7 +78,7 @@ type internal FSharpLanguageServiceBackgroundRequests
         outOfDateProjectFileNames.Add(nm) |> ignore
 
     // This method is executed on the UI thread
-    member this.CreateBackgroundRequest(line: int, col: int, info: TokenInfo, sourceText: string, snapshot: ITextSnapshot, methodTipMiscellany: MethodTipMiscellany, 
+    member this.CreateBackgroundRequest(line: int, col: int, info: TokenInfo, sourceText: string, snapshot: ITextSnapshot, methodTipMiscellany: MethodTipMiscellany_DEPRECATED, 
                                          fileName: string, reason: BackgroundRequestReason, view: IVsTextView,
                                          sink: AuthoringSink, source: ISource, timestamp: int, synchronous: bool) =
         let extraData =
@@ -75,17 +100,17 @@ type internal FSharpLanguageServiceBackgroundRequests
                             let projectSite = ProjectSitesAndFiles.CreateProjectSiteForScript(fileName, referencedProjectFileNames, checkOptions)
                             { ProjectSite = projectSite
                               CheckOptions = checkOptions 
-                              ProjectFileName = projectSite.ProjectFileName()
+                              ProjectFileName = projectSite.ProjectFileName
                               FSharpChecker = checker
                               Colorizer = lazy getColorizer(view) } 
                     Some data
                 else 
                     // This portion is executed on the UI thread.
                     let rdt = getServiceProvider().RunningDocumentTable
-                    let projectSite = getProjectSitesAndFiles().FindOwningProject(rdt,fileName)
+                    let projectSite = getProjectSitesAndFiles().FindOwningProject_DEPRECATED(rdt,fileName)
                     let enableInMemoryCrossProjectReferences = true
-                    let _, checkOptions = ProjectSitesAndFiles.GetProjectOptionsForProjectSite(enableInMemoryCrossProjectReferences, (fun _ -> None), projectSite, fileName, None, getServiceProvider(), false)                            
-                    let projectFileName = projectSite.ProjectFileName()
+                    let _, checkOptions = ProjectSitesAndFiles.GetProjectOptionsForProjectSite(enableInMemoryCrossProjectReferences, (fun _ -> None), projectSite, getServiceProvider(), None(*projectId*), fileName, None(*extraProjectInfo*), None(*FSharpProjectOptionsTable*), false)
+                    let projectFileName = projectSite.ProjectFileName
                     let data = 
                         {   ProjectSite = projectSite
                             CheckOptions = checkOptions 
@@ -94,12 +119,9 @@ type internal FSharpLanguageServiceBackgroundRequests
                             Colorizer = lazy getColorizer(view) } 
                     Some (Lazy<_>.CreateFromValue data)
 
-        new FSharpBackgroundRequest(line, col, info, sourceText, snapshot, methodTipMiscellany, fileName, reason, view, sink, source, timestamp, synchronous, extraData)
+        new FSharpBackgroundRequest_DEPRECATED(line, col, info, sourceText, snapshot, methodTipMiscellany, fileName, reason, view, sink, source, timestamp, synchronous, extraData)
 
-    /// Handle an incoming request to analyze a file.
-    ///
-    /// Executed either on the UI thread (for req.IsSynchronous) or the background request thread.
-    member this.ExecuteBackgroundRequest(req:FSharpBackgroundRequest, source:IFSharpSource) = 
+    member this.ExecuteBackgroundRequest(req:FSharpBackgroundRequest_DEPRECATED, source:IFSharpSource_DEPRECATED) = 
         try
             let data =
                 match req.ExtraData with
@@ -134,7 +156,7 @@ type internal FSharpLanguageServiceBackgroundRequests
 
             | _ -> 
                 let syncParseInfoOpt = 
-                    if FSharpIntellisenseInfo.IsReasonRequiringSyncParse(req.Reason) then
+                    if FSharpIntellisenseInfo_DEPRECATED.IsReasonRequiringSyncParse(req.Reason) then
                         let parseResults = interactiveChecker.ParseFileInProject(req.FileName,req.Text,checkOptions) |> Async.RunSynchronously
                         Some parseResults
                     else None
@@ -183,7 +205,12 @@ type internal FSharpLanguageServiceBackgroundRequests
                 // Now that we have the parseResults, we can SetDependencyFiles().
                 // 
                 // If the set of dependencies changes, the file needs to be re-checked
-                let anyDependenciesChanged = source.SetDependencyFiles(parseResults.DependencyFiles)
+                let dependencyFiles = 
+                    match typedResults with 
+                    | None -> parseResults.DependencyFiles
+                    | Some r -> r.DependencyFiles
+                
+                let anyDependenciesChanged = source.SetDependencyFiles(dependencyFiles)
                 if anyDependenciesChanged then
                     req.ResultClearsDirtinessOfFile <- false
                     // Furthermore, if the project is out-of-date behave just as if we were notified dependency files changed.  
@@ -220,7 +247,7 @@ type internal FSharpLanguageServiceBackgroundRequests
 
                         let provideMethodList = (req.Reason = BackgroundRequestReason.MethodTip || req.Reason = BackgroundRequestReason.MatchBracesAndMethodTip)
 
-                        let scope = new FSharpIntellisenseInfo(parseResults, req.Line, req.Col, req.Snapshot, typedResults, projectSite, req.View, colorizer, getDocumentationBuilder(), provideMethodList) 
+                        let scope = new FSharpIntellisenseInfo_DEPRECATED(parseResults, req.Line, req.Col, req.Snapshot, typedResults, projectSite, req.View, colorizer, getDocumentationBuilder(), provideMethodList) 
 
                         req.ResultIntellisenseInfo <- scope
                         req.ResultTimestamp <- resultTimestamp  // This will be different from req.Timestamp when we're using stale results.
@@ -296,9 +323,9 @@ type internal FSharpLanguageServiceBackgroundRequests
 
 
     // This is called on the UI thread after fresh full typecheck results are available
-    member this.OnParseFileOrCheckFileComplete(req:BackgroundRequest) =
+    member this.OnParseFileOrCheckFileComplete(req:BackgroundRequest_DEPRECATED) =
         match req.Source, req.ResultIntellisenseInfo, req.View with 
-        | (:? IFSharpSource as source), (:? FSharpIntellisenseInfo as scope), textView when textView <> null && not req.Source.IsClosed -> 
+        | (:? IFSharpSource_DEPRECATED as source), (:? FSharpIntellisenseInfo_DEPRECATED as scope), textView when textView <> null && not req.Source.IsClosed -> 
 
              scope.OnParseFileOrCheckFileComplete(source)
              

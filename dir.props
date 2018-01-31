@@ -6,6 +6,8 @@
 
     <!-- true if we have bootstrapped buildtools (usually on an unsupported platform -->
     <_IsBootstrapping Condition="'$(BootstrapBuildToolsDir)' != ''">true</_IsBootstrapping>
+    <!-- For the tarball we will have the patches already applies so we can skip patching -->
+    <SkipPatches Condition="'$(SkipPatches)' == ''">true</SkipPatches>
   </PropertyGroup>
 
   <PropertyGroup>

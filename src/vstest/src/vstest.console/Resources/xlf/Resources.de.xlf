@@ -392,15 +392,6 @@
         </alt-trans>
         <note from="bb-metadata">fuzzyMatch="15" wordcount="22" adjWordcount="18.7" curWordcount="18.7"</note>
       </trans-unit>
-      <trans-unit id="SuggestUseVsixExtensionsIfNoTestsIsFound">
-        <source>Additionally, you can try specifying '/UseVsixExtensions' command if the test discoverer &amp; executor is installed on the machine as vsix extensions and your installation supports vsix extensions. Example: vstest.console.exe myTests.dll /UseVsixExtensions:true</source>
-        <target state="translated">Sie können außerdem versuchen, den Befehl "/UseVsixExtensions" anzugeben, wenn der Testdiscoverer und -executor als VSIX-Extension auf dem Computer installiert ist und die Installation VSIX-Extensions unterstützt. Beispiel: vstest.console.exe myTests.dll /UseVsixExtensions:true</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">Sie können außerdem versuchen, Angabe ' UseVsixExtensions Befehl Test Entdecker und Executor ist VSIX-Erweiterungen und die Installation auf dem Computer installiert VSIX-Erweiterung unterstützt. Beispiel: vstest.console.exe myTests.dll /UseVsixExtensions:true</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="31" adjWordcount="26.35" curWordcount="26.35"</note>
-      </trans-unit>
       <trans-unit id="UseVsixExtensionsValueRequired">
         <source>The /UseVsixExtensions parameter requires a value. If 'true', the installed VSIX extensions (if any) will be used in the test run. If false, they will be ignored.   Example:  /UseVsixExtensions:true</source>
         <target state="translated">Der /UseVsixExtensions-Parameter erfordert einen Wert. Wenn TRUE, werden die installierten VSIX-Extensions (falls vorhanden) im Testlauf verwendet. Wenn FALSE, werden sie ignoriert. Beispiel: /UseVsixExtensions:true</target>
@@ -420,11 +411,11 @@
         <note from="bb-metadata">fuzzyMatch="15" wordcount="29" adjWordcount="24.65" curWordcount="24.65"</note>
       </trans-unit>
       <trans-unit id="InIsolationHelp">
-        <source>/InIsolation
+        <source>--InIsolation|/InIsolation
       Runs the tests in an isolated process. This makes vstest.console.exe 
       process less likely to be stopped on an error in the tests, but tests 
       may run slower.</source>
-        <target state="translated">/InIsolation
+        <target state="translated">/InIsolation/InIsolation
       Führt die Tests in einem isolierten Prozess aus. Auf diese Weise ist es unwahrscheinlicher, dass der Prozess
       "vstest.console.exe" bei einem Fehler in den Tests beendet wird.
       Tests werden aber ggf. langsamer ausgeführt.</target>
@@ -637,15 +628,6 @@
         </alt-trans>
         <note from="bb-metadata">fuzzyMatch="15" wordcount="21" adjWordcount="17.85" curWordcount="17.85"</note>
       </trans-unit>
-      <trans-unit id="NoTestsFoundWarningMessageWithSuggestionToUseVsix">
-        <source>{0} {1}</source>
-        <target state="translated">{0} {1}</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">{0} {1}</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="2" adjWordcount="1.7" curWordcount="1.7"</note>
-      </trans-unit>
       <trans-unit id="LoggerFriendlyNameFormat">
         <source>        FriendlyName: {0}</source>
         <target state="translated">        FriendlyName: {0}</target>
@@ -663,42 +645,6 @@
           <target state-qualifier="mt-suggestion">URI: {0}</target>
         </alt-trans>
         <note from="bb-metadata">fuzzyMatch="15" wordcount="2" adjWordcount="1.7" curWordcount="1.7"</note>
-      </trans-unit>
-      <trans-unit id="SuggestUseVsixExtensionsInListLoggersCommand">
-        <source>The Test Logger Add-Ins installed through a VSIX installation are ignored. Use the /UseVsixExtensions parameter to include them, if your installation supports vsix extensions. Example: vstest.console.exe {0} /UseVsixExtensions:true</source>
-        <target state="translated">Die Testprotokollierungs-Add-Ins, die über eine VSIX-Installation installiert wurden, werden ignoriert. Verwenden Sie den /UseVsixExtensions-Parameter, um sie einzuschließen, wenn Ihre Installation VSIX-Extensions unterstützt. Beispiel: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">Test Protokollierung Add-Ins über eine VSIX-Installation installiert werden ignoriert. Verwenden Sie /UseVsixExtensions Parameter hinzufügen, wenn Ihre Installation VSIX-Erweiterung unterstützt. Beispiel: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="28" adjWordcount="23.8" curWordcount="23.8"</note>
-      </trans-unit>
-      <trans-unit id="SuggestUseVsixExtensionsInListExecutorsCommand">
-        <source>The Test Executor Add-Ins installed through a VSIX installation are ignored. Use the /UseVsixExtensions parameter to include them, if your installation supports vsix extensions. Example: vstest.console.exe {0} /UseVsixExtensions:true</source>
-        <target state="translated">Die Testexecutor-Add-Ins, die über eine VSIX-Installation installiert wurden, werden ignoriert. Verwenden Sie den /UseVsixExtensions-Parameter, um sie einzuschließen, wenn Ihre Installation VSIX-Extensions unterstützt. Beispiel: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">Die Test Executor Add-Ins über eine VSIX-Installation installiert werden ignoriert. Verwenden Sie /UseVsixExtensions Parameter hinzufügen, wenn Ihre Installation VSIX-Erweiterung unterstützt. Beispiel: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="28" adjWordcount="23.8" curWordcount="23.8"</note>
-      </trans-unit>
-      <trans-unit id="SuggestUseVsixExtensionsInListDiscoverersCommand">
-        <source>The Test Discovery Add-Ins installed through a VSIX installation are ignored. Use the /UseVsixExtensions parameter to include them, if your installation supports vsix extensions. Example: vstest.console.exe {0} /UseVsixExtensions:true</source>
-        <target state="translated">Die Testermittlungs-Add-Ins, die über eine VSIX-Installation installiert wurden, werden ignoriert. Verwenden Sie den /UseVsixExtensions-Parameter, um sie einzuschließen, wenn Ihre Installation VSIX-Extensions unterstützt. Beispiel: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">Test Discovery Add-Ins über eine VSIX-Installation installiert werden ignoriert. Verwenden Sie /UseVsixExtensions Parameter hinzufügen, wenn Ihre Installation VSIX-Erweiterung unterstützt. Beispiel: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="28" adjWordcount="23.8" curWordcount="23.8"</note>
-      </trans-unit>
-      <trans-unit id="SuggestUseVsixExtensionsInListSettingsProviderCommand">
-        <source>The Settings Providers Add-Ins installed through a VSIX installation are ignored. Use the /UseVsixExtensions parameter to include them, if your installation supports vsix extensions. Example: vstest.console.exe {0} /UseVsixExtensions:true</source>
-        <target state="translated">Die Einstellungenanbieter-Add-Ins, die über eine VSIX-Installation installiert wurden, werden ignoriert. Verwenden Sie den /UseVsixExtensions-Parameter, um sie einzuschließen, wenn Ihre Installation VSIX-Extensions unterstützt. Beispiel: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">Die Einstellungen Anbieter Add-Ins über eine VSIX-Installation installiert werden ignoriert. Verwenden Sie /UseVsixExtensions Parameter hinzufügen, wenn Ihre Installation VSIX-Erweiterung unterstützt. Beispiel: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="28" adjWordcount="23.8" curWordcount="23.8"</note>
       </trans-unit>
       <trans-unit id="SettingFormat">
         <source>        SettingName: {0}</source>
@@ -799,11 +745,11 @@
       <trans-unit id="FrameworkArgumentHelp">
         <source>--Framework|/Framework:&lt;Framework Version&gt;
       Target .Net Framework version to be used for test execution. 
-      Valid values are ".NETFramework,Version=v4.6", ".NETCoreApp,Version=v1.0" etc.
+      Valid values are ".NETFramework,Version=v4.5.1", ".NETCoreApp,Version=v1.0" etc.
       Other supported values are Framework35, Framework40, Framework45 and FrameworkCore10.</source>
         <target state="translated">--Framework|/Framework:&lt; Frameworkversion &gt;
       Die .NET Framework-Zielversion, die für die Testausführung verwendet werden soll.
-      Gültige Werte sind ".NETFramework,Version=v4.6", ".NETCoreApp,Version=v1.0 " usw.
+      Gültige Werte sind ".NETFramework,Version=v4.5.1", ".NETCoreApp,Version=v1.0 " usw.
       Weitere unterstützte Werte sind "Framework35", "Framework40", "Framework45" und "FrameworkCore10".</target>
         <note />
         <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
@@ -815,8 +761,8 @@
         <note from="bb-metadata">fuzzyMatch="15" wordcount="31" adjWordcount="26.35" curWordcount="26.35"</note>
       </trans-unit>
       <trans-unit id="FrameworkVersionRequired">
-        <source>The /Framework argument requires the target .Net Framework version for the test run.   Example:  /Framework:".NETFramework,Version=v4.6"</source>
-        <target state="translated">Das /Framework-Argument erfordert die .NET Framework-Zielversion für den Testlauf. Beispiel: /Framework:".NETFramework,Version=v4. 6"</target>
+        <source>The /Framework argument requires the target .Net Framework version for the test run.   Example:  /Framework:".NETFramework,Version=v4.5.1"</source>
+        <target state="translated">Das /Framework-Argument erfordert die .NET Framework-Zielversion für den Testlauf. Beispiel: /Framework:".NETFramework,Version=v4.5.1"</target>
         <note />
         <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
           <target state-qualifier="mt-suggestion">Das Argument /Framework muss das Ziel .net Framework-Version für den Testlauf.   Beispiel: /Framework: ". NETFramework, Version v4. 6 = "</target>
@@ -824,8 +770,8 @@
         <note from="bb-metadata">fuzzyMatch="15" wordcount="16" adjWordcount="13.6" curWordcount="13.6"</note>
       </trans-unit>
       <trans-unit id="InvalidFrameworkVersion">
-        <source>Invalid .Net Framework version:{0}. Please give the fullname of the TargetFramework. Other supported .Net Framework versions are Framework35, Framework40 and Framework45.</source>
-        <target state="translated">Ungültige .NET Framework-Version: {0}. Geben Sie den vollständigen Namen von TargetFramework an. Weitere unterstützte .NET Framework-Versionen sind "Framework35", "Framework40" und "Framework45".</target>
+        <source>Invalid .Net Framework version:{0}. Please give the fullname of the TargetFramework. Other supported .Net Framework versions are Framework35, Framework40, Framework45 and FrameworkCore10.</source>
+        <target state="translated">Ungültige .NET Framework-Version: {0}. Geben Sie den vollständigen Namen von TargetFramework an. Weitere unterstützte .NET Framework-Versionen sind "Framework35", "Framework40", "Framework45" und "FrameworkCore10".</target>
         <note />
         <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
           <target state-qualifier="mt-suggestion">Ungültige .net Framework-Version: {0}. Geben Fullname der TargetFramework. Andere unterstützt .net Framework-Versionen sind Framework35, Framework40 und Framework45.</target>
@@ -963,15 +909,6 @@
           <target state-qualifier="mt-suggestion">Das Argument {0} erwartet nicht den Befehl 'EnableCodeCoverage'. Geben Sie den Befehl ohne das Argument (Beispiel: vstest.console.exe myTests.dll /EnableCodeCoverage) und versuchen Sie es erneut.</target>
         </alt-trans>
         <note from="bb-metadata">fuzzyMatch="15" wordcount="22" adjWordcount="18.7" curWordcount="18.7"</note>
-      </trans-unit>
-      <trans-unit id="MalformedRunSettingsFile">
-        <source>Settings file provided do not confirm to required format. </source>
-        <target state="translated">Die angegebene Einstellungsdatei ist nicht mit dem erforderlichen Format kompatibel. </target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">Settings-Datei nicht in das erforderliche Format bestätigen.</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="9" adjWordcount="7.65" curWordcount="7.65"</note>
       </trans-unit>
       <trans-unit id="NoTestEntryPoint">
         <source>App package '{0}' does not has test executor entry point. For running unit tests for Windows Store apps, create app package using Windows Store app Unit Test Library project.</source>
@@ -1549,8 +1486,74 @@
       </trans-unit>
       <trans-unit id="DbgTrcMessagesBanner">
         <source>Debug Traces Messages:</source>
-        <target state="new">Debug Traces Messages:</target>
-        <note></note>
+        <target state="translated">Meldungen zu Debugablaufverfolgungen:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EnableBlameUsage">
+        <source>--Blame|/Blame
+      Runs the test in blame mode. This option is helpful in isolating the problematic test causing test host crash. It creates an output file in the current directory as "Sequence.xml", that captures the order of execution of test before the crash.</source>
+        <target state="translated">--Blame|/Blame
+      Führt den Test im Modus "Verantwortung zuweisen" aus. Diese Option hilft bei der Isolierung des problematischen Tests, der den Absturz des Testhosts verursacht. Im aktuellen Verzeichnis wird eine Ausgabedatei "Sequence.xml" erstellt, in der die Reihenfolge der Testausführung vor dem Absturz erfasst wird.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TestRunAborted">
+        <source>Test Run Aborted.</source>
+        <target state="translated">Testlauf abgebrochen.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TestRunCanceled">
+        <source>Test Run Canceled.</source>
+        <target state="translated">Testlauf abgebrochen.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="OpenResponseFileError">
+        <source>Error opening response file '{0}'</source>
+        <target state="translated">Fehler beim Öffnen der Antwortdatei "{0}".</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ResponseFileArgumentHelp">
+        <source>@&lt;file&gt;
+      Read response file for more options.</source>
+        <target state="translated">@&lt;file&gt;
+      Lesen Sie die Antwortdatei für weitere Optionen.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TestRunSummaryForCanceledOrAbortedRun">
+        <source>Total tests: Unknown. Passed: {0}. Failed: {1}. Skipped: {2}.</source>
+        <target state="translated">Tests gesamt: Unbekannt. Erfolgreich: {0}. Fehlerhaft: {1}. Übersprungen: {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StringFormatToJoinTwoStrings">
+        <source>{0} {1}</source>
+        <target state="translated">{0} {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SuggestTestAdapterPathIfNoTestsIsFound">
+        <source>Additionally, path to test adapters can be specified using /TestAdapterPath command. Example  /TestAdapterPath:&lt;pathToCustomAdapters&gt;.</source>
+        <target state="translated">Außerdem kann der Pfad zu den Testadaptern über den Befehl "/TestAdapterPath" angegeben werden. Beispiel: /TestAdapterPath:&lt;PfadZuBenutzerdefiniertenAdaptern&gt;.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="UseVsixExtensionsDeprecation">
+        <source>/UseVsixExtensions is getting deprecated. Please use /TestAdapterPath instead.</source>
+        <target state="translated">/UseVsixExtensions wird demnächst eingestellt. Verwenden Sie stattdessen /TestAdapterPath.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DisableAutoFakesUsage">
+        <source>--DisableAutoFakes|/DisableAutoFakes:&lt;true/false&gt;
+     Example: /DisableAutoFakes:true</source>
+        <target state="translated">--DisableAutoFakes|/DisableAutoFakes:&lt;true/false&gt;
+     Beispiel: /DisableAutoFakes:true</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CollectWithTestSettingErrorMessage">
+        <source>--Collect|/Collect:"{0}" is not supported if test run is configured using testsettings.</source>
+        <target state="translated">--Collect|/Collect:"{0}" wird nicht unterstützt, wenn der Testlauf mithilfe von "testsettings" konfiguriert wurde.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="RunsettingsWithDCErrorMessage">
+        <source>Data collectors configured via run settings are not supported with embedded test settings. Please see https://aka.ms/vstest-configure-datacollector for more information. Run settings: {0}.</source>
+        <target state="translated">Eingebettete Testeinstellungen werden nicht für Datensammler unterstützt, die über Ausführungseinstellungen konfiguriert wurden. Weitere Informationen finden Sie unter https://aka.ms/vstest-configure-datacollector. Ausführungseinstellungen: {0}.</target>
+        <note />
       </trans-unit>
     </body>
   </file>

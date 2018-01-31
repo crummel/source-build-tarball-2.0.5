@@ -4,14 +4,15 @@
 namespace Microsoft.TestPlatform.CommunicationUtilities.PlatformTests
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Net;
     using System.Net.Sockets;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-
     using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+    using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.Interfaces;
     using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.ObjectModel;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -42,8 +43,13 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.PlatformTests
         public void Dispose()
         {
             this.tcpListener.Stop();
-            this.tcpClient.Dispose();
-
+#if NET451
+            // tcpClient.Close() calls tcpClient.Dispose().
+            this.tcpClient?.Close();
+#else
+            // tcpClient.Close() not available for netcoreapp1.0
+            this.tcpClient?.Dispose();
+#endif
             this.communicationManager.StopServer();
             this.communicationManager.StopClient();
         }
@@ -53,7 +59,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.PlatformTests
         [TestMethod]
         public async Task HostServerShouldStartServerAndReturnPortNumber()
         {
-            var port = this.communicationManager.HostServer();
+            var port = this.communicationManager.HostServer(new IPEndPoint(IPAddress.Loopback, 0)).Port;
 
             Assert.IsTrue(port > 0);
             await this.tcpClient.ConnectAsync(IPAddress.Loopback, port);
@@ -65,7 +71,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.PlatformTests
         {
             var clientConnected = false;
             var waitEvent = new ManualResetEvent(false);
-            var port = this.communicationManager.HostServer();
+            var port = this.communicationManager.HostServer(new IPEndPoint(IPAddress.Loopback, 0)).Port;
 
             var acceptClientTask = this.communicationManager.AcceptClientAsync().ContinueWith(
                 (continuationTask, state) =>
@@ -83,7 +89,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.PlatformTests
         [TestMethod]
         public async Task WaitForClientConnectionShouldWaitUntilClientIsConnected()
         {
-            var port = this.communicationManager.HostServer();
+            var port = this.communicationManager.HostServer(new IPEndPoint(IPAddress.Loopback, 0)).Port;
             var acceptClientTask = this.communicationManager.AcceptClientAsync();
             await this.tcpClient.ConnectAsync(IPAddress.Loopback, port);
 
@@ -96,7 +102,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.PlatformTests
         [TestMethod]
         public void WaitForClientConnectionShouldReturnFalseIfClientIsNotConnected()
         {
-            this.communicationManager.HostServer();
+            this.communicationManager.HostServer(new IPEndPoint(IPAddress.Loopback, 0));
             var acceptClientTask = this.communicationManager.AcceptClientAsync();
 
             // Do not attempt the client to connect to server. Directly wait until timeout.
@@ -108,7 +114,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.PlatformTests
         [TestMethod]
         public void StopServerShouldCloseServer()
         {
-            var port = this.communicationManager.HostServer();
+            var port = this.communicationManager.HostServer(new IPEndPoint(IPAddress.Loopback, 0)).Port;
             var acceptClientTask = this.communicationManager.AcceptClientAsync();
 
             this.communicationManager.StopServer();
@@ -125,7 +131,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.PlatformTests
         {
             var port = this.StartServer();
 
-            var setupClientTask = this.communicationManager.SetupClientAsync(port);
+            var setupClientTask = this.communicationManager.SetupClientAsync(new IPEndPoint(IPAddress.Loopback, port));
 
             var client = await this.tcpListener.AcceptTcpClientAsync();
             Assert.IsTrue(client.Connected);
@@ -135,7 +141,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.PlatformTests
         public async Task WaitForServerConnectionShouldWaitUntilClientIsConnected()
         {
             var port = this.StartServer();
-            var setupClientTask = this.communicationManager.SetupClientAsync(port);
+            var setupClientTask = this.communicationManager.SetupClientAsync(new IPEndPoint(IPAddress.Loopback, port));
             await this.tcpListener.AcceptTcpClientAsync();
 
             var serverConnected = this.communicationManager.WaitForServerConnection(1000);
@@ -147,7 +153,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.PlatformTests
         public void WaitForServerConnectionShouldReturnFalseIfClientIsNotConnected()
         {
             // There is no server listening on port 20000.
-            var setupClientTask = this.communicationManager.SetupClientAsync(20000);
+            var setupClientTask = this.communicationManager.SetupClientAsync(new IPEndPoint(IPAddress.Loopback, 20000));
 
             var serverConnected = this.communicationManager.WaitForServerConnection(100);
 
@@ -259,8 +265,54 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.PlatformTests
 
             Assert.AreEqual(DummyPayload, message);
         }
-
         #endregion
+
+        [TestMethod]
+        public void SocketPollShouldNotHangServerClientCommunication()
+        {
+            // Measure the throughput with socket communication v1 (SocketCommunicationManager)
+            // implementation.
+            var server = new SocketCommunicationManager();
+            var client = new SocketCommunicationManager();
+
+            int port = server.HostServer(new IPEndPoint(IPAddress.Loopback, 0)).Port;
+            client.SetupClientAsync(new IPEndPoint(IPAddress.Loopback, port)).Wait();
+            server.AcceptClientAsync().Wait();
+
+            server.WaitForClientConnection(1000);
+            client.WaitForServerConnection(1000);
+
+            var clientThread = new Thread(() => SendData(client));
+            clientThread.Start();
+
+            var dataReceived = 0;
+            while (dataReceived < 2048 * 5)
+            {
+                dataReceived += server.ReceiveRawMessageAsync(CancellationToken.None).Result.Length;
+                Task.Delay(1000).Wait();
+            }
+
+            clientThread.Join();
+
+            Assert.IsTrue(true);
+        }
+
+        private static void SendData(ICommunicationManager communicationManager)
+        {
+            // Having less than the buffer size in SocketConstants.BUFFERSIZE.
+            var dataBytes = new byte[2048];
+            for (int i = 0; i < dataBytes.Length; i++)
+            {
+                dataBytes[i] = 0x65;
+            }
+
+            var dataBytesStr = Encoding.UTF8.GetString(dataBytes);
+
+            for (int i = 0; i < 5; i++)
+            {
+                communicationManager.SendRawMessage(dataBytesStr);
+            }
+        }
 
         private int StartServer()
         {
@@ -272,7 +324,7 @@ namespace Microsoft.TestPlatform.CommunicationUtilities.PlatformTests
         private async Task<TcpClient> StartServerAndWaitForConnection()
         {
             var port = this.StartServer();
-            var setupClientTask = this.communicationManager.SetupClientAsync(port);
+            var setupClientTask = this.communicationManager.SetupClientAsync(new IPEndPoint(IPAddress.Loopback, port));
             var client = await this.tcpListener.AcceptTcpClientAsync();
             this.communicationManager.WaitForServerConnection(1000);
 

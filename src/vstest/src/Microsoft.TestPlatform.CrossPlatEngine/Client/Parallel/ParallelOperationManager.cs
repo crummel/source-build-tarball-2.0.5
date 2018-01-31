@@ -5,9 +5,11 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Client
 {
     using System;
     using System.Collections;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
     using Microsoft.VisualStudio.TestPlatform.ObjectModel;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Engine;
 
@@ -65,7 +67,6 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Client
         public void RemoveManager(T manager)
         {
             this.concurrentManagerHandlerMap.Remove(manager);
-            this.DisposeInstance(manager);
         }
 
         /// <summary>
@@ -132,7 +133,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Client
             {
                 // not initialized yet
                 // create rest of concurrent clients other than default one
-                this.concurrentManagerHandlerMap = new Dictionary<T, U>();
+                this.concurrentManagerHandlerMap = new ConcurrentDictionary<T, U>();
                 for (int i = 0; i < newParallelLevel; i++)
                 {
                     this.AddManager(this.CreateNewConcurrentManager(), default(U));
@@ -153,18 +154,18 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Client
                 {
                     // If number of concurrent clients is more than the new level
                     // Dispose off the extra ones
-                    int numerOfMangersToRemove = currentParallelLevel - newParallelLevel;
+                    int managersCount = currentParallelLevel - newParallelLevel;
 
                     foreach(var concurrentManager in this.GetConcurrentManagerInstances())
                     {
-                        if (numerOfMangersToRemove == 0)
+                        if (managersCount == 0)
                         {
                             break;
                         }
                         else
                         {
                             this.RemoveManager(concurrentManager);
-                            numerOfMangersToRemove--;
+                            managersCount--;
                         }
                     }
                 }
@@ -180,7 +181,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Client
             {
                 foreach (var managerInstance in this.GetConcurrentManagerInstances())
                 {
-                    this.DisposeInstance(managerInstance);
+                    this.RemoveManager(managerInstance);
                 }
             }
 
@@ -252,12 +253,6 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Client
 
             return hasNext;
         }
-
-        #region AbstractMethods
-
-        protected abstract void DisposeInstance(T managerInstance);
-
-        #endregion
     }
 }
 

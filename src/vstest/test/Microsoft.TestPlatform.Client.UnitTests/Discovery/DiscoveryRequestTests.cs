@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
 namespace Microsoft.VisualStudio.TestPlatform.Client.UnitTests.Discovery
 {
     using System;
@@ -8,28 +9,37 @@ namespace Microsoft.VisualStudio.TestPlatform.Client.UnitTests.Discovery
 
     using Client.Discovery;
 
+    using Microsoft.VisualStudio.TestPlatform.Common.Telemetry;
+    using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+    using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.Interfaces;
+    using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.ObjectModel;
+    using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+    using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
+    using Microsoft.VisualStudio.TestPlatform.ObjectModel.Engine;
+
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
 
-    using ObjectModel;
-    using ObjectModel.Client;
-    using ObjectModel.Engine;
-
     [TestClass]
     public class DiscoveryRequestTests
     {
-        IDiscoveryRequest discoveryRequest;
+        DiscoveryRequest discoveryRequest;
         Mock<IProxyDiscoveryManager> discoveryManager;
         DiscoveryCriteria discoveryCriteria;
+        private Mock<IRequestData> mockRequestData;
+        private Mock<IDataSerializer> mockDataSerializer;
 
         public DiscoveryRequestTests()
         {
             this.discoveryCriteria = new DiscoveryCriteria(new List<string> { "foo" }, 1, null);
             this.discoveryManager = new Mock<IProxyDiscoveryManager>();
-            this.discoveryRequest = new DiscoveryRequest(this.discoveryCriteria, this.discoveryManager.Object);
+            this.mockRequestData = new Mock<IRequestData>();
+            this.mockRequestData.Setup(rd => rd.MetricsCollection).Returns(new NoOpMetricsCollection());
+            this.mockDataSerializer = new Mock<IDataSerializer>();
+            this.discoveryRequest = new DiscoveryRequest(this.mockRequestData.Object, this.discoveryCriteria, this.discoveryManager.Object, this.mockDataSerializer.Object);
         }
-        
+
         [TestMethod]
         public void ConstructorSetsDiscoveryCriteriaAndDiscoveryManager()
         {
@@ -41,7 +51,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Client.UnitTests.Discovery
         public void DiscoveryAsycIfDiscoveryRequestIsDisposedThrowsObjectDisposedException()
         {
             this.discoveryRequest.Dispose();
-            
+
             Assert.ThrowsException<ObjectDisposedException>(() => this.discoveryRequest.DiscoverAsync());
         }
 
@@ -105,10 +115,9 @@ namespace Microsoft.VisualStudio.TestPlatform.Client.UnitTests.Discovery
         [TestMethod]
         public void HandleDiscoveryCompleteShouldCloseDiscoveryManager()
         {
-            var eventsHandler = this.discoveryRequest as ITestDiscoveryEventsHandler;
+            var eventsHandler = this.discoveryRequest as ITestDiscoveryEventsHandler2;
 
-            eventsHandler.HandleDiscoveryComplete(1, Enumerable.Empty<TestCase>(), false);
-
+            eventsHandler.HandleDiscoveryComplete(new DiscoveryCompleteEventArgs(1, false), Enumerable.Empty<TestCase>());
             this.discoveryManager.Verify(dm => dm.Close(), Times.Once);
         }
 
@@ -118,13 +127,88 @@ namespace Microsoft.VisualStudio.TestPlatform.Client.UnitTests.Discovery
             var events = new List<string>();
             this.discoveryManager.Setup(dm => dm.Close()).Callback(() => events.Add("close"));
             this.discoveryRequest.OnDiscoveryComplete += (s, e) => events.Add("complete");
-            var eventsHandler = this.discoveryRequest as ITestDiscoveryEventsHandler;
+            var eventsHandler = this.discoveryRequest as ITestDiscoveryEventsHandler2;
 
-            eventsHandler.HandleDiscoveryComplete(1, Enumerable.Empty<TestCase>(), false);
+            eventsHandler.HandleDiscoveryComplete(new DiscoveryCompleteEventArgs(1, false), Enumerable.Empty<TestCase>());
 
             Assert.AreEqual(2, events.Count);
             Assert.AreEqual("close", events[0]);
             Assert.AreEqual("complete", events[1]);
+        }
+
+        /// <summary>
+        /// DiscoverAsync should invoke OnDiscoveryStart event.
+        /// </summary>
+        [TestMethod]
+        public void DiscoverAsyncShouldInvokeOnDiscoveryStart()
+        {
+            bool onDiscoveryStartHandlerCalled = false;
+            this.discoveryRequest.OnDiscoveryStart += (s, e) => onDiscoveryStartHandlerCalled = true;
+
+            // Action
+            this.discoveryRequest.DiscoverAsync();
+
+            // Assert
+            Assert.IsTrue(onDiscoveryStartHandlerCalled, "DiscoverAsync should invoke OnDiscoveryStart event");
+        }
+
+        [TestMethod]
+        public void HandleDiscoveryCompleteShouldCollectMetrics()
+        {
+            var mockMetricsCollector = new Mock<IMetricsCollection>();
+            var dict = new Dictionary<string, object>();
+            dict.Add("DummyMessage", "DummyValue");
+
+            mockMetricsCollector.Setup(mc => mc.Metrics).Returns(dict);
+            this.mockRequestData.Setup(rd => rd.MetricsCollection).Returns(mockMetricsCollector.Object);
+
+            var eventsHandler = this.discoveryRequest as ITestDiscoveryEventsHandler2;
+            var discoveryCompleteEventArgs = new DiscoveryCompleteEventArgs(1, false);
+            discoveryCompleteEventArgs.Metrics = dict;
+
+            // Act
+            eventsHandler.HandleDiscoveryComplete(discoveryCompleteEventArgs, Enumerable.Empty<TestCase>());
+
+            // Verify.
+            mockMetricsCollector.Verify(rd => rd.Add(TelemetryDataConstants.TimeTakenInSecForDiscovery, It.IsAny<double>()), Times.Once);
+            mockMetricsCollector.Verify(rd => rd.Add("DummyMessage", "DummyValue"), Times.Once);
+        }
+
+        [TestMethod]
+        public void HandleRawMessageShouldHandleRawMessage()
+        {
+            bool onDiscoveryCompleteInvoked = false;
+            this.discoveryRequest.OnRawMessageReceived += (object sender, string e) =>
+                {
+                    onDiscoveryCompleteInvoked = true;
+                };
+
+            this.discoveryRequest.HandleRawMessage(string.Empty);
+
+            Assert.IsTrue(onDiscoveryCompleteInvoked);
+        }
+
+        [TestMethod]
+        public void HandleRawMessageShouldAddVSTestDataPointsIfTelemetryOptedIn()
+        {
+            bool onDiscoveryCompleteInvoked = true;
+            this.mockRequestData.Setup(x => x.IsTelemetryOptedIn).Returns(true);
+            this.discoveryRequest.OnRawMessageReceived += (object sender, string e) =>
+                {
+                    onDiscoveryCompleteInvoked = true;
+                };
+
+            this.mockDataSerializer.Setup(x => x.DeserializeMessage(It.IsAny<string>()))
+                .Returns(new Message() { MessageType = MessageType.DiscoveryComplete });
+
+            this.mockDataSerializer.Setup(x => x.DeserializePayload<DiscoveryCompletePayload>(It.IsAny<Message>()))
+                .Returns(new DiscoveryCompletePayload());
+
+            this.discoveryRequest.HandleRawMessage(string.Empty);
+
+            this.mockDataSerializer.Verify(x => x.SerializePayload(It.IsAny<string>(), It.IsAny<DiscoveryCompletePayload>()), Times.Once);
+            this.mockRequestData.Verify(x => x.MetricsCollection, Times.AtLeastOnce);
+            Assert.IsTrue(onDiscoveryCompleteInvoked);
         }
     }
 }

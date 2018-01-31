@@ -6,6 +6,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollect
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -42,6 +43,8 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollect
 
         private Task testCaseEventMonitorTask;
 
+        private IDataSerializer dataSerializer;
+
         /// <summary>
         /// Use to cancel data collection test case events monitoring if test run is cancelled.
         /// </summary>
@@ -58,7 +61,8 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollect
                 new SocketCommunicationManager(),
                 messageSink,
                 DataCollectionManager.Create(messageSink),
-                new DataCollectionTestCaseEventHandler())
+                new DataCollectionTestCaseEventHandler(),
+                JsonDataSerializer.Instance)
         {
             this.messageSink = messageSink;
         }
@@ -78,15 +82,20 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollect
         /// <param name="dataCollectionTestCaseEventHandler">
         /// The data collection test case event handler.
         /// </param>
+        /// <param name="dataSerializer">
+        /// Serializer for serialization and deserialization of the messages.
+        /// </param>
         protected DataCollectionRequestHandler(
             ICommunicationManager communicationManager,
             IMessageSink messageSink,
             IDataCollectionManager dataCollectionManager,
-            IDataCollectionTestCaseEventHandler dataCollectionTestCaseEventHandler)
+            IDataCollectionTestCaseEventHandler dataCollectionTestCaseEventHandler,
+            IDataSerializer dataSerializer)
         {
             this.communicationManager = communicationManager;
             this.messageSink = messageSink;
             this.dataCollectionManager = dataCollectionManager;
+            this.dataSerializer = dataSerializer;
             this.dataCollectionTestCaseEventHandler = dataCollectionTestCaseEventHandler;
             this.cancellationTokenSource = new CancellationTokenSource();
         }
@@ -125,7 +134,8 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollect
                             communicationManager,
                             messageSink,
                             DataCollectionManager.Create(messageSink),
-                            new DataCollectionTestCaseEventHandler());
+                            new DataCollectionTestCaseEventHandler(),
+                            JsonDataSerializer.Instance);
                     }
                 }
             }
@@ -136,7 +146,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollect
         /// <inheritdoc />
         public void InitializeCommunication(int port)
         {
-            this.communicationManager.SetupClientAsync(port);
+            this.communicationManager.SetupClientAsync(new IPEndPoint(IPAddress.Loopback, port));
         }
 
         /// <inheritdoc />
@@ -164,7 +174,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollect
                         }
 
                         // Initialize datacollectors and get enviornment variables.
-                        var settingXml = message.Payload.ToObject<string>();
+                        var settingXml = this.dataSerializer.DeserializePayload<string>(message);
                         this.AddExtensionAssemblies(settingXml);
 
                         var envVariables = this.dataCollectionManager.InitializeDataCollectors(settingXml);
@@ -228,7 +238,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollect
                             EqtTrace.Info("DataCollection completing.");
                         }
 
-                        var isCancelled = message.Payload.ToObject<bool>();
+                        var isCancelled = this.dataSerializer.DeserializePayload<bool>(message);
 
                         if (isCancelled)
                         {
@@ -335,13 +345,13 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollect
                         extensionAssemblies.AddRange(
                             fileHelper.EnumerateFiles(
                                 adapterPath,
-                                TestPlatformConstants.DataCollectorRegexPattern,
-                                SearchOption.AllDirectories));
+                                SearchOption.AllDirectories,
+                                TestPlatformConstants.DataCollectorEndsWithPattern));
                     }
 
                     if (extensionAssemblies.Count > 0)
                     {
-                        TestPluginCache.Instance.UpdateExtensions(extensionAssemblies, true);
+                        TestPluginCache.Instance.UpdateExtensions(extensionAssemblies, skipExtensionFilters: false);
                     }
                 }
             }
