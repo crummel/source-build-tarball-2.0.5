@@ -392,15 +392,6 @@
         </alt-trans>
         <note from="bb-metadata">fuzzyMatch="15" wordcount="22" adjWordcount="18.7" curWordcount="18.7"</note>
       </trans-unit>
-      <trans-unit id="SuggestUseVsixExtensionsIfNoTestsIsFound">
-        <source>Additionally, you can try specifying '/UseVsixExtensions' command if the test discoverer &amp; executor is installed on the machine as vsix extensions and your installation supports vsix extensions. Example: vstest.console.exe myTests.dll /UseVsixExtensions:true</source>
-        <target state="translated">Kromě toho můžete zkusit zadat příkaz /UseVsixExtensions, pokud jsou nástroj pro zjišťování testů a prováděcí modul testování nainstalované na stejném počítači, kde jsou i rozšíření vsix, a vaše instalace rozšíření vsix podporuje. Příklad: vstest.console.exe myTests.dll /UseVsixExtensions:true</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">Kromě toho můžete použít "/ UseVsixExtensions' příkaz if test discoverer &amp; vykonavatele je v počítači nainstalován jako rozšíření vsix a instalace podporuje rozšíření vsix. Příklad: vstest.console.exe myTests.dll /UseVsixExtensions:true</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="31" adjWordcount="26.35" curWordcount="26.35"</note>
-      </trans-unit>
       <trans-unit id="UseVsixExtensionsValueRequired">
         <source>The /UseVsixExtensions parameter requires a value. If 'true', the installed VSIX extensions (if any) will be used in the test run. If false, they will be ignored.   Example:  /UseVsixExtensions:true</source>
         <target state="translated">Parametr /UseVsixExtensions vyžaduje hodnotu. Pokud hodnota bude true, v testovacím běhu se použijí nainstalovaná rozšíření VSIX (pokud nějaká jsou). Pokud je hodnota false, budou se rozšíření ignorovat.   Příklad:  /UseVsixExtensions:true</target>
@@ -420,14 +411,14 @@
         <note from="bb-metadata">fuzzyMatch="15" wordcount="29" adjWordcount="24.65" curWordcount="24.65"</note>
       </trans-unit>
       <trans-unit id="InIsolationHelp">
-        <source>/InIsolation
+        <source>--InIsolation|/InIsolation
       Runs the tests in an isolated process. This makes vstest.console.exe 
       process less likely to be stopped on an error in the tests, but tests 
       may run slower.</source>
-        <target state="translated">/InIsolation
+        <target state="translated">--InIsolation|/InIsolation
       Spustí testy v izolovaném procesu. Díky tomu je méně pravděpodobné,
-      že se proces vstest.console.exe zastaví, pokud se v testu stane chyba, ale testy 
-      můžou být pomalejší.</target>
+      že se proces vstest.console.exe zastaví, pokud se v testech stane chyba,
+      ale testy můžou být pomalejší.</target>
         <note />
         <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
           <target state-qualifier="mt-suggestion">/ InIsolation
@@ -637,15 +628,6 @@
         </alt-trans>
         <note from="bb-metadata">fuzzyMatch="15" wordcount="21" adjWordcount="17.85" curWordcount="17.85"</note>
       </trans-unit>
-      <trans-unit id="NoTestsFoundWarningMessageWithSuggestionToUseVsix">
-        <source>{0} {1}</source>
-        <target state="translated">{0} {1}</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">{0} {1}.</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="2" adjWordcount="1.7" curWordcount="1.7"</note>
-      </trans-unit>
       <trans-unit id="LoggerFriendlyNameFormat">
         <source>        FriendlyName: {0}</source>
         <target state="translated">        PopisnýNázev: {0}</target>
@@ -663,42 +645,6 @@
           <target state-qualifier="mt-suggestion">Identifikátor URI: {0}</target>
         </alt-trans>
         <note from="bb-metadata">fuzzyMatch="15" wordcount="2" adjWordcount="1.7" curWordcount="1.7"</note>
-      </trans-unit>
-      <trans-unit id="SuggestUseVsixExtensionsInListLoggersCommand">
-        <source>The Test Logger Add-Ins installed through a VSIX installation are ignored. Use the /UseVsixExtensions parameter to include them, if your installation supports vsix extensions. Example: vstest.console.exe {0} /UseVsixExtensions:true</source>
-        <target state="translated">Doplňky protokolovače testu, které se nainstalovaly prostřednictvím instalace VSIX, se ignorují. Pokud vaše instalace podporuje rozšíření vsix a chcete je zahrnout, použijte parametr /UseVsixExtensions. Příklad: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">Test Logger doplňky nainstalované pomocí Instalační VSIX jsou ignorovány. Pomocí parametru /UseVsixExtensions je, pokud vaše instalace podporuje rozšíření vsix. Příklad: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="28" adjWordcount="23.8" curWordcount="23.8"</note>
-      </trans-unit>
-      <trans-unit id="SuggestUseVsixExtensionsInListExecutorsCommand">
-        <source>The Test Executor Add-Ins installed through a VSIX installation are ignored. Use the /UseVsixExtensions parameter to include them, if your installation supports vsix extensions. Example: vstest.console.exe {0} /UseVsixExtensions:true</source>
-        <target state="translated">Doplňky prováděcího modulu testování, které se nainstalovaly prostřednictvím instalace VSIX, se ignorují. Pokud vaše instalace podporuje rozšíření vsix a chcete je zahrnout, použijte parametr /UseVsixExtensions. Příklad: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">Testovací exekutor doplňky nainstalované pomocí Instalační VSIX jsou ignorovány. Pomocí parametru /UseVsixExtensions je, pokud vaše instalace podporuje rozšíření vsix. Příklad: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="28" adjWordcount="23.8" curWordcount="23.8"</note>
-      </trans-unit>
-      <trans-unit id="SuggestUseVsixExtensionsInListDiscoverersCommand">
-        <source>The Test Discovery Add-Ins installed through a VSIX installation are ignored. Use the /UseVsixExtensions parameter to include them, if your installation supports vsix extensions. Example: vstest.console.exe {0} /UseVsixExtensions:true</source>
-        <target state="translated">Doplňky zjišťování testů, které se nainstalovaly prostřednictvím instalace VSIX, se ignorují. Pokud vaše instalace podporuje rozšíření vsix a chcete je zahrnout, použijte parametr /UseVsixExtensions. Příklad: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">Test zjištění doplňky nainstalované pomocí Instalační VSIX jsou ignorovány. Pomocí parametru /UseVsixExtensions je, pokud vaše instalace podporuje rozšíření vsix. Příklad: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="28" adjWordcount="23.8" curWordcount="23.8"</note>
-      </trans-unit>
-      <trans-unit id="SuggestUseVsixExtensionsInListSettingsProviderCommand">
-        <source>The Settings Providers Add-Ins installed through a VSIX installation are ignored. Use the /UseVsixExtensions parameter to include them, if your installation supports vsix extensions. Example: vstest.console.exe {0} /UseVsixExtensions:true</source>
-        <target state="translated">Doplňky poskytovatelů nastavení, které se nainstalovaly prostřednictvím instalace VSIX, se ignorují. Pokud vaše instalace podporuje rozšíření vsix a chcete je zahrnout, použijte parametr /UseVsixExtensions. Příklad: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">Nastavení zprostředkovatelů doplňky nainstalované pomocí Instalační VSIX jsou ignorovány. Pomocí parametru /UseVsixExtensions je, pokud vaše instalace podporuje rozšíření vsix. Příklad: vstest.console.exe {0} /UseVsixExtensions:true</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="28" adjWordcount="23.8" curWordcount="23.8"</note>
       </trans-unit>
       <trans-unit id="SettingFormat">
         <source>        SettingName: {0}</source>
@@ -799,11 +745,11 @@
       <trans-unit id="FrameworkArgumentHelp">
         <source>--Framework|/Framework:&lt;Framework Version&gt;
       Target .Net Framework version to be used for test execution. 
-      Valid values are ".NETFramework,Version=v4.6", ".NETCoreApp,Version=v1.0" etc.
+      Valid values are ".NETFramework,Version=v4.5.1", ".NETCoreApp,Version=v1.0" etc.
       Other supported values are Framework35, Framework40, Framework45 and FrameworkCore10.</source>
         <target state="translated">--Framework|/Framework:&lt;Verze rozhraní&gt;
       Cílová verze rozhraní .NET Framework, která se použije k provedení testu. 
-      Platné hodnoty jsou ".NETFramework,Version=v4.6", ".NETCoreApp,Version=v1.0" atd.
+      Platné hodnoty jsou ".NETFramework,Version=v4.5.1", ".NETCoreApp,Version=v1.0" atd.
       Dalšími podporovanými hodnotami jsou Framework35, Framework40, Framework45 a FrameworkCore10.</target>
         <note />
         <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
@@ -815,8 +761,8 @@
         <note from="bb-metadata">fuzzyMatch="15" wordcount="31" adjWordcount="26.35" curWordcount="26.35"</note>
       </trans-unit>
       <trans-unit id="FrameworkVersionRequired">
-        <source>The /Framework argument requires the target .Net Framework version for the test run.   Example:  /Framework:".NETFramework,Version=v4.6"</source>
-        <target state="translated">Argument /Framework vyžaduje cílovou verzi rozhraní .NET Framework pro testovací běh.   Příklad:  /Framework:".NETFramework,Version=v4.6"</target>
+        <source>The /Framework argument requires the target .Net Framework version for the test run.   Example:  /Framework:".NETFramework,Version=v4.5.1"</source>
+        <target state="translated">Argument /Framework vyžaduje cílovou verzi rozhraní .NET Framework pro testovací běh. Příklad: /Framework:".NETFramework,Version=v4.5.1"</target>
         <note />
         <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
           <target state-qualifier="mt-suggestion">/Framework argument vyžaduje cílové rozhraní .net Framework verze pro test spustit.   Příklad: /Framework: ". NETFramework, verze = v4.6 "</target>
@@ -824,8 +770,8 @@
         <note from="bb-metadata">fuzzyMatch="15" wordcount="16" adjWordcount="13.6" curWordcount="13.6"</note>
       </trans-unit>
       <trans-unit id="InvalidFrameworkVersion">
-        <source>Invalid .Net Framework version:{0}. Please give the fullname of the TargetFramework. Other supported .Net Framework versions are Framework35, Framework40 and Framework45.</source>
-        <target state="translated">Neplatná verze rozhraní .NET Framework: {0}. Zadejte prosím úplný název pro TargetFramework. Dalšími podporovanými verzemi jsou Framework35, Framework40 a Framework45.</target>
+        <source>Invalid .Net Framework version:{0}. Please give the fullname of the TargetFramework. Other supported .Net Framework versions are Framework35, Framework40, Framework45 and FrameworkCore10.</source>
+        <target state="translated">Neplatná verze rozhraní .NET Framework: {0}. Zadejte prosím úplný název cílového rozhraní. Dalšími podporovanými verzemi jsou Framework35, Framework40, Framework45 a FrameworkCore10.</target>
         <note />
         <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
           <target state-qualifier="mt-suggestion">Neplatné rozhraní .net Framework verze: {0}. uveďte, prosím, fullname TargetFramework. Ostatní podporované rozhraní .net Framework verze jsou Framework35, Framework40 a Framework45.</target>
@@ -963,15 +909,6 @@
           <target state-qualifier="mt-suggestion">Argument {0} není očekávána v příkazu "EnableCodeCoverage". Zadejte příkaz bez argumentu (Příklad: vstest.console.exe myTests.dll /EnableCodeCoverage) a akci opakujte.</target>
         </alt-trans>
         <note from="bb-metadata">fuzzyMatch="15" wordcount="22" adjWordcount="18.7" curWordcount="18.7"</note>
-      </trans-unit>
-      <trans-unit id="MalformedRunSettingsFile">
-        <source>Settings file provided do not confirm to required format. </source>
-        <target state="translated">Zadaný soubor nastavení neodpovídá požadovanému formátu. </target>
-        <note />
-        <alt-trans match-quality="100%" tool="BlackBox/MSR MT">
-          <target state-qualifier="mt-suggestion">Zadaný soubor nastavení nepotvrdí do požadovaného formátu.</target>
-        </alt-trans>
-        <note from="bb-metadata">fuzzyMatch="15" wordcount="9" adjWordcount="7.65" curWordcount="7.65"</note>
       </trans-unit>
       <trans-unit id="NoTestEntryPoint">
         <source>App package '{0}' does not has test executor entry point. For running unit tests for Windows Store apps, create app package using Windows Store app Unit Test Library project.</source>
@@ -1549,8 +1486,74 @@
       </trans-unit>
       <trans-unit id="DbgTrcMessagesBanner">
         <source>Debug Traces Messages:</source>
-        <target state="new">Debug Traces Messages:</target>
-        <note></note>
+        <target state="translated">Zprávy trasování ladění:</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="EnableBlameUsage">
+        <source>--Blame|/Blame
+      Runs the test in blame mode. This option is helpful in isolating the problematic test causing test host crash. It creates an output file in the current directory as "Sequence.xml", that captures the order of execution of test before the crash.</source>
+        <target state="translated">--Blame|/Blame
+      Spustí test v režimu blame. Tato možnost je užitečná pro izolování problematického testu, který způsobuje chybové ukončení hostitele testů. V aktuálním adresáři se vytvoří výstupní soubor Sequence.xml, do kterého se zaznamená pořadí provádění testů před chybovým ukončením.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TestRunAborted">
+        <source>Test Run Aborted.</source>
+        <target state="translated">Testovací běh se přerušil.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TestRunCanceled">
+        <source>Test Run Canceled.</source>
+        <target state="translated">Testovací běh se zrušil.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="OpenResponseFileError">
+        <source>Error opening response file '{0}'</source>
+        <target state="translated">Chyba při otevírání souboru odpovědí {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ResponseFileArgumentHelp">
+        <source>@&lt;file&gt;
+      Read response file for more options.</source>
+        <target state="translated">@&lt;soubor&gt;
+      Načte další možnosti ze souboru odpovědí.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="TestRunSummaryForCanceledOrAbortedRun">
+        <source>Total tests: Unknown. Passed: {0}. Failed: {1}. Skipped: {2}.</source>
+        <target state="translated">Celkový počet testů: neznámý. Úspěšné: {0}. Neúspěšné: {1}. Přeskočené: {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="StringFormatToJoinTwoStrings">
+        <source>{0} {1}</source>
+        <target state="translated">{0} {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="SuggestTestAdapterPathIfNoTestsIsFound">
+        <source>Additionally, path to test adapters can be specified using /TestAdapterPath command. Example  /TestAdapterPath:&lt;pathToCustomAdapters&gt;.</source>
+        <target state="translated">Kromě toho se dá pomocí příkazu /TestAdapterPath zadat cesta k adaptérům testů. Příklad: /TestAdapterPath:&lt;cesta_k_vlastním_adaptérům&gt;</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="UseVsixExtensionsDeprecation">
+        <source>/UseVsixExtensions is getting deprecated. Please use /TestAdapterPath instead.</source>
+        <target state="translated">Příkaz /UseVsixExtensions je zastaralý. Použijte místo něj prosím příkaz /TestAdapterPath.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="DisableAutoFakesUsage">
+        <source>--DisableAutoFakes|/DisableAutoFakes:&lt;true/false&gt;
+     Example: /DisableAutoFakes:true</source>
+        <target state="translated">--DisableAutoFakes|/DisableAutoFakes:&lt;true/false&gt;
+     Příklad: /DisableAutoFakes:true</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="CollectWithTestSettingErrorMessage">
+        <source>--Collect|/Collect:"{0}" is not supported if test run is configured using testsettings.</source>
+        <target state="translated">--Collect|/Collect:"{0}" není podporován, pokud je testovací běh nakonfigurován pomocí nastavení testů.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="RunsettingsWithDCErrorMessage">
+        <source>Data collectors configured via run settings are not supported with embedded test settings. Please see https://aka.ms/vstest-configure-datacollector for more information. Run settings: {0}.</source>
+        <target state="translated">Kolekce dat konfigurované prostřednictvím nastavení běhu nejsou podporované s vloženým nastavením testů. Další informace viz https://aka.ms/vstest-configure-datacollector. Nastavení běhu: {0}.</target>
+        <note />
       </trans-unit>
     </body>
   </file>

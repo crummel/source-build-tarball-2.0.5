@@ -45,7 +45,6 @@ namespace TestPlatform.Common.UnitTests.ExtensionFramework
             var instance = TestPluginManager.CreateTestExtension<ITestDiscoverer>(typeof(DummyTestDiscoverer));
 
             Assert.IsNotNull(instance);
-            Assert.IsTrue(instance is ITestDiscoverer);
         }
 
         [TestMethod]
@@ -80,7 +79,7 @@ namespace TestPlatform.Common.UnitTests.ExtensionFramework
             IEnumerable<LazyExtension<ITestDiscoverer, ITestDiscovererCapabilities>> testExtensions;
 
             TestPluginManager.Instance.GetSpecificTestExtensions<TestDiscovererPluginInformation, ITestDiscoverer, ITestDiscovererCapabilities, TestDiscovererMetadata>(
-                TestPlatformConstants.TestAdapterRegexPattern,
+                TestPlatformConstants.TestAdapterEndsWithPattern,
                 out unfilteredTestExtensions,
                 out testExtensions);
 
@@ -99,20 +98,20 @@ namespace TestPlatform.Common.UnitTests.ExtensionFramework
             IEnumerable<LazyExtension<ITestDiscoverer, ITestDiscovererCapabilities>> testExtensions;
 
             TestPluginManager.Instance.GetSpecificTestExtensions<TestDiscovererPluginInformation, ITestDiscoverer, ITestDiscovererCapabilities, TestDiscovererMetadata>(
-                TestPlatformConstants.TestAdapterRegexPattern,
+                TestPlatformConstants.TestAdapterEndsWithPattern,
                 out unfilteredTestExtensions,
                 out testExtensions);
 
             // Call this again to verify that discovery is not called again.
             TestPluginManager.Instance.GetSpecificTestExtensions<TestDiscovererPluginInformation, ITestDiscoverer, ITestDiscovererCapabilities, TestDiscovererMetadata>(
-                TestPlatformConstants.TestAdapterRegexPattern,
+                TestPlatformConstants.TestAdapterEndsWithPattern,
                 out unfilteredTestExtensions,
                 out testExtensions);
 
             Assert.IsNotNull(testExtensions);
-            Assert.IsTrue(testExtensions.Count() > 0);
+            Assert.IsTrue(testExtensions.Any());
 
-            Assert.AreEqual(1, discoveryCount);
+            Assert.AreEqual(2, discoveryCount);
         }
 
         [TestMethod]

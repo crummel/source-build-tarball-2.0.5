@@ -100,13 +100,32 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.UnitTests.Internal
         }
 
         [TestMethod]
-        public void InitializeWithParametersShouldDefaultToMinimalVerbosityLevelForInvalidVerbosity()
+        public void InitializeWithParametersShouldDefaultToNormalVerbosityLevelForInvalidVerbosity()
         {
             var parameters = new Dictionary<string, string>();
             parameters.Add("verbosity", "random");
             this.consoleLogger.Initialize(new Mock<TestLoggerEvents>().Object, parameters);
 
+#if NET451
+            Assert.AreEqual(ConsoleLogger.Verbosity.Normal, this.consoleLogger.VerbosityLevel);
+#else
             Assert.AreEqual(ConsoleLogger.Verbosity.Minimal, this.consoleLogger.VerbosityLevel);
+#endif
+        }
+
+        [TestMethod]
+        public void InitializeWithParametersShouldSetPrefixValue()
+        {
+            var parameters = new Dictionary<string, string>();
+
+            Assert.IsFalse(ConsoleLogger.AppendPrefix);
+
+            parameters.Add("prefix", "true");
+            this.consoleLogger.Initialize(new Mock<TestLoggerEvents>().Object, parameters);
+
+            Assert.IsTrue(ConsoleLogger.AppendPrefix);
+
+            ConsoleLogger.AppendPrefix = false;
         }
 
         [TestMethod]
@@ -427,7 +446,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.UnitTests.Internal
             this.mockOutput.Verify(o => o.WriteLine(string.Format(CultureInfo.CurrentCulture, CommandLineResources.TestRunSummary, 1, 1, 0, 0), OutputLevel.Information), Times.Once());
             this.mockOutput.Verify(o => o.WriteLine(CommandLineResources.TestRunSuccessful, OutputLevel.Information), Times.Once());
         }
-        
+
         [TestMethod]
         public void TestRunCompleteHandlerShouldWriteToConsoleIfTestsFail()
         {
@@ -440,6 +459,78 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.UnitTests.Internal
 
             this.mockOutput.Verify(o => o.WriteLine(string.Format(CultureInfo.CurrentCulture, CommandLineResources.TestRunSummary, 1, 0, 1, 0), OutputLevel.Information), Times.Once());
             this.mockOutput.Verify(o => o.WriteLine(CommandLineResources.TestRunFailed, OutputLevel.Error), Times.Once());
+        }
+
+        [TestMethod]
+        public void TestRunCompleteHandlerShouldWriteToConsoleIfTestsCanceled()
+        {
+            // Raise an event on mock object raised to register test case count and mark Outcome as Outcome.Failed
+            var eventArgs = new TestRunChangedEventArgs(null, this.GetTestResultObject(TestOutcome.Failed), null);
+            this.testRunRequest.Raise(m => m.OnRunStatsChange += null, eventArgs);
+
+            // Raise an event on mock object
+            this.testRunRequest.Raise(m => m.OnRunCompletion += null, new TestRunCompleteEventArgs(null, true, false, null, null, new TimeSpan(1, 0, 0, 0)));
+
+            this.mockOutput.Verify(o => o.WriteLine(string.Format(CultureInfo.CurrentCulture, CommandLineResources.TestRunSummaryForCanceledOrAbortedRun, 0, 1, 0), OutputLevel.Information), Times.Once());
+            this.mockOutput.Verify(o => o.WriteLine(CommandLineResources.TestRunCanceled, OutputLevel.Error), Times.Once());
+        }
+
+        [TestMethod]
+        public void TestRunCompleteHandlerShouldWriteToConsoleIfTestsCanceledWithoutRunningAnyTest()
+        {
+            // Raise an event on mock object
+            this.testRunRequest.Raise(m => m.OnRunCompletion += null, new TestRunCompleteEventArgs(null, true, false, null, null, new TimeSpan(1, 0, 0, 0)));
+            this.mockOutput.Verify(o => o.WriteLine(CommandLineResources.TestRunCanceled, OutputLevel.Error), Times.Once());
+        }
+
+        [TestMethod]
+        public void TestRunCompleteHandlerShouldNotWriteTolatTestToConsoleIfTestsCanceled()
+        {
+            // Raise an event on mock object raised to register test case count and mark Outcome as Outcome.Failed
+            var eventArgs = new TestRunChangedEventArgs(null, this.GetTestResultObject(TestOutcome.Failed), null);
+            this.testRunRequest.Raise(m => m.OnRunStatsChange += null, eventArgs);
+
+            // Raise an event on mock object
+            this.testRunRequest.Raise(m => m.OnRunCompletion += null, new TestRunCompleteEventArgs(null, true, false, null, null, new TimeSpan(1, 0, 0, 0)));
+
+            this.mockOutput.Verify(o => o.WriteLine(string.Format(CultureInfo.CurrentCulture, CommandLineResources.TestRunSummaryForCanceledOrAbortedRun, 0, 1, 0), OutputLevel.Information), Times.Once());
+            this.mockOutput.Verify(o => o.WriteLine(CommandLineResources.TestRunCanceled, OutputLevel.Error), Times.Once());
+        }
+
+        [TestMethod]
+        public void TestRunCompleteHandlerShouldNotWriteTolatTestToConsoleIfTestsAborted()
+        {
+            // Raise an event on mock object raised to register test case count and mark Outcome as Outcome.Failed
+            var eventArgs = new TestRunChangedEventArgs(null, this.GetTestResultObject(TestOutcome.Failed), null);
+            this.testRunRequest.Raise(m => m.OnRunStatsChange += null, eventArgs);
+
+            // Raise an event on mock object
+            this.testRunRequest.Raise(m => m.OnRunCompletion += null, new TestRunCompleteEventArgs(null, false, true, null, null, new TimeSpan(1, 0, 0, 0)));
+
+            this.mockOutput.Verify(o => o.WriteLine(string.Format(CultureInfo.CurrentCulture, CommandLineResources.TestRunSummaryForCanceledOrAbortedRun, 0, 1, 0), OutputLevel.Information), Times.Once());
+            this.mockOutput.Verify(o => o.WriteLine(CommandLineResources.TestRunAborted, OutputLevel.Error), Times.Once());
+        }
+
+        [TestMethod]
+        public void TestRunCompleteHandlerShouldWriteToConsoleIfTestsAborted()
+        {
+            // Raise an event on mock object raised to register test case count and mark Outcome as Outcome.Failed
+            var eventArgs = new TestRunChangedEventArgs(null, this.GetTestResultObject(TestOutcome.Failed), null);
+            this.testRunRequest.Raise(m => m.OnRunStatsChange += null, eventArgs);
+
+            // Raise an event on mock object
+            this.testRunRequest.Raise(m => m.OnRunCompletion += null, new TestRunCompleteEventArgs(null, false, true, null, null, new TimeSpan(1, 0, 0, 0)));
+
+            this.mockOutput.Verify(o => o.WriteLine(string.Format(CultureInfo.CurrentCulture, CommandLineResources.TestRunSummaryForCanceledOrAbortedRun, 0, 1, 0), OutputLevel.Information), Times.Once());
+            this.mockOutput.Verify(o => o.WriteLine(CommandLineResources.TestRunAborted, OutputLevel.Error), Times.Once());
+        }
+
+        [TestMethod]
+        public void TestRunCompleteHandlerShouldWriteToConsoleIfTestsAbortedWithoutRunningAnyTest()
+        {
+            // Raise an event on mock object
+            this.testRunRequest.Raise(m => m.OnRunCompletion += null, new TestRunCompleteEventArgs(null, false, true, null, null, new TimeSpan(1, 0, 0, 0)));
+            this.mockOutput.Verify(o => o.WriteLine(CommandLineResources.TestRunAborted, OutputLevel.Error), Times.Once());
         }
 
         [TestMethod]
@@ -564,7 +655,9 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine.UnitTests.Internal
 
         private List<ObjectModel.TestResult> GetTestResultsObject()
         {
-            var testcase = new TestCase("TestName", new Uri("some://uri"), "TestSource");
+            var testcase = new TestCase("DymmyNamespace.DummyClass.TestName", new Uri("some://uri"), "TestSource");
+            testcase.DisplayName = "TestName";
+
             var testresult = new ObjectModel.TestResult(testcase);
             testresult.Outcome = TestOutcome.Passed;
 

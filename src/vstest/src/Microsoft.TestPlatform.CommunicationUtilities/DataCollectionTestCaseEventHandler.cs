@@ -3,7 +3,7 @@
 
 namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollection
 {
-    using System;
+    using System.Net;
 
     using Microsoft.VisualStudio.TestPlatform.Common.DataCollector;
     using Microsoft.VisualStudio.TestPlatform.Common.DataCollector.Interfaces;
@@ -19,12 +19,13 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollect
     {
         private ICommunicationManager communicationManager;
         private IDataCollectionManager dataCollectionManager;
+        private IDataSerializer dataSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataCollectionTestCaseEventHandler"/> class.
         /// </summary>
         internal DataCollectionTestCaseEventHandler()
-            : this(new SocketCommunicationManager(), DataCollectionManager.Instance)
+            : this(new SocketCommunicationManager(), DataCollectionManager.Instance, JsonDataSerializer.Instance)
         {
         }
 
@@ -33,18 +34,20 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollect
         /// </summary>
         /// <param name="communicationManager">Communication manager implementation.</param>
         /// <param name="dataCollectionManager">Data collection manager implementation.</param>
-        internal DataCollectionTestCaseEventHandler(ICommunicationManager communicationManager, IDataCollectionManager dataCollectionManager)
+        /// <param name="dataSerializer">Serializer for serialization and deserialization of the messages.</param>
+        internal DataCollectionTestCaseEventHandler(ICommunicationManager communicationManager, IDataCollectionManager dataCollectionManager, IDataSerializer dataSerializer)
         {
             this.communicationManager = communicationManager;
             this.dataCollectionManager = dataCollectionManager;
+            this.dataSerializer = dataSerializer;
         }
 
         /// <inheritdoc />
         public int InitializeCommunication()
         {
-            var port = this.communicationManager.HostServer();
+            var endpoint = this.communicationManager.HostServer(new IPEndPoint(IPAddress.Loopback, 0));
             this.communicationManager.AcceptClientAsync();
-            return port;
+            return endpoint.Port;
         }
 
         /// <inheritdoc />
@@ -75,8 +78,9 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollect
                             EqtTrace.Info("DataCollectionTestCaseEventHandler: Test case starting.");
                         }
 
-                        var testCaseStartEventArgs = message.Payload.ToObject<TestCaseStartEventArgs>();
+                        var testCaseStartEventArgs = this.dataSerializer.DeserializePayload<TestCaseStartEventArgs>(message);
                         this.dataCollectionManager.TestCaseStarted(testCaseStartEventArgs);
+                        this.communicationManager.SendMessage(MessageType.DataCollectionTestStartAck);
 
                         if (EqtTrace.IsInfoEnabled)
                         {
@@ -91,7 +95,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.DataCollect
                             EqtTrace.Info("DataCollectionTestCaseEventHandler : Test case completing.");
                         }
 
-                        var testCaseEndEventArgs = message.Payload.ToObject<TestCaseEndEventArgs>();
+                        var testCaseEndEventArgs = this.dataSerializer.DeserializePayload<TestCaseEndEventArgs>(message);
                         var attachmentSets = this.dataCollectionManager.TestCaseEnded(testCaseEndEventArgs);
                         this.communicationManager.SendMessage(MessageType.DataCollectionTestEndResult, attachmentSets);
 

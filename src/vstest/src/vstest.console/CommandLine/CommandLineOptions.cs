@@ -98,6 +98,11 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine
         public bool Parallel { get; set; }
 
         /// <summary>
+        /// Specifies whether InIsolation is on or off.
+        /// </summary>
+        public bool InIsolation { get; set; }
+
+        /// <summary>
         /// Readonly collection of all available test sources
         /// </summary>
         public IEnumerable<string> Sources
@@ -169,6 +174,11 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine
         public string TestCaseFilterValue { get; set; }
 
         /// <summary>
+        /// Target Path used by ListFullyQualifiedTests option
+        /// </summary>
+        public string ListTestsTargetPath { get; set; }
+
+        /// <summary>
         /// Specifies the Target Device
         /// </summary>
         public string TargetDevice { get; set; }
@@ -209,6 +219,17 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine
             get;
             set;
         }
+
+        /// <summary>
+        /// If not already set from IDE in the runSettings, ShouldCollectSourceInformation defaults to IsDesignMode value        
+        /// </summary>
+        public bool ShouldCollectSourceInformation
+        {
+            get
+            {
+                return IsDesignMode;
+            }
+        }        
 
         /// <summary>
         /// Specifies if /Platform has been specified on command line or not.

@@ -5,6 +5,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Client
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -20,9 +21,12 @@ namespace Microsoft.VisualStudio.TestPlatform.Client
     using Microsoft.VisualStudio.TestPlatform.ObjectModel;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Engine;
+    using Microsoft.VisualStudio.TestPlatform.ObjectModel.Host;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Utilities;
+    using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions;
     using Microsoft.VisualStudio.TestPlatform.Utilities.Helpers;
     using Microsoft.VisualStudio.TestPlatform.Utilities.Helpers.Interfaces;
+    using ClientResources = Microsoft.VisualStudio.TestPlatform.Client.Resources.Resources;
 
     /// <summary>
     /// Implementation for TestPlatform
@@ -75,11 +79,11 @@ namespace Microsoft.VisualStudio.TestPlatform.Client
         /// <summary>
         /// The create discovery request.
         /// </summary>
+        /// <param name="requestData"></param>
         /// <param name="discoveryCriteria"> The discovery criteria. </param>
-        /// <param name="protocolConfig"> Protocol related information.  </param>
         /// <returns> The <see cref="IDiscoveryRequest"/>. </returns>
         /// <exception cref="ArgumentNullException"> Throws if parameter is null. </exception>
-        public IDiscoveryRequest CreateDiscoveryRequest(DiscoveryCriteria discoveryCriteria, ProtocolConfig protocolConfig)
+        public IDiscoveryRequest CreateDiscoveryRequest(IRequestData requestData, DiscoveryCriteria discoveryCriteria)
         {
             if (discoveryCriteria == null)
             {
@@ -89,13 +93,25 @@ namespace Microsoft.VisualStudio.TestPlatform.Client
             // Update cache with Extension Folder's files
             this.AddExtensionAssemblies(discoveryCriteria.RunSettings);
 
+            // Update and initialize loggers only when DesignMode is false
+            var runConfiguration = XmlRunSettingsUtilities.GetRunConfigurationNode(discoveryCriteria.RunSettings);
+            if (runConfiguration.DesignMode == false)
+            {
+                this.AddExtensionAssembliesFromSource(discoveryCriteria.Sources);
+
+                // Initialize loggers
+                TestLoggerManager.Instance.InitializeLoggers(requestData);
+            }
+
             var testHostManager = this.testHostProviderManager.GetTestHostManagerByRunConfiguration(discoveryCriteria.RunSettings);
+            ThrowExceptionIfTestHostManagerIsNull(testHostManager, discoveryCriteria.RunSettings);
+
             testHostManager.Initialize(TestSessionMessageLogger.Instance, discoveryCriteria.RunSettings);
 
-            var discoveryManager = this.TestEngine.GetDiscoveryManager(testHostManager, discoveryCriteria, protocolConfig);
+            var discoveryManager = this.TestEngine.GetDiscoveryManager(requestData, testHostManager, discoveryCriteria);
             discoveryManager.Initialize();
 
-            return new DiscoveryRequest(discoveryCriteria, discoveryManager);
+            return new DiscoveryRequest(requestData, discoveryCriteria, discoveryManager);
         }
 
         /// <summary>
@@ -105,7 +121,7 @@ namespace Microsoft.VisualStudio.TestPlatform.Client
         /// <param name="protocolConfig"> Protocol related information.  </param>
         /// <returns> The <see cref="ITestRunRequest"/>. </returns>
         /// <exception cref="ArgumentNullException"> Throws if parameter is null. </exception>
-        public ITestRunRequest CreateTestRunRequest(TestRunCriteria testRunCriteria, ProtocolConfig protocolConfig)
+        public ITestRunRequest CreateTestRunRequest(IRequestData requestData, TestRunCriteria testRunCriteria)
         {
             if (testRunCriteria == null)
             {
@@ -122,10 +138,12 @@ namespace Microsoft.VisualStudio.TestPlatform.Client
                 this.AddExtensionAssembliesFromSource(testRunCriteria);
 
                 // Initialize loggers
-                TestLoggerManager.Instance.InitializeLoggers();
+                TestLoggerManager.Instance.InitializeLoggers(requestData);
             }
 
             var testHostManager = this.testHostProviderManager.GetTestHostManagerByRunConfiguration(testRunCriteria.TestRunSettings);
+            ThrowExceptionIfTestHostManagerIsNull(testHostManager, testRunCriteria.TestRunSettings);
+
             testHostManager.Initialize(TestSessionMessageLogger.Instance, testRunCriteria.TestRunSettings);
 
             if (testRunCriteria.TestHostLauncher != null)
@@ -133,10 +151,10 @@ namespace Microsoft.VisualStudio.TestPlatform.Client
                 testHostManager.SetCustomLauncher(testRunCriteria.TestHostLauncher);
             }
 
-            var executionManager = this.TestEngine.GetExecutionManager(testHostManager, testRunCriteria, protocolConfig);
+            var executionManager = this.TestEngine.GetExecutionManager(requestData, testHostManager, testRunCriteria);
             executionManager.Initialize();
 
-            return new TestRunRequest(testRunCriteria, executionManager);
+            return new TestRunRequest(requestData, testRunCriteria, executionManager);
         }
 
         /// <summary>
@@ -151,11 +169,31 @@ namespace Microsoft.VisualStudio.TestPlatform.Client
         /// The update extensions.
         /// </summary>
         /// <param name="pathToAdditionalExtensions"> The path to additional extensions. </param>
-        /// <param name="loadOnlyWellKnownExtensions"> The load only well known extensions. </param>
-        public void UpdateExtensions(IEnumerable<string> pathToAdditionalExtensions, bool loadOnlyWellKnownExtensions)
+        /// <param name="skipExtensionFilters">Skips filtering by name (if true).</param>
+        public void UpdateExtensions(IEnumerable<string> pathToAdditionalExtensions, bool skipExtensionFilters)
         {
             this.TestEngine.GetExtensionManager()
-                   .UseAdditionalExtensions(pathToAdditionalExtensions, loadOnlyWellKnownExtensions);
+                   .UseAdditionalExtensions(pathToAdditionalExtensions, skipExtensionFilters);
+        }
+
+        /// <summary>
+        /// Clears the cached extensions
+        /// </summary>
+        public void ClearExtensions()
+        {
+            this.TestEngine.GetExtensionManager().ClearExtensions();
+        }
+
+        private void ThrowExceptionIfTestHostManagerIsNull(ITestRuntimeProvider testHostManager, string settingXml)
+        {
+            if (testHostManager == null)
+            {
+                var config = XmlRunSettingsUtilities.GetRunConfigurationNode(settingXml);
+                var framework = config.TargetFrameworkVersion;
+
+                EqtTrace.Error("TestPlatform.CreateTestRunRequest: No suitable testHostProvider found for runsettings : {0}", settingXml);
+                throw new TestPlatformException(String.Format(CultureInfo.CurrentCulture, ClientResources.NoTestHostProviderFound));
+            }
         }
 
         /// <summary>
@@ -175,25 +213,25 @@ namespace Microsoft.VisualStudio.TestPlatform.Client
                     var adapterPath = Path.GetFullPath(Environment.ExpandEnvironmentVariables(customTestAdaptersPath));
                     if (!Directory.Exists(adapterPath))
                     {
-                        EqtTrace.Warning(string.Format("AdapterPath Not Found:", adapterPath));
+                        if (EqtTrace.IsWarningEnabled)
+                        {
+                            EqtTrace.Warning(string.Format("AdapterPath Not Found:", adapterPath));
+                        }
+
                         continue;
                     }
 
-                    var extensionAssemblies = new List<string>(this.fileHelper.EnumerateFiles(adapterPath, TestPlatformConstants.TestAdapterRegexPattern, SearchOption.AllDirectories));
-                    extensionAssemblies.AddRange(this.fileHelper.EnumerateFiles(adapterPath, TestPlatformConstants.TestLoggerRegexPattern, SearchOption.AllDirectories));
-                    extensionAssemblies.AddRange(this.fileHelper.EnumerateFiles(adapterPath, TestPlatformConstants.RunTimeRegexPattern, SearchOption.AllDirectories));
-                    extensionAssemblies.AddRange(this.fileHelper.EnumerateFiles(adapterPath, TestPlatformConstants.SettingsProviderRegexPattern, SearchOption.AllDirectories));
-
+                    var extensionAssemblies = new List<string>(this.fileHelper.EnumerateFiles(adapterPath, SearchOption.AllDirectories, TestPlatformConstants.TestAdapterEndsWithPattern, TestPlatformConstants.TestLoggerEndsWithPattern, TestPlatformConstants.RunTimeEndsWithPattern, TestPlatformConstants.SettingsProviderEndsWithPattern));
                     if (extensionAssemblies.Count > 0)
                     {
-                        this.UpdateExtensions(extensionAssemblies, true);
+                        this.UpdateExtensions(extensionAssemblies, skipExtensionFilters: false);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Update the test logger paths from source directory
+        /// Update the extension assemblies from source directory
         /// </summary>
         /// <param name="testRunCriteria">
         /// The test Run Criteria.
@@ -207,6 +245,15 @@ namespace Microsoft.VisualStudio.TestPlatform.Client
                 sources = testRunCriteria.Tests.Select(tc => tc.Source).Distinct();
             }
 
+            AddExtensionAssembliesFromSource(sources);
+        }
+
+        /// <summary>
+        /// Update the test logger paths from source directory
+        /// </summary>
+        /// <param name="sources"></param>
+        private void AddExtensionAssembliesFromSource(IEnumerable<string> sources)
+        {
             // Currently we support discovering loggers only from Source directory
             var loggersToUpdate = new List<string>();
 
@@ -215,13 +262,13 @@ namespace Microsoft.VisualStudio.TestPlatform.Client
                 var sourceDirectory = Path.GetDirectoryName(source);
                 if (!string.IsNullOrEmpty(sourceDirectory) && this.fileHelper.DirectoryExists(sourceDirectory))
                 {
-                    loggersToUpdate.AddRange(this.fileHelper.EnumerateFiles(sourceDirectory, TestPlatformConstants.TestLoggerRegexPattern, SearchOption.TopDirectoryOnly).ToList());
+                    loggersToUpdate.AddRange(this.fileHelper.EnumerateFiles(sourceDirectory, SearchOption.TopDirectoryOnly, TestPlatformConstants.TestLoggerEndsWithPattern));
                 }
             }
 
             if (loggersToUpdate.Count > 0)
             {
-                this.UpdateExtensions(loggersToUpdate, true);
+                this.UpdateExtensions(loggersToUpdate, skipExtensionFilters: false);
             }
         }
 
@@ -232,14 +279,10 @@ namespace Microsoft.VisualStudio.TestPlatform.Client
         private static void AddExtensionAssembliesFromExtensionDirectory()
         {
             var fileHelper = new FileHelper();
-            var extensionsFolder = Path.Combine(Path.GetDirectoryName(typeof(TestPlatform).GetTypeInfo().Assembly.Location), "Extensions");
-            var defaultExtensionPaths = new List<string>();
+            var extensionsFolder = Path.Combine(Path.GetDirectoryName(typeof(TestPlatform).GetTypeInfo().Assembly.GetAssemblyLocation()), "Extensions");
             if (fileHelper.DirectoryExists(extensionsFolder))
             {
-                var dlls = fileHelper.EnumerateFiles(extensionsFolder, ".*.dll", SearchOption.TopDirectoryOnly);
-                defaultExtensionPaths.AddRange(dlls);
-                var exes = fileHelper.EnumerateFiles(extensionsFolder, ".*.exe", SearchOption.TopDirectoryOnly);
-                defaultExtensionPaths.AddRange(exes);
+                var defaultExtensionPaths = fileHelper.EnumerateFiles(extensionsFolder, SearchOption.TopDirectoryOnly, ".dll", ".exe");
                 TestPluginCache.Instance.DefaultExtensionPaths = defaultExtensionPaths;
             }
         }

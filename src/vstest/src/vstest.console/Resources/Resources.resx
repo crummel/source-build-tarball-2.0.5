@@ -276,11 +276,11 @@
   <data name="FrameworkArgumentHelp" xml:space="preserve">
     <value>--Framework|/Framework:&lt;Framework Version&gt;
       Target .Net Framework version to be used for test execution. 
-      Valid values are ".NETFramework,Version=v4.6", ".NETCoreApp,Version=v1.0" etc.
+      Valid values are ".NETFramework,Version=v4.5.1", ".NETCoreApp,Version=v1.0" etc.
       Other supported values are Framework35, Framework40, Framework45 and FrameworkCore10.</value>
   </data>
   <data name="FrameworkVersionRequired" xml:space="preserve">
-    <value>The /Framework argument requires the target .Net Framework version for the test run.   Example:  /Framework:".NETFramework,Version=v4.6"</value>
+    <value>The /Framework argument requires the target .Net Framework version for the test run.   Example:  /Framework:".NETFramework,Version=v4.5.1"</value>
   </data>
   <data name="HelpArgumentHelp" xml:space="preserve">
     <value>-?|--Help|/?|/Help
@@ -303,7 +303,7 @@
     <value>Hours</value>
   </data>
   <data name="InIsolationHelp" xml:space="preserve">
-    <value>/InIsolation
+    <value>--InIsolation|/InIsolation
       Runs the tests in an isolated process. This makes vstest.console.exe 
       process less likely to be stopped on an error in the tests, but tests 
       may run slower.</value>
@@ -318,7 +318,7 @@
     <value>Argument {0} is not expected in the 'EnableCodeCoverage' command. Specify the command without the argument (Example: vstest.console.exe myTests.dll /EnableCodeCoverage) and try again.</value>
   </data>
   <data name="InvalidFrameworkVersion" xml:space="preserve">
-    <value>Invalid .Net Framework version:{0}. Please give the fullname of the TargetFramework. Other supported .Net Framework versions are Framework35, Framework40 and Framework45.</value>
+    <value>Invalid .Net Framework version:{0}. Please give the fullname of the TargetFramework. Other supported .Net Framework versions are Framework35, Framework40, Framework45 and FrameworkCore10.</value>
   </data>
   <data name="InvalidInIsolationCommand" xml:space="preserve">
     <value>Argument {0} is not expected in the 'InIsolation' command. Specify the command without the argument (Example: vstest.console.exe myTests.dll /InIsolation) and try again.</value>
@@ -382,9 +382,6 @@
   <data name="LoggerUriInvalid" xml:space="preserve">
     <value>The Test Logger URI '{0}' is not valid.  The Test Logger will be ignored.</value>
   </data>
-  <data name="MalformedRunSettingsFile" xml:space="preserve">
-    <value>Settings file provided do not confirm to required format. </value>
-  </data>
   <data name="MicrosoftCommandLineTitle" xml:space="preserve">
     <value>Microsoft (R) Test Execution Command Line Tool Version {0}</value>
   </data>
@@ -415,7 +412,7 @@
   <data name="NoTestsAvailableInSources" xml:space="preserve">
     <value>No test is available in {0}. Make sure that installed test discoverers &amp; executors, platform &amp; framework version settings are appropriate and try again.</value>
   </data>
-  <data name="NoTestsFoundWarningMessageWithSuggestionToUseVsix" xml:space="preserve">
+  <data name="StringFormatToJoinTwoStrings" xml:space="preserve">
     <value>{0} {1}</value>
   </data>
   <data name="OutputArgumentHelp" xml:space="preserve">
@@ -522,20 +519,8 @@
   <data name="StdOutMessagesBanner" xml:space="preserve">
     <value>Standard Output Messages:</value>
   </data>
-  <data name="SuggestUseVsixExtensionsIfNoTestsIsFound" xml:space="preserve">
-    <value>Additionally, you can try specifying '/UseVsixExtensions' command if the test discoverer &amp; executor is installed on the machine as vsix extensions and your installation supports vsix extensions. Example: vstest.console.exe myTests.dll /UseVsixExtensions:true</value>
-  </data>
-  <data name="SuggestUseVsixExtensionsInListDiscoverersCommand" xml:space="preserve">
-    <value>The Test Discovery Add-Ins installed through a VSIX installation are ignored. Use the /UseVsixExtensions parameter to include them, if your installation supports vsix extensions. Example: vstest.console.exe {0} /UseVsixExtensions:true</value>
-  </data>
-  <data name="SuggestUseVsixExtensionsInListExecutorsCommand" xml:space="preserve">
-    <value>The Test Executor Add-Ins installed through a VSIX installation are ignored. Use the /UseVsixExtensions parameter to include them, if your installation supports vsix extensions. Example: vstest.console.exe {0} /UseVsixExtensions:true</value>
-  </data>
-  <data name="SuggestUseVsixExtensionsInListLoggersCommand" xml:space="preserve">
-    <value>The Test Logger Add-Ins installed through a VSIX installation are ignored. Use the /UseVsixExtensions parameter to include them, if your installation supports vsix extensions. Example: vstest.console.exe {0} /UseVsixExtensions:true</value>
-  </data>
-  <data name="SuggestUseVsixExtensionsInListSettingsProviderCommand" xml:space="preserve">
-    <value>The Settings Providers Add-Ins installed through a VSIX installation are ignored. Use the /UseVsixExtensions parameter to include them, if your installation supports vsix extensions. Example: vstest.console.exe {0} /UseVsixExtensions:true</value>
+  <data name="SuggestTestAdapterPathIfNoTestsIsFound" xml:space="preserve">
+    <value>Additionally, path to test adapters can be specified using /TestAdapterPath command. Example  /TestAdapterPath:&lt;pathToCustomAdapters&gt;.</value>
   </data>
   <data name="SupportedFileTypesIndicator" xml:space="preserve">
     <value>        Supported File Types:</value>
@@ -654,5 +639,38 @@
   </data>
   <data name="DbgTrcMessagesBanner" xml:space="preserve">
     <value>Debug Traces Messages:</value>
+  </data>
+  <data name="OpenResponseFileError" xml:space="preserve">
+    <value>Error opening response file '{0}'</value>
+  </data>
+  <data name="ResponseFileArgumentHelp" xml:space="preserve">
+    <value>@&lt;file&gt;
+      Read response file for more options.</value>
+  </data>
+  <data name="EnableBlameUsage" xml:space="preserve">
+    <value>--Blame|/Blame
+      Runs the test in blame mode. This option is helpful in isolating the problematic test causing test host crash. It creates an output file in the current directory as "Sequence.xml", that captures the order of execution of test before the crash.</value>
+  </data>
+  <data name="TestRunAborted" xml:space="preserve">
+    <value>Test Run Aborted.</value>
+  </data>
+  <data name="TestRunCanceled" xml:space="preserve">
+    <value>Test Run Canceled.</value>
+  </data>
+  <data name="TestRunSummaryForCanceledOrAbortedRun" xml:space="preserve">
+    <value>Total tests: Unknown. Passed: {0}. Failed: {1}. Skipped: {2}.</value>
+  </data>
+  <data name="UseVsixExtensionsDeprecation" xml:space="preserve">
+    <value>/UseVsixExtensions is getting deprecated. Please use /TestAdapterPath instead.</value>
+  </data>
+  <data name="DisableAutoFakesUsage" xml:space="preserve">
+    <value>--DisableAutoFakes|/DisableAutoFakes:&lt;true/false&gt;
+     Example: /DisableAutoFakes:true</value>
+  </data>
+  <data name="CollectWithTestSettingErrorMessage" xml:space="preserve">
+    <value>--Collect|/Collect:"{0}" is not supported if test run is configured using testsettings.</value>
+  </data>
+  <data name="RunsettingsWithDCErrorMessage" xml:space="preserve">
+    <value>Data collectors configured via run settings are not supported with embedded test settings. Please see https://aka.ms/vstest-configure-datacollector for more information. Run settings: {0}.</value>
   </data>
 </root>

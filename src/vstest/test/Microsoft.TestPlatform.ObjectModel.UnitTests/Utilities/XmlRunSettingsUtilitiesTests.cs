@@ -3,9 +3,11 @@
 
 namespace Microsoft.TestPlatform.ObjectModel.UnitTests.Utilities
 {
-    using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
     using System.Xml;
+    using System.Xml.XPath;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel;
     using Microsoft.VisualStudio.TestPlatform.ObjectModel.Utilities;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -74,6 +76,8 @@ namespace Microsoft.TestPlatform.ObjectModel.UnitTests.Utilities
     </DataCollectors>
   </DataCollectionRunSettings>
 </RunSettings>";
+
+        private readonly string EmptyRunSettings = "<RunSettings></RunSettings>";
 
         #endregion
 
@@ -305,7 +309,7 @@ namespace Microsoft.TestPlatform.ObjectModel.UnitTests.Utilities
         [TestMethod]
         public void IsDataCollectionEnabledShouldReturnFalseIfDataCollectionNodeIsNotPresent()
         {
-            Assert.IsFalse(XmlRunSettingsUtilities.IsDataCollectionEnabled("<RunSettings></RunSettings>"));
+            Assert.IsFalse(XmlRunSettingsUtilities.IsDataCollectionEnabled(EmptyRunSettings));
         }
 
         [TestMethod]
@@ -334,7 +338,7 @@ namespace Microsoft.TestPlatform.ObjectModel.UnitTests.Utilities
         [TestMethod]
         public void IsInProcDataCollectionEnabledShouldReturnFalseIfDataCollectionNodeIsNotPresent()
         {
-            Assert.IsFalse(XmlRunSettingsUtilities.IsInProcDataCollectionEnabled("<RunSettings></RunSettings>"));
+            Assert.IsFalse(XmlRunSettingsUtilities.IsInProcDataCollectionEnabled(EmptyRunSettings));
         }
 
         [TestMethod]
@@ -362,7 +366,7 @@ namespace Microsoft.TestPlatform.ObjectModel.UnitTests.Utilities
         [TestMethod]
         public void GetDataCollectionRunSettingsShouldReturnNullOnNoDataCollectorSettings()
         {
-            Assert.IsNull(XmlRunSettingsUtilities.GetDataCollectionRunSettings("<RunSettings></RunSettings>"));
+            Assert.IsNull(XmlRunSettingsUtilities.GetDataCollectionRunSettings(EmptyRunSettings));
         }
 
         [TestMethod]
@@ -384,6 +388,26 @@ namespace Microsoft.TestPlatform.ObjectModel.UnitTests.Utilities
         }
 
         #endregion
+
+        [TestMethod]
+        public void GetDataCollectorsFriendlyNameShouldReturnListOfFriendlyName()
+        {
+            var settingsXml = @"<RunSettings>
+                                    <DataCollectionRunSettings>
+                                        <DataCollectors>
+                                            <DataCollector friendlyName=""DummyDataCollector1"">
+                                            </DataCollector>
+                                            <DataCollector friendlyName=""DummyDataCollector2"">
+                                            </DataCollector>
+                                        </DataCollectors>
+                                    </DataCollectionRunSettings>
+                                </RunSettings>";
+
+            var friendlyNameList = XmlRunSettingsUtilities.GetDataCollectorsFriendlyName(settingsXml).ToList<string>();
+
+            Assert.AreEqual(friendlyNameList.Count, 2, "There should be two friendly name");
+            CollectionAssert.AreEqual(friendlyNameList, new List<string> { "DummyDataCollector1", "DummyDataCollector2" });
+        }
 
         private string ConvertOutOfProcDataCollectionSettingsToInProcDataCollectionSettings(string settings)
         {

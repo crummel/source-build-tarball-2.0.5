@@ -1,0 +1,25 @@
+From 3e365470b828e5ee9032a2af42e5ae79bb148267 Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Tue, 30 Jan 2018 15:26:57 -0500
+Subject: [PATCH 1/1] Temporary fix for versioning
+
+---
+ scripts/build.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/build.sh b/scripts/build.sh
+index 0e0202b..e8443f7 100755
+--- a/scripts/build.sh
++++ b/scripts/build.sh
+@@ -92,7 +92,7 @@ TPB_TargetFrameworkCore="netcoreapp2.0"
+ TPB_TargetFrameworkCore10="netcoreapp1.0"
+ TPB_Configuration=$CONFIGURATION
+ TPB_TargetRuntime=$TARGET_RUNTIME
+-TPB_Version=$(test -z $VERSION_SUFFIX && echo $VERSION || echo $VERSION-$VERSION_SUFFIX)
++TPB_Version=$VERSION
+ TPB_CIBuild=$CI_BUILD
+ TPB_LocalizedBuild=$DISABLE_LOCALIZED_BUILD
+ TPB_Verbose=$VERBOSE
+-- 
+1.8.3.1
+

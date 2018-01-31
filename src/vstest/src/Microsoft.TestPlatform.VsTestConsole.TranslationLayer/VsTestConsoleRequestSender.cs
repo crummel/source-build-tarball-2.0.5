@@ -6,11 +6,11 @@ namespace Microsoft.TestPlatform.VsTestConsole.TranslationLayer
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
 
     using Microsoft.TestPlatform.VsTestConsole.TranslationLayer.Interfaces;
-    using Microsoft.TestPlatform.VsTestConsole.TranslationLayer.Payloads;
     using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
     using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.Interfaces;
     using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.ObjectModel;
@@ -26,7 +26,7 @@ namespace Microsoft.TestPlatform.VsTestConsole.TranslationLayer
     /// <summary>
     /// VstestConsoleRequestSender for sending requests to Vstest.console.exe
     /// </summary>
-    internal class VsTestConsoleRequestSender : ITranslationLayerRequestSender
+    internal class VsTestConsoleRequestSender : ITranslationLayerRequestSender, ITranslationLayerRequestSenderAsync
     {
         private readonly ICommunicationManager communicationManager;
 
@@ -74,7 +74,7 @@ namespace Microsoft.TestPlatform.VsTestConsole.TranslationLayer
             int port = -1;
             try
             {
-                port = this.communicationManager.HostServer();
+                port = this.communicationManager.HostServer(new IPEndPoint(IPAddress.Loopback, 0)).Port;
                 this.communicationManager.AcceptClientAsync();
 
                 Task.Run(() =>
@@ -86,7 +86,7 @@ namespace Microsoft.TestPlatform.VsTestConsole.TranslationLayer
             }
             catch (Exception ex)
             {
-                EqtTrace.Error("VsTestConsoleRequestSender: Error initializing communication with VstestConsole: {0}", ex);
+                EqtTrace.Error("VsTestConsoleRequestSender.InitializeCommunication: Error initializing communication with VstestConsole: {0}", ex);
                 this.handShakeComplete.Set();
             }
 
@@ -94,7 +94,7 @@ namespace Microsoft.TestPlatform.VsTestConsole.TranslationLayer
         }
 
         /// <summary>
-        /// Waits for Vstest.console.exe Connection for a given timeout
+        /// Waits for Vstest.console.exe Connection for a given timeout.
         /// </summary>
         /// <param name="clientConnectionTimeout">Time to wait for the connection</param>
         /// <returns>True, if successful</returns>
@@ -104,66 +104,96 @@ namespace Microsoft.TestPlatform.VsTestConsole.TranslationLayer
             return waitSucess && this.handShakeSuccessful;
         }
 
-        /// <summary>
-        /// Initializes the Extensions while probing additional extension paths 
-        /// </summary>
-        /// <param name="pathToAdditionalExtensions">Paths to check for additional extensions</param>
+        /// <inheritdoc/>
+        public async Task<int> InitializeCommunicationAsync(int clientConnectionTimeout)
+        {
+            this.processExitCancellationTokenSource = new CancellationTokenSource();
+            this.handShakeSuccessful = false;
+            this.handShakeComplete.Reset();
+            int port = -1;
+            try
+            {
+                port = this.communicationManager.HostServer(new IPEndPoint(IPAddress.Loopback, 0)).Port;
+                var timeoutSource = new CancellationTokenSource(clientConnectionTimeout);
+                await Task.Run(() => this.communicationManager.AcceptClientAsync(), timeoutSource.Token);
+
+                this.handShakeSuccessful = await this.HandShakeWithVsTestConsoleAsync();
+                this.handShakeComplete.Set();
+            }
+            catch (Exception ex)
+            {
+                EqtTrace.Error("VsTestConsoleRequestSender.InitializeCommunicationAsync: Error initializing communication with VstestConsole: {0}", ex);
+                this.handShakeComplete.Set();
+            }
+
+            return this.handShakeSuccessful ? port : -1;
+        }
+
+        /// <inheritdoc/>
         public void InitializeExtensions(IEnumerable<string> pathToAdditionalExtensions)
         {
             this.communicationManager.SendMessage(MessageType.ExtensionsInitialize, pathToAdditionalExtensions, this.protocolVersion);
         }
 
-        /// <summary>
-        /// Discover Tests using criteria and send events through eventHandler
-        /// </summary>
-        /// <param name="sources"></param>
-        /// <param name="runSettings"></param>
-        /// <param name="eventHandler"></param>
-        public void DiscoverTests(IEnumerable<string> sources, string runSettings, ITestDiscoveryEventsHandler eventHandler)
+        /// <inheritdoc/>
+        public void DiscoverTests(IEnumerable<string> sources, string runSettings, TestPlatformOptions options, ITestDiscoveryEventsHandler2 eventHandler)
         {
-            this.SendMessageAndListenAndReportTestCases(sources, runSettings, eventHandler);
+            this.SendMessageAndListenAndReportTestCases(sources, runSettings, options, eventHandler);
         }
 
         /// <summary>
-        /// Starts the TestRun with given sources and criteria
+        /// Asynchronous equivalent of <see cref="DiscoverTests"/>.
         /// </summary>
-        /// <param name="sources">Sources for test run</param>
-        /// <param name="runSettings">RunSettings for test run</param>
-        /// <param name="runEventsHandler">EventHandler for test run events</param>
-        public void StartTestRun(IEnumerable<string> sources, string runSettings, ITestRunEventsHandler runEventsHandler)
+        public async Task DiscoverTestsAsync(IEnumerable<string> sources, string runSettings, TestPlatformOptions options, ITestDiscoveryEventsHandler2 eventHandler)
+        {
+            await this.SendMessageAndListenAndReportTestCasesAsync(sources, runSettings, options, eventHandler);
+        }
+
+        /// <inheritdoc/>
+        public void StartTestRun(IEnumerable<string> sources, string runSettings, TestPlatformOptions options, ITestRunEventsHandler runEventsHandler)
         {
             this.SendMessageAndListenAndReportTestResults(
                 MessageType.TestRunAllSourcesWithDefaultHost,
-                new TestRunRequestPayload() { Sources = sources.ToList(), RunSettings = runSettings },
+                new TestRunRequestPayload() { Sources = sources.ToList(), RunSettings = runSettings, TestPlatformOptions = options },
                 runEventsHandler,
                 null);
         }
 
-        /// <summary>
-        /// Starts the TestRun with given test cases and criteria
-        /// </summary>
-        /// <param name="testCases">TestCases to run</param>
-        /// <param name="runSettings">RunSettings for test run</param>
-        /// <param name="runEventsHandler">EventHandler for test run events</param>
-        public void StartTestRun(IEnumerable<TestCase> testCases, string runSettings, ITestRunEventsHandler runEventsHandler)
+        /// <inheritdoc/>
+        public async Task StartTestRunAsync(IEnumerable<string> sources, string runSettings, TestPlatformOptions options, ITestRunEventsHandler runEventsHandler)
         {
-            this.SendMessageAndListenAndReportTestResults(
+            await this.SendMessageAndListenAndReportTestResultsAsync(
                 MessageType.TestRunAllSourcesWithDefaultHost,
-                new TestRunRequestPayload() { TestCases = testCases.ToList(), RunSettings = runSettings },
+                new TestRunRequestPayload() { Sources = sources.ToList(), RunSettings = runSettings, TestPlatformOptions = options },
                 runEventsHandler,
                 null);
         }
 
-        /// <summary>
-        /// Starts the TestRun with given sources and criteria with custom test host
-        /// </summary>
-        /// <param name="sources">Sources for test run</param>
-        /// <param name="runSettings">RunSettings for test run</param>
-        /// <param name="runEventsHandler">EventHandler for test run events</param>
-        /// <param name="customHostLauncher">TestHostLauncher that launches the test host for the run</param>
+        /// <inheritdoc/>
+        public void StartTestRun(IEnumerable<TestCase> testCases, string runSettings, TestPlatformOptions options, ITestRunEventsHandler runEventsHandler)
+        {
+            this.SendMessageAndListenAndReportTestResults(
+                MessageType.TestRunAllSourcesWithDefaultHost,
+                new TestRunRequestPayload() { TestCases = testCases.ToList(), RunSettings = runSettings, TestPlatformOptions = options },
+                runEventsHandler,
+                null);
+        }
+
+        /// <inheritdoc/>
+        public async Task StartTestRunAsync(IEnumerable<TestCase> testCases, string runSettings, TestPlatformOptions options, ITestRunEventsHandler runEventsHandler)
+        {
+            await this.SendMessageAndListenAndReportTestResultsAsync(
+                MessageType.TestRunAllSourcesWithDefaultHost,
+                new TestRunRequestPayload() { TestCases = testCases.ToList(), RunSettings = runSettings, TestPlatformOptions = options },
+                runEventsHandler,
+                null);
+        }
+
+        /// <inheritdoc/>
         public void StartTestRunWithCustomHost(
             IEnumerable<string> sources,
             string runSettings,
+            TestPlatformOptions options,
             ITestRunEventsHandler runEventsHandler,
             ITestHostLauncher customHostLauncher)
         {
@@ -173,49 +203,73 @@ namespace Microsoft.TestPlatform.VsTestConsole.TranslationLayer
                 {
                     Sources = sources.ToList(),
                     RunSettings = runSettings,
-                    DebuggingEnabled = customHostLauncher.IsDebug
+                    DebuggingEnabled = customHostLauncher.IsDebug,
+                    TestPlatformOptions = options
                 },
                 runEventsHandler,
                 customHostLauncher);
         }
 
-        /// <summary>
-        /// Starts the TestRun with given test cases and criteria with custom test host
-        /// </summary>
-        /// <param name="testCases">TestCases to run</param>
-        /// <param name="runSettings">RunSettings for test run</param>
-        /// <param name="runEventsHandler">EventHandler for test run events</param>
-        /// <param name="customHostLauncher">TestHostLauncher that launches the test host for the run</param>
-        public void StartTestRunWithCustomHost(
-            IEnumerable<TestCase> testCases,
+        /// <inheritdoc/>
+        public async Task StartTestRunWithCustomHostAsync(
+            IEnumerable<string> sources,
             string runSettings,
+            TestPlatformOptions options,
             ITestRunEventsHandler runEventsHandler,
             ITestHostLauncher customHostLauncher)
         {
+            await this.SendMessageAndListenAndReportTestResultsAsync(
+                MessageType.GetTestRunnerProcessStartInfoForRunAll,
+                new TestRunRequestPayload()
+                {
+                    Sources = sources.ToList(),
+                    RunSettings = runSettings,
+                    DebuggingEnabled = customHostLauncher.IsDebug,
+                    TestPlatformOptions = options
+                },
+                runEventsHandler,
+                customHostLauncher);
+        }
+
+        /// <inheritdoc/>
+        public void StartTestRunWithCustomHost(IEnumerable<TestCase> testCases, string runSettings, TestPlatformOptions options, ITestRunEventsHandler runEventsHandler, ITestHostLauncher customHostLauncher)
+        {
             this.SendMessageAndListenAndReportTestResults(
+                MessageType.GetTestRunnerProcessStartInfoForRunSelected,
+                new TestRunRequestPayload
+                {
+                    TestCases = testCases.ToList(),
+                    RunSettings = runSettings,
+                    DebuggingEnabled = customHostLauncher.IsDebug,
+                    TestPlatformOptions = options
+                },
+                runEventsHandler,
+                customHostLauncher);
+        }
+
+        /// <inheritdoc/>
+        public async Task StartTestRunWithCustomHostAsync(IEnumerable<TestCase> testCases, string runSettings, TestPlatformOptions options, ITestRunEventsHandler runEventsHandler, ITestHostLauncher customHostLauncher)
+        {
+            await this.SendMessageAndListenAndReportTestResultsAsync(
                 MessageType.GetTestRunnerProcessStartInfoForRunSelected,
                 new TestRunRequestPayload()
                 {
                     TestCases = testCases.ToList(),
                     RunSettings = runSettings,
-                    DebuggingEnabled = customHostLauncher.IsDebug
+                    DebuggingEnabled = customHostLauncher.IsDebug,
+                    TestPlatformOptions = options
                 },
                 runEventsHandler,
                 customHostLauncher);
         }
 
-
-        /// <summary>
-        /// Send Cancel TestRun message
-        /// </summary>
+        /// <inheritdoc/>
         public void CancelTestRun()
         {
             this.communicationManager.SendMessage(MessageType.CancelTestRun);
         }
 
-        /// <summary>
-        /// Send Abort TestRun message
-        /// </summary>
+        /// <inheritdoc/>
         public void AbortTestRun()
         {
             this.communicationManager.SendMessage(MessageType.AbortTestRun);
@@ -268,28 +322,60 @@ namespace Microsoft.TestPlatform.VsTestConsole.TranslationLayer
                 else if (message.MessageType == MessageType.ProtocolError)
                 {
                     // TODO : Payload for ProtocolError needs to finalized.
-                    EqtTrace.Error("VsTestConsoleRequestSender: Version Check failed. ProtolError was revceived from the runner");
+                    EqtTrace.Error("VsTestConsoleRequestSender.HandShakeWithVsTestConsole: Version Check failed. ProtolError was revceived from the runner");
                 }
                 else
                 {
-                    EqtTrace.Error("VsTestConsoleRequestSender: VersionCheck Message Expected but different message received: Received MessageType: {0}", message.MessageType);
+                    EqtTrace.Error("VsTestConsoleRequestSender.HandShakeWithVsTestConsole: VersionCheck Message Expected but different message received: Received MessageType: {0}", message.MessageType);
                 }
             }
             else
             {
-                EqtTrace.Error("VsTestConsoleRequestSender: SessionConnected Message Expected but different message received: Received MessageType: {0}", message.MessageType);
+                EqtTrace.Error("VsTestConsoleRequestSender.HandShakeWithVsTestConsole: SessionConnected Message Expected but different message received: Received MessageType: {0}", message.MessageType);
             }
 
             return success;
         }
 
-        private void SendMessageAndListenAndReportTestCases(IEnumerable<string> sources, string runSettings, ITestDiscoveryEventsHandler eventHandler)
+        private async Task<bool> HandShakeWithVsTestConsoleAsync()
+        {
+            var success = false;
+            var message = await this.communicationManager.ReceiveMessageAsync(this.processExitCancellationTokenSource.Token);
+            if (message.MessageType == MessageType.SessionConnected)
+            {
+                this.communicationManager.SendMessage(MessageType.VersionCheck, this.protocolVersion);
+                message = await this.communicationManager.ReceiveMessageAsync(this.processExitCancellationTokenSource.Token);
+
+                if (message.MessageType == MessageType.VersionCheck)
+                {
+                    this.protocolVersion = this.dataSerializer.DeserializePayload<int>(message);
+                    success = true;
+                }
+                else if (message.MessageType == MessageType.ProtocolError)
+                {
+                    // TODO : Payload for ProtocolError needs to finalized.
+                    EqtTrace.Error("VsTestConsoleRequestSender.HandShakeWithVsTestConsoleAsync: Version Check failed. ProtolError was revceived from the runner");
+                }
+                else
+                {
+                    EqtTrace.Error("VsTestConsoleRequestSender.HandShakeWithVsTestConsoleAsync: VersionCheck Message Expected but different message received: Received MessageType: {0}", message.MessageType);
+                }
+            }
+            else
+            {
+                EqtTrace.Error("VsTestConsoleRequestSender.HandShakeWithVsTestConsoleAsync: SessionConnected Message Expected but different message received: Received MessageType: {0}", message.MessageType);
+            }
+
+            return success;
+        }
+
+        private void SendMessageAndListenAndReportTestCases(IEnumerable<string> sources, string runSettings, TestPlatformOptions options, ITestDiscoveryEventsHandler2 eventHandler)
         {
             try
             {
                 this.communicationManager.SendMessage(
                             MessageType.StartDiscovery,
-                            new DiscoveryRequestPayload() { Sources = sources, RunSettings = runSettings },
+                            new DiscoveryRequestPayload() { Sources = sources, RunSettings = runSettings, TestPlatformOptions = options },
                             this.protocolVersion);
                 var isDiscoveryComplete = false;
 
@@ -311,10 +397,14 @@ namespace Microsoft.TestPlatform.VsTestConsole.TranslationLayer
                         var discoveryCompletePayload =
                             this.dataSerializer.DeserializePayload<DiscoveryCompletePayload>(message);
 
+                        var discoveryCompleteEventArgs = new DiscoveryCompleteEventArgs(discoveryCompletePayload.TotalTests, discoveryCompletePayload.IsAborted);
+
+                        // Adding Metrics From VsTestConsole
+                        discoveryCompleteEventArgs.Metrics = discoveryCompletePayload.Metrics;
+
                         eventHandler.HandleDiscoveryComplete(
-                            discoveryCompletePayload.TotalTests,
-                            discoveryCompletePayload.LastDiscoveredTests,
-                            discoveryCompletePayload.IsAborted);
+                            discoveryCompleteEventArgs,
+                            discoveryCompletePayload.LastDiscoveredTests);
                         isDiscoveryComplete = true;
                     }
                     else if (string.Equals(MessageType.TestMessage, message.MessageType))
@@ -329,7 +419,69 @@ namespace Microsoft.TestPlatform.VsTestConsole.TranslationLayer
                 EqtTrace.Error("Aborting Test Discovery Operation: {0}", exception);
 
                 eventHandler.HandleLogMessage(TestMessageLevel.Error, TranslationLayerResources.AbortedTestsDiscovery);
-                eventHandler.HandleDiscoveryComplete(-1, null, true);
+
+                var discoveryCompleteEventArgs = new DiscoveryCompleteEventArgs(-1, true);
+                eventHandler.HandleDiscoveryComplete(discoveryCompleteEventArgs, null);
+
+                CleanupCommunicationIfProcessExit();
+            }
+
+            this.testPlatformEventSource.TranslationLayerDiscoveryStop();
+        }
+
+        private async Task SendMessageAndListenAndReportTestCasesAsync(IEnumerable<string> sources, string runSettings, TestPlatformOptions options, ITestDiscoveryEventsHandler2 eventHandler)
+        {
+            try
+            {
+                this.communicationManager.SendMessage(
+                            MessageType.StartDiscovery,
+                            new DiscoveryRequestPayload() { Sources = sources, RunSettings = runSettings, TestPlatformOptions = options },
+                            this.protocolVersion);
+                var isDiscoveryComplete = false;
+
+                // Cycle through the messages that the vstest.console sends.
+                // Currently each of the operations are not separate tasks since they should not each take much time.
+                // This is just a notification.
+                while (!isDiscoveryComplete)
+                {
+                    var message = await this.TryReceiveMessageAsync();
+
+                    if (string.Equals(MessageType.TestCasesFound, message.MessageType))
+                    {
+                        var testCases = this.dataSerializer.DeserializePayload<IEnumerable<TestCase>>(message);
+
+                        eventHandler.HandleDiscoveredTests(testCases);
+                    }
+                    else if (string.Equals(MessageType.DiscoveryComplete, message.MessageType))
+                    {
+                        var discoveryCompletePayload =
+                            this.dataSerializer.DeserializePayload<DiscoveryCompletePayload>(message);
+
+                        var discoveryCompleteEventArgs = new DiscoveryCompleteEventArgs(discoveryCompletePayload.TotalTests, discoveryCompletePayload.IsAborted);
+
+                        // Adding Metrics from VsTestConsole
+                        discoveryCompleteEventArgs.Metrics = discoveryCompletePayload.Metrics;
+
+                        eventHandler.HandleDiscoveryComplete(
+                            discoveryCompleteEventArgs,
+                            discoveryCompletePayload.LastDiscoveredTests);
+                        isDiscoveryComplete = true;
+                    }
+                    else if (string.Equals(MessageType.TestMessage, message.MessageType))
+                    {
+                        var testMessagePayload = this.dataSerializer.DeserializePayload<TestMessagePayload>(message);
+                        eventHandler.HandleLogMessage(testMessagePayload.MessageLevel, testMessagePayload.Message);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                EqtTrace.Error("Aborting Test Discovery Operation: {0}", exception);
+
+                eventHandler.HandleLogMessage(TestMessageLevel.Error, TranslationLayerResources.AbortedTestsDiscovery);
+
+                var discoveryCompleteEventArgs = new DiscoveryCompleteEventArgs(-1, true);
+                eventHandler.HandleDiscoveryComplete(discoveryCompleteEventArgs, null);
 
                 CleanupCommunicationIfProcessExit();
             }
@@ -349,6 +501,60 @@ namespace Microsoft.TestPlatform.VsTestConsole.TranslationLayer
                 while (!isTestRunComplete)
                 {
                     var message = this.TryReceiveMessage();
+
+                    if (string.Equals(MessageType.TestRunStatsChange, message.MessageType))
+                    {
+                        var testRunChangedArgs = this.dataSerializer.DeserializePayload<TestRunChangedEventArgs>(
+                            message);
+                        eventHandler.HandleTestRunStatsChange(testRunChangedArgs);
+                    }
+                    else if (string.Equals(MessageType.ExecutionComplete, message.MessageType))
+                    {
+                        var testRunCompletePayload =
+                            this.dataSerializer.DeserializePayload<TestRunCompletePayload>(message);
+
+                        eventHandler.HandleTestRunComplete(
+                            testRunCompletePayload.TestRunCompleteArgs,
+                            testRunCompletePayload.LastRunTests,
+                            testRunCompletePayload.RunAttachments,
+                            testRunCompletePayload.ExecutorUris);
+                        isTestRunComplete = true;
+                    }
+                    else if (string.Equals(MessageType.TestMessage, message.MessageType))
+                    {
+                        var testMessagePayload = this.dataSerializer.DeserializePayload<TestMessagePayload>(message);
+                        eventHandler.HandleLogMessage(testMessagePayload.MessageLevel, testMessagePayload.Message);
+                    }
+                    else if (string.Equals(MessageType.CustomTestHostLaunch, message.MessageType))
+                    {
+                        HandleCustomHostLaunch(customHostLauncher, message);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                EqtTrace.Error("Aborting Test Run Operation: {0}", exception);
+                eventHandler.HandleLogMessage(TestMessageLevel.Error, TranslationLayerResources.AbortedTestsRun);
+                var completeArgs = new TestRunCompleteEventArgs(null, false, true, exception, null, TimeSpan.Zero);
+                eventHandler.HandleTestRunComplete(completeArgs, null, null, null);
+                this.CleanupCommunicationIfProcessExit();
+            }
+
+            this.testPlatformEventSource.TranslationLayerExecutionStop();
+        }
+
+        private async Task SendMessageAndListenAndReportTestResultsAsync(string messageType, object payload, ITestRunEventsHandler eventHandler, ITestHostLauncher customHostLauncher)
+        {
+            try
+            {
+                this.communicationManager.SendMessage(messageType, payload, this.protocolVersion);
+                var isTestRunComplete = false;
+
+                // Cycle through the messages that the testhost sends. 
+                // Currently each of the operations are not separate tasks since they should not each take much time. This is just a notification.
+                while (!isTestRunComplete)
+                {
+                    var message = await this.TryReceiveMessageAsync();
 
                     if (string.Equals(MessageType.TestRunStatsChange, message.MessageType))
                     {
@@ -415,6 +621,18 @@ namespace Microsoft.TestPlatform.VsTestConsole.TranslationLayer
             return message;
         }
 
+        private async Task<Message> TryReceiveMessageAsync()
+        {
+            Message message = await this.communicationManager.ReceiveMessageAsync(this.processExitCancellationTokenSource.Token);
+
+            if (message == null)
+            {
+                throw new TransationLayerException(TranslationLayerResources.FailedToReceiveMessage);
+            }
+
+            return message;
+        }
+
         private void HandleCustomHostLaunch(ITestHostLauncher customHostLauncher, Message message)
         {
             var ackPayload = new CustomHostLaunchAckPayload() { HostProcessId = -1, ErrorMessage = null };
@@ -430,6 +648,7 @@ namespace Microsoft.TestPlatform.VsTestConsole.TranslationLayer
             catch (Exception ex)
             {
                 EqtTrace.Error("Error while launching custom host: {0}", ex);
+
                 // Vstest.console will send the abort message properly while cleaning up all the flow, so do not abort here
                 // Let the ack go through and let vstest.console handle the error
                 ackPayload.ErrorMessage = ex.Message;
