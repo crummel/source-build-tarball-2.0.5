@@ -14,7 +14,6 @@
   <Import Project="..\BuildFromSource.targets" />
 
   <PropertyGroup>
-    <BuildRevision>$([System.DateTime]::Now.ToString(`yyMMdd`))</BuildRevision>
     <PackageLicenceUrl Condition="'$(PackageLicenceUrl)' == ''">https://github.com/Microsoft/visualfsharp/blob/master/License.txt</PackageLicenceUrl>
     <PackageProjectUrl Condition="'$(PackageProjectUrl)' == ''">https://github.com/Microsoft/visualfsharp</PackageProjectUrl>
     <PackageAuthors    Condition="'$(PackageAuthors)' == ''"   >Microsoft and F# Software Foundation</PackageAuthors> 
