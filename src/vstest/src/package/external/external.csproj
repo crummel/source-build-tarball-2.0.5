@@ -41,16 +41,28 @@
       <Version>14.0.12-pre</Version>
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="vswhere">
+      <Version>2.0.2</Version>
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Internal.TestPlatform.Extensions">
-      <Version>15.1.0-preview-745112</Version>
+      <Version>15.6.0-preview-1121756</Version>
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.QualityTools">
+      <Version>15.5.0-preview-1086294</Version>
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.QualityTools.DataCollectors">
+      <Version>15.5.0-preview-1086294</Version>
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Internal.Dia">
       <Version>14.0.0</Version>
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools">
-      <Version>15.1.192</Version>
+    <PackageReference Include="Microsoft.VSSDK.BuildTools ">
+      <Version>15.0.26201</Version>
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <Reference Include="System" />
