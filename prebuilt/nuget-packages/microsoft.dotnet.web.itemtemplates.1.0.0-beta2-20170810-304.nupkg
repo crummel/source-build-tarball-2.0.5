@@ -1,0 +1,2908 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>templating - Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170810-304 - MyGet - Hosting your NuGet, npm, Bower, Maven, PHP Composer and Vsix packages</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    
+            <link rel="stylesheet" href="https://mygetwww-2e16.kxcdn.com/bundles/css/styles.min.css?c=MjAxOC4xLjAuMTcy" type="text/css" />
+
+
+    <link href="https://mygetwww-2e16.kxcdn.com/favicon.ico?c=MjAxOC4xLjAuMTcy" rel="shortcut icon" type="image/x-icon" />
+    <meta property="og:image" content="https://mygetwww-2e16.kxcdn.com/Content/images/myget/logo.png?c=MjAxOC4xLjAuMTcy" />
+        <style>.navbar .brand { background-image: url('https://dotnetmyget.blob.core.windows.net/files/logo.png'); background-position: 0; background-size: auto 40px; }</style>
+
+    <!--[if lt IE 9]>
+        <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+            <script type="text/javascript" src="https://mygetwww-2e16.kxcdn.com/bundles/js/scripts.min.js?c=MjAxOC4xLjAuMTcy"></script>
+
+
+    
+</head>
+<body>
+    <div class="content-wrapper">
+        <header>
+            <nav class="navbar navbar-static-top" role="navigation">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="/">
+                <h1><span>MyGet - Hosted Package Management Server for NuGet, symbols, Npm, Bower, Maven, PHP Composer and VSIX</span></h1>
+            </a>
+            <div class="nav-collapse collapse pull-right">
+                    <ul class="nav">
+                                                    <li><a href="/gallery">Gallery</a></li>
+                        <li><a href="http://docs.myget.org">Docs</a></li>
+                        <li><a href="http://blog.myget.org">Blog</a></li>
+                    </ul>
+                    <div class="navbar-form pull-right">
+                        <a class="btn" href="/Account/Login">Sign In</a>
+                        <a class="btn btn-primary" href="/Account/Register">Sign Up</a>
+                    </div>
+            </div>
+        </div>
+    </div>
+</nav>
+        </header>
+
+        <div class="content">
+
+
+            <div class="container">
+                
+    <div class="row breadcrumbs">
+    <div class="span12">
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home"></i> <a href="/">Home</a>
+                <span class="divider"><i class="icon-chevron-right"></i></span>
+            </li>
+                        <li>
+                            <a href="/Feed">Feeds</a>
+                            <span class="divider"><i class="icon-chevron-right"></i></span>
+                        </li>
+                        <li>
+                            <a href="/feed/Packages/templating">templating</a>
+                            <span class="divider"><i class="icon-chevron-right"></i></span>
+                        </li>
+                        <li>
+                            <a href="/feed/Packages/templating">Packages</a>
+                            <span class="divider"><i class="icon-chevron-right"></i></span>
+                        </li>
+                        <li>Microsoft.DotNet.Web.ItemTemplates</li>
+
+        </ul>
+    </div>
+</div>
+
+                
+
+
+<script type="text/javascript">
+    $(function () {
+        $('.actionPush').click(function (e) {
+            myget.partialDialog.show({
+                url: this.href,
+                title: 'Push package to another feed',
+                saveLabel: 'Push',
+                cancelLabel: 'Cancel',
+                width: 700,
+                height: 600
+            });
+
+            e.preventDefault();
+        });
+
+        $('.actionDelete').click(function (e) {
+            if (confirm("Are you sure you want to delete this specific package version from the current feed?")) {
+                $.ajax({
+                    url: $(this).attr('href'),
+                    cache: false,
+                    type: 'DELETE',
+                    success: function (data) {
+                        myget.shell.notifications().notification(data.Message, data.MessageType);
+
+                        if (data.Success) {
+                            setTimeout(function () { window.location.href = data.RedirectUrl; }, 30000);
+                        }
+                    }
+                });
+            }
+            e.preventDefault();
+        });
+        $('.actionListPackage').click(function (e) {
+            if (!confirm("Are you sure you want to list this package on the current feed?\n\nThe package will show up in search results and can be installed directly.")) {
+                e.preventDefault();
+            }
+        });
+        $('.actionUnlistPackage').click(function (e) {
+            if (!confirm("Are you sure you want to unlist this package on the current feed?\n\nThe package will no longer show up in search results but can still be installed when working with package restore and update scenarios.")) {
+                e.preventDefault();
+            }
+        });
+        $('.actionPinPackage').click(function (e) {
+            if (!confirm("Are you sure you want to pin this package?\n\nThe package will no longer be subject to retention policies.")) {
+                e.preventDefault();
+            }
+        });
+        $('.actionUnpinPackage').click(function (e) {
+            if (!confirm("Are you sure you want to unpin this package?\n\nThe package may be removed by retention policies.")) {
+                e.preventDefault();
+            }
+        });
+
+
+        $('.actionEditLicense').click(function (e) {
+            var url = this.href + '&salt=' + (new Date()).getTime();
+            myget.partialDialog.show({
+                url: url,
+                title: 'Edit license',
+                saveLabel: 'Update',
+                cancelLabel: 'Cancel',
+                width: 600,
+                height: 400
+            });
+
+            e.preventDefault();
+        });
+    });
+</script>
+
+<article>
+    <div class="row">
+        <div class="span12">
+            <h2>templating - Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170810-304</h2>
+        </div>
+    </div>
+
+
+
+<script type="text/javascript" src="https://mygetwww-2e16.kxcdn.com/bundles/js/ace/ace.js?c=MjAxOC4xLjAuMTcy"></script>
+
+
+<script type="text/javascript">
+    $(function () {
+        ko.applyBindings({}, $('.snippets').get(0));
+
+        $('.snippets pre').each(function (i, item) {
+            var editor = ace.edit(item);
+            editor.setTheme("ace/theme/tomorrow");
+            editor.session.setMode("ace/mode/html");
+            editor.setOptions({
+                maxLines: 8
+            });
+            editor.setReadOnly(true);
+            editor.renderer.setShowGutter(false);
+        });
+
+        $.ajax({
+            url: '/Package/UpstreamPackages/templating?packageId=Microsoft.DotNet.Web.ItemTemplates&amp;packageVersion=1.0.0-beta2-20170810-304',
+            cache: false,
+            type: 'GET',
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (data) {
+                if (data.length > 0) {
+                    $('#upstreamPackages').html($.map(data, function (item) {
+                        if (item.PackageDetailsUrl && item.PackageDetailsUrl.length > 0) {
+                            return '<a href="' + item.PackageDetailsUrl + '">' + item.PackageSourceName + '</a>';
+                        } else {
+                            return item.PackageSourceName;
+                        }
+                    }).join(', '));
+                }
+            }
+        });
+
+
+
+        var dependencyTreeVisible = false;
+        $('#actionLoadDependencyTree').click(function (e) {
+            dependencyTreeVisible = !dependencyTreeVisible;
+
+            if (dependencyTreeVisible) {
+                if ($('#dependencyTree').html().length == 0) {
+                    $('#dependencyTree').load('/Package/RenderDependencyTree/templating?packageType=nuget&packageId=Microsoft.DotNet.Web.ItemTemplates&packageVersion=1.0.0-beta2-20170810-304');
+                }
+                $('#dependencyTree').slideDown();
+                $('.toggleDependencyTree').addClass('icon-chevron-up');
+                $('.toggleDependencyTree').removeClass('icon-chevron-down');
+            } else {
+                $('#dependencyTree').slideUp();
+                $('.toggleDependencyTree').addClass('icon-chevron-down');
+                $('.toggleDependencyTree').removeClass('icon-chevron-up');
+            };
+            e.preventDefault();
+        });
+    });
+</script>
+
+<div class="row">
+    <div class="span12">
+    </div>
+</div>
+
+<div class="row">
+    <div class="span8" style="word-wrap: break-word;">
+
+        <p>Web File Templates for Microsoft Template Engine</p>
+
+        
+        <div class="tabs-top">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#nuget" data-toggle="tab">NuGet (PM Console)</a></li>
+                <li><a href="#nugetexe" data-toggle="tab">NuGet.exe</a></li>
+                <li><a href="#dotnetexe" data-toggle="tab">.NET CLI</a></li>
+                <li><a href="#csproj" data-toggle="tab">.csproj</a></li>
+                <li><a href="#paket" data-toggle="tab">Paket</a></li>
+                <li><a href="#chocolatey" data-toggle="tab">Chocolatey</a></li>
+                <li><a href="#psget" data-toggle="tab">PowerShellGet</a></li>
+            </ul>
+
+            <div class="tab-content snippets">
+
+
+                <div class="tab-pane active" id="nuget">
+                    <div class="terminal-commandWrapper">
+                        <div class="terminal-commandPrompt">
+                            <p class="terminal-command">
+                                PM&gt; Install-Package Microsoft.DotNet.Web.ItemTemplates -Version 1.0.0-beta2-20170810-304 -Source https://dotnet.myget.org/F/templating/api/v3/index.json
+                            </p>
+                        </div>
+                    </div>
+                        <span class="clippy-container" style="float: none;">
+        <span class="clippy-button" title="Copy to clipboard" data-bind="clipboard: ko.observable('Install-Package Microsoft.DotNet.Web.ItemTemplates -Version 1.0.0-beta2-20170810-304 -Source https://dotnet.myget.org/F/templating/api/v3/index.json')"></span>
+    </span>
+    <a href="#" title="Copy to clipboard" data-bind="clipboard: ko.observable('Install-Package Microsoft.DotNet.Web.ItemTemplates -Version 1.0.0-beta2-20170810-304 -Source https://dotnet.myget.org/F/templating/api/v3/index.json')">Copy to clipboard</a>
+
+                </div>
+                <div class="tab-pane" id="nugetexe">
+                    <div class="terminal-commandWrapper">
+                        <div class="terminal-commandPrompt">
+                            <p class="terminal-command">
+                                &gt; nuget.exe install Microsoft.DotNet.Web.ItemTemplates -Version 1.0.0-beta2-20170810-304 -Source https://dotnet.myget.org/F/templating/api/v3/index.json
+                            </p>
+                        </div>
+                    </div>
+                        <span class="clippy-container" style="float: none;">
+        <span class="clippy-button" title="Copy to clipboard" data-bind="clipboard: ko.observable('nuget.exe install Microsoft.DotNet.Web.ItemTemplates -Version 1.0.0-beta2-20170810-304 -Source https://dotnet.myget.org/F/templating/api/v3/index.json')"></span>
+    </span>
+    <a href="#" title="Copy to clipboard" data-bind="clipboard: ko.observable('nuget.exe install Microsoft.DotNet.Web.ItemTemplates -Version 1.0.0-beta2-20170810-304 -Source https://dotnet.myget.org/F/templating/api/v3/index.json')">Copy to clipboard</a>
+
+                </div>
+                <div class="tab-pane" id="dotnetexe">
+                    <div class="terminal-commandWrapper">
+                        <div class="terminal-commandPrompt">
+                            <p class="terminal-command">
+                                &gt; dotnet add package Microsoft.DotNet.Web.ItemTemplates --version 1.0.0-beta2-20170810-304 --source https://dotnet.myget.org/F/templating/api/v3/index.json
+                            </p>
+                        </div>
+                    </div>
+                        <span class="clippy-container" style="float: none;">
+        <span class="clippy-button" title="Copy to clipboard" data-bind="clipboard: ko.observable('dotnet add package Microsoft.DotNet.Web.ItemTemplates --version 1.0.0-beta2-20170810-304 --source https://dotnet.myget.org/F/templating/api/v3/index.json')"></span>
+    </span>
+    <a href="#" title="Copy to clipboard" data-bind="clipboard: ko.observable('dotnet add package Microsoft.DotNet.Web.ItemTemplates --version 1.0.0-beta2-20170810-304 --source https://dotnet.myget.org/F/templating/api/v3/index.json')">Copy to clipboard</a>
+
+                </div>
+                <div class="tab-pane" id="csproj">
+                    <pre class="editor"><code>&lt;PackageReference Include=&quot;Microsoft.DotNet.Web.ItemTemplates&quot; Version=&quot;1.0.0-beta2-20170810-304&quot; /&gt;</code></pre>
+                        <span class="clippy-container" style="float: none;">
+        <span class="clippy-button" title="Copy to clipboard" data-bind="clipboard: ko.observable('&lt;PackageReference Include=&quot;Microsoft.DotNet.Web.ItemTemplates&quot; Version=&quot;1.0.0-beta2-20170810-304&quot; /&gt;')"></span>
+    </span>
+    <a href="#" title="Copy to clipboard" data-bind="clipboard: ko.observable('&lt;PackageReference Include=&quot;Microsoft.DotNet.Web.ItemTemplates&quot; Version=&quot;1.0.0-beta2-20170810-304&quot; /&gt;')">Copy to clipboard</a>
+
+                </div>
+                <div class="tab-pane" id="paket">
+                    <pre class="editor"><code>source https://dotnet.myget.org/F/templating/api/v3/index.json
+
+nuget Microsoft.DotNet.Web.ItemTemplates  ~&gt; 1.0.0-beta2-20170810-304</code></pre>
+                        <span class="clippy-container" style="float: none;">
+        <span class="clippy-button" title="Copy to clipboard" data-bind="clipboard: ko.observable('source https://dotnet.myget.org/F/templating/api/v3/index.json\r\n\r\nnuget Microsoft.DotNet.Web.ItemTemplates  ~&gt; 1.0.0-beta2-20170810-304')"></span>
+    </span>
+    <a href="#" title="Copy to clipboard" data-bind="clipboard: ko.observable('source https://dotnet.myget.org/F/templating/api/v3/index.json\r\n\r\nnuget Microsoft.DotNet.Web.ItemTemplates  ~&gt; 1.0.0-beta2-20170810-304')">Copy to clipboard</a>
+
+                </div>
+                <div class="tab-pane" id="chocolatey">
+                    <div class="terminal-commandWrapper">
+                        <div class="terminal-commandPrompt">
+                            <p class="terminal-command">
+                                &gt; choco install Microsoft.DotNet.Web.ItemTemplates --version 1.0.0-beta2-20170810-304 --source https://dotnet.myget.org/F/templating/api/v2
+                            </p>
+                        </div>
+                    </div>
+                        <span class="clippy-container" style="float: none;">
+        <span class="clippy-button" title="Copy to clipboard" data-bind="clipboard: ko.observable('choco install Microsoft.DotNet.Web.ItemTemplates --version 1.0.0-beta2-20170810-304 --source https://dotnet.myget.org/F/templating/api/v2')"></span>
+    </span>
+    <a href="#" title="Copy to clipboard" data-bind="clipboard: ko.observable('choco install Microsoft.DotNet.Web.ItemTemplates --version 1.0.0-beta2-20170810-304 --source https://dotnet.myget.org/F/templating/api/v2')">Copy to clipboard</a>
+
+                </div>
+                <div class="tab-pane" id="psget">
+                    <pre class="editor"><code>Import-Module PowerShellGet
+Register-PSRepository -Name &quot;templating&quot; -SourceLocation &quot;https://dotnet.myget.org/F/templating/api/v2&quot;
+Install-Module -Name &quot;Microsoft.DotNet.Web.ItemTemplates&quot; -RequiredVersion &quot;1.0.0-beta2-20170810-304&quot; -Repository &quot;templating&quot; -AllowPreRelease</code></pre>
+                        <span class="clippy-container" style="float: none;">
+        <span class="clippy-button" title="Copy to clipboard" data-bind="clipboard: ko.observable('Import-Module PowerShellGet\r\nRegister-PSRepository -Name &quot;templating&quot; -SourceLocation &quot;https://dotnet.myget.org/F/templating/api/v2&quot;\r\nInstall-Module -Name &quot;Microsoft.DotNet.Web.ItemTemplates&quot; -RequiredVersion &quot;1.0.0-beta2-20170810-304&quot; -Repository &quot;templating&quot; -AllowPreRelease')"></span>
+    </span>
+    <a href="#" title="Copy to clipboard" data-bind="clipboard: ko.observable('Import-Module PowerShellGet\r\nRegister-PSRepository -Name &quot;templating&quot; -SourceLocation &quot;https://dotnet.myget.org/F/templating/api/v2&quot;\r\nInstall-Module -Name &quot;Microsoft.DotNet.Web.ItemTemplates&quot; -RequiredVersion &quot;1.0.0-beta2-20170810-304&quot; -Repository &quot;templating&quot; -AllowPreRelease')">Copy to clipboard</a>
+
+                </div>
+            </div>
+        </div>
+
+
+        <hr/>
+
+        <div class="tabs-top">
+        <ul class="nav nav-tabs">
+                <li class="active"><a href="#readme" data-toggle="tab">Readme</a></li>
+
+
+
+
+
+        </ul>
+
+            <div class="tab-content">
+                    <div class="tab-pane active" id="readme">
+                        <h1 id="overview">Overview</h1>
+<p>This repository is the home for the .NET Core Template Engine. It contains the brains for <code>dotnet new</code>.
+When <code>dotnet new</code> is invoked, it will call the Template Engine to create the artifacts on disk.
+Template Engine is a library for manipulating streams, including operations to replace values, include/exclude
+regions and process <code>if</code>, <code>else if</code>, <code>else</code> and <code>end if</code> style statements.</p>
+<h1 id="template-samples">Template Samples</h1>
+<p>We have created a <a href="https://github.com/dotnet/dotnet-template-samples">dotnet template samples repo</a>, which shows how you can use
+the Template Engine to create new templates. The samples are setup to be stand alone for specific examples. If you are in need of a sample, and it doesn't exist please <a href="https://github.com/dotnet/dotnet-template-samples/issues/new">create an issue</a> in the samples repo.</p>
+<h1 id="info-for-dotnet-new-users">Info for <code>dotnet new</code> users</h1>
+<p>You can create new projects with <code>dotnet new</code>, this section will briefly describe that. For more info take a look at
+<a href="https://blogs.msdn.microsoft.com/dotnet/2017/02/07/announcing-net-core-tools-updates-in-vs-2017-rc/">Announcing .NET Core Tools Updates in VS 2017 RC</a>.</p>
+<p>To get started let's find out what options we have by executing <code>dotnet new --help</code>. The result is pasted in the block below.</p>
+<pre><code class="language-bash">$ dotnet new mvc --help
+
+MVC ASP.NET Web Application (C#)
+Author: Microsoft
+Options:
+  -au|--auth           The type of authentication to use
+                           None          - No authentication
+                           Individual    - Individual authentication
+                       Default: None
+
+  -uld|--use-local-db  Whether or not to use LocalDB instead of SQLite
+                       bool - Optional
+                       Default: false
+
+  -f|--framework
+                           1.0    - Target netcoreapp1.0
+                           1.1    - Target netcoreapp1.1
+                       Default: 1.0
+</code></pre>
+<p>Let's create a new project named &quot;MyAwesomeProject&quot; in the &quot;src/MyProject&quot; directory. This project should be an ASP.NET MVC project with Individual Auth. To create that template
+execute <code>dotnet new mvc -n MyAwesomeProject -o src/MyProject -au Individual</code>. Let's try that now, the result is below.</p>
+<pre><code class="language-bash">$ dotnet new mvc -n MyAwesomeProject -o src/MyProject -au Individual
+The template &quot;MVC Application&quot; created successfully.
+</code></pre>
+<p>The project was successfully created on disk as expected in <code>src/MyProject</code>. From here, we can run normal <code>dotnet</code> commands like <code>dotnet restore</code> and <code>dotnet build</code>.</p>
+<p>We have a pretty good help system built in, including template specific help (<em>for example <code>dotnet new mvc --help</code></em>). If you're not sure the syntax please try that,
+if you have any difficulties please file a new <a href="https://github.com/dotnet/templating/issues/new">issue</a>.</p>
+<p>Now that we've covered the basics of using <code>dotnew new</code>, lets move on to info for template authors and contributors.</p>
+<h1 id="available-templates">Available templates</h1>
+<p>You can install additional templates that can be used by <code>dotnet new</code>. See <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new">Available templates for dotnet new</a>.</p>
+<h1 id="what-to-expect-when-working-with-this-repo">What to expect when working with this repo</h1>
+<p>The instructions below enable a new command at the <code>dotnet</code> CLI, <code>dotnet new3</code>, that uses the bits and templates contained in this repo. Think of it as a &quot;preview&quot; version of <code>dotnet new</code> for trying out new switches, interactions and display styles before rolling them in to the product.</p>
+<p>Commands executed against <code>dotnet new3</code> won't impact the behavior of <code>dotnet new</code>, Visual Studio for Mac, Visual Studio, nor any other environment.</p>
+<h1 id="how-to-build-run-debug-the-latest">How to build, run &amp; debug the latest</h1>
+<p>If you're authoring templates, or interested in contributing to this repo, then you're likely interested in how to use the latest version of this experience.
+The steps required are outlined below.</p>
+<h2 id="aquire">Aquire</h2>
+<ul>
+<li>Fork this repository.</li>
+<li>Clone the forked repository to your local machine.
+<ul>
+<li><strong>master</strong> is a build branch and does not accept contributions directly.</li>
+<li>The default branch is the active development branch that accepts contributions and flows to master to produce packages.</li>
+</ul>
+</li>
+</ul>
+<h2 id="build-run">Build &amp; Run</h2>
+<ul>
+<li>Open up a command prompt and navigation to the root of your source code.</li>
+<li>Run the setup script appropriate your environment.
+<ul>
+<li><strong>Windows:</strong> <a href="https://github.com/dotnet/templating/blob/master/setup.cmd">setup.cmd</a></li>
+<li><strong>Mac/Linux</strong>: <a href="https://github.com/dotnet/templating/blob/master/setup.sh">setup.sh</a></li>
+</ul>
+</li>
+<li>When running the setup script, the existing built-in command <code>dotnet new</code> will be preserved. A new command <code>dotnet new3</code> will be enabled which allows you to create
+files with the latest Template Engine.</li>
+<li>That's it! Now you can run <code>dotnet new3</code>.</li>
+</ul>
+<p>For example, here is the result of running <code>dotnet new3 --help</code> on a Mac (<em>truncated to save space here</em>).</p>
+<pre><code class="language-bash">$ dotnet new3 --help
+Template Instantiation Commands for .NET Core CLI.
+
+Usage: dotnet new3 [arguments] [options]
+
+Arguments:
+  template  The template to instantiate.
+
+&lt;truncated&gt;
+</code></pre>
+<h3 id="template-nuget-packages">Template NuGet Packages</h3>
+<ul>
+<li>The build the that produces the <strong>template NuGet packages</strong> currently has a dependency on <strong>nuget.exe</strong>.
+<ul>
+<li>Because of this, those that wish to <code>install</code> using the <strong>template NuGet packages</strong> will need to be on Windows in order to produce the appropriate assets.</li>
+</ul>
+</li>
+</ul>
+<h2 id="debugging">Debugging</h2>
+<p>Debugging code requires your current <code>dotnet new3</code> session to have its active build session configured to DEBUG, and a debugger from your application of choice to be attached to the current running <code>dotnet new3</code> process. The steps required to accomplish this are outlined below.</p>
+<h3 id="notes">Notes</h3>
+<ul>
+<li>When working with the source inside Visual Studio, it is recommended you use the latest available version.</li>
+</ul>
+<h3 id="setup">Setup</h3>
+<ul>
+<li>Open the <strong>Microsoft.Templating.sln</strong> solution in the application you will use to attach your debugger.
+<ul>
+<li>This solution contains the projects needed to run, modify &amp; debug the Template Engine.</li>
+</ul>
+</li>
+<li>Once your solution is loaded, open up a new command prompt and navigate to the root of your repository.</li>
+<li>Execute the <strong>dn3buildmode-debug.cmd</strong> script.
+<ul>
+<li>This will set your <code>dotnet new3</code> build to a DEBUG mode.</li>
+</ul>
+</li>
+<li>Run the &quot;setup&quot; script to build a new <code>dotnet new3</code> session.</li>
+</ul>
+<h3 id="execution">Execution</h3>
+<p>Once &quot;setup&quot; has completed successfully, run the following command.</p>
+<pre><code class="language-bash">dotnet new3 --debug:attach {{additonal args}}
+</code></pre>
+<p>By supplying the <code>--debug:attach</code> argument with any other argument(s) you are running, you are triggering a <code>Console.ReadLine();</code> request which pauses execution of the Template Engine at an early point in its execution.</p>
+<p>Once the engine is &quot;paused&quot;, you have the opportunity to attach a debugger to the running <code>dotnet new3</code> process.</p>
+<p>In the application you are using to attach a debugger...</p>
+<ul>
+<li>Open the <strong>Microsoft.TemplateEngine.Cli.New3Command</strong> class and locate the following function.
+<ul>
+<li><code>New3Command.Run()</code></li>
+</ul>
+</li>
+<li>Set a breakpoint at any point after the following block of code.</li>
+</ul>
+<pre><code class="language-csharp">if (args.Any(x =&gt; string.Equals(x, &quot;--debug:attach&quot;, StringComparison.Ordinal)))
+{
+    // This is the line that is executed when --debug:attach is passed as 
+    // an argument. 
+    Console.ReadLine();
+}
+</code></pre>
+<ul>
+<li>Attach the debugger to the current running 'dotnet new 3' process.</li>
+<li>For example, if you are using <strong>Visual Studio</strong> you can perform the following.
+<ul>
+<li>Execute the keyboard shortcut - <code>ctrl + alt + p</code>.</li>
+<li>This will open up a dialog that allows you to search for the <strong>dotnet-new3.exe</strong> process.</li>
+<li>Locate the desired process, select it and hit the <strong>Attach</strong> button.</li>
+</ul>
+</li>
+</ul>
+<p>Now that you have a debug session attached to your properly configured <code>dotnet new3</code> process, head back to the command line and hit <code>enter</code>.  This will trigger <code>Console.Readline()</code> to execute and your proceeding breakpoint to be hit inside the application you are using to debug.</p>
+<h1 id="installing-templates">Installing templates</h1>
+<p>Templates can be installed from packages in any NuGet feed, directories on the file system or ZIP type archives (zip, nupkg, vsix, etc.)
+To install a new template use the command:</p>
+<pre><code>dotnet new3 -i {the path to the folder containing the templates}
+</code></pre>
+<h1 id="basic-commands">Basic Commands</h1>
+<h2 id="showing-help">Showing help</h2>
+<pre><code>dotnet new3 --help
+dotnet new3 -h
+dotnet new3
+</code></pre>
+<h2 id="listing-templates">Listing templates</h2>
+<pre><code>dotnet new3 --list
+dotnet new3 -l
+dotnet new3 mvc -l            Lists all templates containing the text &quot;mvc&quot;
+</code></pre>
+<h2 id="template-parameter-help">Template parameter help</h2>
+<pre><code>dotnet new3 mvc --help
+dotnet new3 mvc -h
+</code></pre>
+<h2 id="template-creation">Template creation</h2>
+<pre><code>dotnet new3 MvcWebTemplate --name MyProject --output src --ParameterName1 Value1 --ParameterName2 Value2 ... --ParameterNameN ValueN
+dotnet new3 MvcWebTemplate -n MyProject -o src --ParameterName1 Value1 --ParameterName2 Value2 ... --ParameterNameN ValueN
+</code></pre>
+<h1 id="roadmap">Roadmap</h1>
+<ul>
+<li>Create formal docs</li>
+<li>Interactive mode (i.e. interactive prompts similar to <a href="https://github.com/omnisharp/generator-aspnet"><code>yo aspnet</code></a></li>
+<li>Integration with Visual Studio One ASP.NET dialog</li>
+<li>Integration with Visual Studio for Mac for .NET Core projects</li>
+<li>Integration with <a href="https://github.com/omnisharp/generator-aspnet"><code>yo aspnet</code></a></li>
+<li>Template updates (both required and optional)</li>
+<li>Visual Studio wizard to enable community members to plug into VS as well</li>
+<li>Maybe: Visual Studio wizard which can display templates given a feed URL</li>
+<li>Suggestions welcome, please file <a href="https://github.com/dotnet/templating/issues/new">an issue</a></li>
+</ul>
+
+                    </div>
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div class="span4">
+        <table class="table table-condensed" style="width: 100%; word-wrap: break-word;">
+            <tr>
+                <td>
+                    <h3>Owners</h3>
+                            <span class="label">
+                                Phil Henning
+
+                            </span>
+
+                </td>
+            </tr>
+
+                <tr>
+                    <td style="text-wrap: unrestricted;">
+                        <h3>Authors</h3>
+                        Microsoft
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td style="text-wrap: unrestricted;">
+                        <h3>Project URL</h3>
+                        <a href="https://github.com/dotnet/templating" rel="noopener noreferrer">https://github.com/dotnet/templating</a>
+                    </td>
+                </tr>
+
+            <tr>
+                <td>
+                    <h3>License</h3>
+                    <span class="label">
+
+                        <a href="https://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm" rel="noopener noreferrer">MS-EULA</a>
+
+                    </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="text-wrap: unrestricted;">
+                    <h3>Info</h3>
+                    <b>3</b> total downloads
+                </td>
+            </tr>
+            <tr>
+                <td style="text-wrap: unrestricted;">
+                    <b>0</b> downloads for version 1.0.0-beta2-20170810-304
+                </td>
+            </tr>
+            <tr>
+                <td style="text-wrap: unrestricted;">
+                    Package size <b>5.73 KB</b>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-wrap: unrestricted;">
+                    <i class="icon-download-alt"></i> <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170810-304">Download</a>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td style="text-wrap: unrestricted;">
+                    Found on <span id="upstreamPackages">the current feed only</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="row">
+        <div class="span12">
+            
+<div id="notifications-messages" data-bind="template: { name: '_messages', foreach: messages, beforeRemove: function(elem) { if (elem.nodeType === 1) $(elem).slideUp(function() { $(elem).remove(); }); } }"></div>
+
+<script type="text/html" id="_messages">
+    <div class="alert" data-bind="css: { 'alert-info': $data.messageType == 'info', 'alert-error': $data.messageType == 'error' }">
+        <a class="close" data-dismiss="alert" href="#">&times;</a>
+        <span data-bind="html: $data.message"></span>
+    </div>
+</script>
+
+                <h3>Package history</h3>
+                <div class="btn-toolbar">
+                </div>
+                <table class="table table-condensed table-striped package-list">
+                    <thead>
+                        <tr>
+                            <th width="16px"></th>
+                            <th width="26px"></th>
+                            <th>Version</th>
+                            <th>Size</th>
+                            <th>Last updated</th>
+                            <th>Downloads</th>
+                            <th>Mirrored?</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                            <tr>
+                                <td><i class="icon icon-flag" title="This is the latest version of the package."></i></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20171009-310" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_0__FeedIdentifier" name="Packages[0].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_0__Id" name="Packages[0].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_0__Version" name="Packages[0].Version" type="hidden" value="1.0.0-beta2-20171009-310" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20171009-310" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20171009-310">
+                                        1.0.0-beta2-20171009-310
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Mon, 09 Oct 2017 21:34:28 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20171004-309" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_1__FeedIdentifier" name="Packages[1].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_1__Id" name="Packages[1].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_1__Version" name="Packages[1].Version" type="hidden" value="1.0.0-beta2-20171004-309" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20171004-309" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20171004-309">
+                                        1.0.0-beta2-20171004-309
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Thu, 05 Oct 2017 01:07:38 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20171004-308" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_2__FeedIdentifier" name="Packages[2].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_2__Id" name="Packages[2].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_2__Version" name="Packages[2].Version" type="hidden" value="1.0.0-beta2-20171004-308" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20171004-308" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20171004-308">
+                                        1.0.0-beta2-20171004-308
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Thu, 05 Oct 2017 00:53:02 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20171004-307" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_3__FeedIdentifier" name="Packages[3].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_3__Id" name="Packages[3].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_3__Version" name="Packages[3].Version" type="hidden" value="1.0.0-beta2-20171004-307" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20171004-307" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20171004-307">
+                                        1.0.0-beta2-20171004-307
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Thu, 05 Oct 2017 00:40:23 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170907-306" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_4__FeedIdentifier" name="Packages[4].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_4__Id" name="Packages[4].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_4__Version" name="Packages[4].Version" type="hidden" value="1.0.0-beta2-20170907-306" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170907-306" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170907-306">
+                                        1.0.0-beta2-20170907-306
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Thu, 07 Sep 2017 17:13:06 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170828-305" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_5__FeedIdentifier" name="Packages[5].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_5__Id" name="Packages[5].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_5__Version" name="Packages[5].Version" type="hidden" value="1.0.0-beta2-20170828-305" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170828-305" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170828-305">
+                                        1.0.0-beta2-20170828-305
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Mon, 28 Aug 2017 19:25:37 GMT</td>
+                                <td>1</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170810-304" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_6__FeedIdentifier" name="Packages[6].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_6__Id" name="Packages[6].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_6__Version" name="Packages[6].Version" type="hidden" value="1.0.0-beta2-20170810-304" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170810-304" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170810-304">
+                                        1.0.0-beta2-20170810-304
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Fri, 11 Aug 2017 02:12:53 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170803-303" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_7__FeedIdentifier" name="Packages[7].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_7__Id" name="Packages[7].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_7__Version" name="Packages[7].Version" type="hidden" value="1.0.0-beta2-20170803-303" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170803-303" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170803-303">
+                                        1.0.0-beta2-20170803-303
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Thu, 03 Aug 2017 17:36:13 GMT</td>
+                                <td>1</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170728-302" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_8__FeedIdentifier" name="Packages[8].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_8__Id" name="Packages[8].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_8__Version" name="Packages[8].Version" type="hidden" value="1.0.0-beta2-20170728-302" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170728-302" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170728-302">
+                                        1.0.0-beta2-20170728-302
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Fri, 28 Jul 2017 16:42:48 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170727-301" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_9__FeedIdentifier" name="Packages[9].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_9__Id" name="Packages[9].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_9__Version" name="Packages[9].Version" type="hidden" value="1.0.0-beta2-20170727-301" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170727-301" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170727-301">
+                                        1.0.0-beta2-20170727-301
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Thu, 27 Jul 2017 19:24:49 GMT</td>
+                                <td>1</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170725-300" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_10__FeedIdentifier" name="Packages[10].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_10__Id" name="Packages[10].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_10__Version" name="Packages[10].Version" type="hidden" value="1.0.0-beta2-20170725-300" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170725-300" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170725-300">
+                                        1.0.0-beta2-20170725-300
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Tue, 25 Jul 2017 22:26:22 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170725-299" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_11__FeedIdentifier" name="Packages[11].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_11__Id" name="Packages[11].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_11__Version" name="Packages[11].Version" type="hidden" value="1.0.0-beta2-20170725-299" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170725-299" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170725-299">
+                                        1.0.0-beta2-20170725-299
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Tue, 25 Jul 2017 19:02:09 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170724-298" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_12__FeedIdentifier" name="Packages[12].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_12__Id" name="Packages[12].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_12__Version" name="Packages[12].Version" type="hidden" value="1.0.0-beta2-20170724-298" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170724-298" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170724-298">
+                                        1.0.0-beta2-20170724-298
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Tue, 25 Jul 2017 01:11:10 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170724-297" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_13__FeedIdentifier" name="Packages[13].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_13__Id" name="Packages[13].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_13__Version" name="Packages[13].Version" type="hidden" value="1.0.0-beta2-20170724-297" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170724-297" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170724-297">
+                                        1.0.0-beta2-20170724-297
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Tue, 25 Jul 2017 01:03:41 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170721-296" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_14__FeedIdentifier" name="Packages[14].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_14__Id" name="Packages[14].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_14__Version" name="Packages[14].Version" type="hidden" value="1.0.0-beta2-20170721-296" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170721-296" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170721-296">
+                                        1.0.0-beta2-20170721-296
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Sat, 22 Jul 2017 01:37:17 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170720-295" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_15__FeedIdentifier" name="Packages[15].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_15__Id" name="Packages[15].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_15__Version" name="Packages[15].Version" type="hidden" value="1.0.0-beta2-20170720-295" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170720-295" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170720-295">
+                                        1.0.0-beta2-20170720-295
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Fri, 21 Jul 2017 02:42:23 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170719-291" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_16__FeedIdentifier" name="Packages[16].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_16__Id" name="Packages[16].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_16__Version" name="Packages[16].Version" type="hidden" value="1.0.0-beta2-20170719-291" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170719-291" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170719-291">
+                                        1.0.0-beta2-20170719-291
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Wed, 19 Jul 2017 09:11:57 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170718-290" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_17__FeedIdentifier" name="Packages[17].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_17__Id" name="Packages[17].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_17__Version" name="Packages[17].Version" type="hidden" value="1.0.0-beta2-20170718-290" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170718-290" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170718-290">
+                                        1.0.0-beta2-20170718-290
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Wed, 19 Jul 2017 05:04:09 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170718-289" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_18__FeedIdentifier" name="Packages[18].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_18__Id" name="Packages[18].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_18__Version" name="Packages[18].Version" type="hidden" value="1.0.0-beta2-20170718-289" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170718-289" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170718-289">
+                                        1.0.0-beta2-20170718-289
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Wed, 19 Jul 2017 04:33:07 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170717-288" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_19__FeedIdentifier" name="Packages[19].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_19__Id" name="Packages[19].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_19__Version" name="Packages[19].Version" type="hidden" value="1.0.0-beta2-20170717-288" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170717-288" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170717-288">
+                                        1.0.0-beta2-20170717-288
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Mon, 17 Jul 2017 20:47:44 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170714-287" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_20__FeedIdentifier" name="Packages[20].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_20__Id" name="Packages[20].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_20__Version" name="Packages[20].Version" type="hidden" value="1.0.0-beta2-20170714-287" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170714-287" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170714-287">
+                                        1.0.0-beta2-20170714-287
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Fri, 14 Jul 2017 22:20:23 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170713-286" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_21__FeedIdentifier" name="Packages[21].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_21__Id" name="Packages[21].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_21__Version" name="Packages[21].Version" type="hidden" value="1.0.0-beta2-20170713-286" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170713-286" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170713-286">
+                                        1.0.0-beta2-20170713-286
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Thu, 13 Jul 2017 19:08:46 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170712-285" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_22__FeedIdentifier" name="Packages[22].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_22__Id" name="Packages[22].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_22__Version" name="Packages[22].Version" type="hidden" value="1.0.0-beta2-20170712-285" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170712-285" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170712-285">
+                                        1.0.0-beta2-20170712-285
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Wed, 12 Jul 2017 16:14:09 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170711-284" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_23__FeedIdentifier" name="Packages[23].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_23__Id" name="Packages[23].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_23__Version" name="Packages[23].Version" type="hidden" value="1.0.0-beta2-20170711-284" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170711-284" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170711-284">
+                                        1.0.0-beta2-20170711-284
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Tue, 11 Jul 2017 22:33:10 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170710-283" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_24__FeedIdentifier" name="Packages[24].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_24__Id" name="Packages[24].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_24__Version" name="Packages[24].Version" type="hidden" value="1.0.0-beta2-20170710-283" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170710-283" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170710-283">
+                                        1.0.0-beta2-20170710-283
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Mon, 10 Jul 2017 22:44:55 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170710-282" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_25__FeedIdentifier" name="Packages[25].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_25__Id" name="Packages[25].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_25__Version" name="Packages[25].Version" type="hidden" value="1.0.0-beta2-20170710-282" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170710-282" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170710-282">
+                                        1.0.0-beta2-20170710-282
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Mon, 10 Jul 2017 16:48:54 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170710-281" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_26__FeedIdentifier" name="Packages[26].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_26__Id" name="Packages[26].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_26__Version" name="Packages[26].Version" type="hidden" value="1.0.0-beta2-20170710-281" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170710-281" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170710-281">
+                                        1.0.0-beta2-20170710-281
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Mon, 10 Jul 2017 16:30:31 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170707-280" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_27__FeedIdentifier" name="Packages[27].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_27__Id" name="Packages[27].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_27__Version" name="Packages[27].Version" type="hidden" value="1.0.0-beta2-20170707-280" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170707-280" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170707-280">
+                                        1.0.0-beta2-20170707-280
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Sat, 08 Jul 2017 00:22:19 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170707-279" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_28__FeedIdentifier" name="Packages[28].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_28__Id" name="Packages[28].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_28__Version" name="Packages[28].Version" type="hidden" value="1.0.0-beta2-20170707-279" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170707-279" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170707-279">
+                                        1.0.0-beta2-20170707-279
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Fri, 07 Jul 2017 22:30:59 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170706-278" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_29__FeedIdentifier" name="Packages[29].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_29__Id" name="Packages[29].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_29__Version" name="Packages[29].Version" type="hidden" value="1.0.0-beta2-20170706-278" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170706-278" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170706-278">
+                                        1.0.0-beta2-20170706-278
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Thu, 06 Jul 2017 22:03:52 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170706-274" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_30__FeedIdentifier" name="Packages[30].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_30__Id" name="Packages[30].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_30__Version" name="Packages[30].Version" type="hidden" value="1.0.0-beta2-20170706-274" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170706-274" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170706-274">
+                                        1.0.0-beta2-20170706-274
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Thu, 06 Jul 2017 18:14:36 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170703-273" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_31__FeedIdentifier" name="Packages[31].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_31__Id" name="Packages[31].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_31__Version" name="Packages[31].Version" type="hidden" value="1.0.0-beta2-20170703-273" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170703-273" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170703-273">
+                                        1.0.0-beta2-20170703-273
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Tue, 04 Jul 2017 06:12:57 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170703-272" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_32__FeedIdentifier" name="Packages[32].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_32__Id" name="Packages[32].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_32__Version" name="Packages[32].Version" type="hidden" value="1.0.0-beta2-20170703-272" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170703-272" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170703-272">
+                                        1.0.0-beta2-20170703-272
+                                    </a> 
+                                </td>
+                                <td>5.73 KB</td>
+                                <td>Tue, 04 Jul 2017 03:37:27 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170630-271" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_33__FeedIdentifier" name="Packages[33].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_33__Id" name="Packages[33].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_33__Version" name="Packages[33].Version" type="hidden" value="1.0.0-beta2-20170630-271" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170630-271" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170630-271">
+                                        1.0.0-beta2-20170630-271
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Sat, 01 Jul 2017 04:20:51 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170630-270" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_34__FeedIdentifier" name="Packages[34].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_34__Id" name="Packages[34].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_34__Version" name="Packages[34].Version" type="hidden" value="1.0.0-beta2-20170630-270" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170630-270" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170630-270">
+                                        1.0.0-beta2-20170630-270
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Fri, 30 Jun 2017 20:51:13 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170629-269" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_35__FeedIdentifier" name="Packages[35].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_35__Id" name="Packages[35].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_35__Version" name="Packages[35].Version" type="hidden" value="1.0.0-beta2-20170629-269" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170629-269" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170629-269">
+                                        1.0.0-beta2-20170629-269
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Thu, 29 Jun 2017 23:42:01 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170629-268" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_36__FeedIdentifier" name="Packages[36].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_36__Id" name="Packages[36].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_36__Version" name="Packages[36].Version" type="hidden" value="1.0.0-beta2-20170629-268" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170629-268" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170629-268">
+                                        1.0.0-beta2-20170629-268
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Thu, 29 Jun 2017 09:39:38 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170628-267" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_37__FeedIdentifier" name="Packages[37].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_37__Id" name="Packages[37].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_37__Version" name="Packages[37].Version" type="hidden" value="1.0.0-beta2-20170628-267" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170628-267" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170628-267">
+                                        1.0.0-beta2-20170628-267
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Wed, 28 Jun 2017 15:34:27 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170620-266" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_38__FeedIdentifier" name="Packages[38].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_38__Id" name="Packages[38].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_38__Version" name="Packages[38].Version" type="hidden" value="1.0.0-beta2-20170620-266" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170620-266" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170620-266">
+                                        1.0.0-beta2-20170620-266
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Tue, 20 Jun 2017 23:53:42 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170620-265" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_39__FeedIdentifier" name="Packages[39].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_39__Id" name="Packages[39].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_39__Version" name="Packages[39].Version" type="hidden" value="1.0.0-beta2-20170620-265" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170620-265" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170620-265">
+                                        1.0.0-beta2-20170620-265
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Tue, 20 Jun 2017 17:54:21 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170619-264" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_40__FeedIdentifier" name="Packages[40].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_40__Id" name="Packages[40].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_40__Version" name="Packages[40].Version" type="hidden" value="1.0.0-beta2-20170619-264" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170619-264" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170619-264">
+                                        1.0.0-beta2-20170619-264
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Tue, 20 Jun 2017 00:07:28 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170619-262" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_41__FeedIdentifier" name="Packages[41].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_41__Id" name="Packages[41].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_41__Version" name="Packages[41].Version" type="hidden" value="1.0.0-beta2-20170619-262" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170619-262" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170619-262">
+                                        1.0.0-beta2-20170619-262
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Mon, 19 Jun 2017 20:14:59 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170615-261" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_42__FeedIdentifier" name="Packages[42].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_42__Id" name="Packages[42].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_42__Version" name="Packages[42].Version" type="hidden" value="1.0.0-beta2-20170615-261" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170615-261" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170615-261">
+                                        1.0.0-beta2-20170615-261
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Thu, 15 Jun 2017 23:50:59 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170614-260" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_43__FeedIdentifier" name="Packages[43].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_43__Id" name="Packages[43].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_43__Version" name="Packages[43].Version" type="hidden" value="1.0.0-beta2-20170614-260" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170614-260" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170614-260">
+                                        1.0.0-beta2-20170614-260
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Wed, 14 Jun 2017 18:57:48 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170613-259" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_44__FeedIdentifier" name="Packages[44].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_44__Id" name="Packages[44].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_44__Version" name="Packages[44].Version" type="hidden" value="1.0.0-beta2-20170613-259" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170613-259" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170613-259">
+                                        1.0.0-beta2-20170613-259
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Wed, 14 Jun 2017 04:45:56 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170612-258" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_45__FeedIdentifier" name="Packages[45].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_45__Id" name="Packages[45].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_45__Version" name="Packages[45].Version" type="hidden" value="1.0.0-beta2-20170612-258" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170612-258" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170612-258">
+                                        1.0.0-beta2-20170612-258
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Tue, 13 Jun 2017 00:56:00 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170610-257" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_46__FeedIdentifier" name="Packages[46].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_46__Id" name="Packages[46].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_46__Version" name="Packages[46].Version" type="hidden" value="1.0.0-beta2-20170610-257" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170610-257" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170610-257">
+                                        1.0.0-beta2-20170610-257
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Sat, 10 Jun 2017 07:54:17 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170608-256" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_47__FeedIdentifier" name="Packages[47].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_47__Id" name="Packages[47].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_47__Version" name="Packages[47].Version" type="hidden" value="1.0.0-beta2-20170608-256" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170608-256" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170608-256">
+                                        1.0.0-beta2-20170608-256
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Thu, 08 Jun 2017 23:23:24 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170608-255" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_48__FeedIdentifier" name="Packages[48].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_48__Id" name="Packages[48].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_48__Version" name="Packages[48].Version" type="hidden" value="1.0.0-beta2-20170608-255" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170608-255" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170608-255">
+                                        1.0.0-beta2-20170608-255
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Thu, 08 Jun 2017 22:55:52 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170608-254" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_49__FeedIdentifier" name="Packages[49].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_49__Id" name="Packages[49].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_49__Version" name="Packages[49].Version" type="hidden" value="1.0.0-beta2-20170608-254" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170608-254" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170608-254">
+                                        1.0.0-beta2-20170608-254
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Thu, 08 Jun 2017 09:34:07 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170606-253" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_50__FeedIdentifier" name="Packages[50].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_50__Id" name="Packages[50].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_50__Version" name="Packages[50].Version" type="hidden" value="1.0.0-beta2-20170606-253" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170606-253" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170606-253">
+                                        1.0.0-beta2-20170606-253
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Tue, 06 Jun 2017 22:33:47 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170606-252" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_51__FeedIdentifier" name="Packages[51].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_51__Id" name="Packages[51].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_51__Version" name="Packages[51].Version" type="hidden" value="1.0.0-beta2-20170606-252" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170606-252" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170606-252">
+                                        1.0.0-beta2-20170606-252
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Tue, 06 Jun 2017 09:23:50 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170602-251" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_52__FeedIdentifier" name="Packages[52].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_52__Id" name="Packages[52].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_52__Version" name="Packages[52].Version" type="hidden" value="1.0.0-beta2-20170602-251" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170602-251" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170602-251">
+                                        1.0.0-beta2-20170602-251
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Sat, 03 Jun 2017 01:22:55 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170602-250" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_53__FeedIdentifier" name="Packages[53].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_53__Id" name="Packages[53].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_53__Version" name="Packages[53].Version" type="hidden" value="1.0.0-beta2-20170602-250" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170602-250" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170602-250">
+                                        1.0.0-beta2-20170602-250
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Fri, 02 Jun 2017 20:39:13 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170602-249" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_54__FeedIdentifier" name="Packages[54].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_54__Id" name="Packages[54].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_54__Version" name="Packages[54].Version" type="hidden" value="1.0.0-beta2-20170602-249" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170602-249" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170602-249">
+                                        1.0.0-beta2-20170602-249
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Fri, 02 Jun 2017 19:37:10 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170531-247" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_55__FeedIdentifier" name="Packages[55].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_55__Id" name="Packages[55].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_55__Version" name="Packages[55].Version" type="hidden" value="1.0.0-beta2-20170531-247" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170531-247" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170531-247">
+                                        1.0.0-beta2-20170531-247
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Thu, 01 Jun 2017 02:24:47 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170531-246" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_56__FeedIdentifier" name="Packages[56].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_56__Id" name="Packages[56].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_56__Version" name="Packages[56].Version" type="hidden" value="1.0.0-beta2-20170531-246" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170531-246" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170531-246">
+                                        1.0.0-beta2-20170531-246
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Thu, 01 Jun 2017 02:18:56 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170531-245" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_57__FeedIdentifier" name="Packages[57].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_57__Id" name="Packages[57].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_57__Version" name="Packages[57].Version" type="hidden" value="1.0.0-beta2-20170531-245" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170531-245" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170531-245">
+                                        1.0.0-beta2-20170531-245
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Wed, 31 May 2017 23:30:58 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170526-244" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_58__FeedIdentifier" name="Packages[58].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_58__Id" name="Packages[58].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_58__Version" name="Packages[58].Version" type="hidden" value="1.0.0-beta2-20170526-244" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170526-244" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170526-244">
+                                        1.0.0-beta2-20170526-244
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Sat, 27 May 2017 01:01:59 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170526-243" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_59__FeedIdentifier" name="Packages[59].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_59__Id" name="Packages[59].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_59__Version" name="Packages[59].Version" type="hidden" value="1.0.0-beta2-20170526-243" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170526-243" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170526-243">
+                                        1.0.0-beta2-20170526-243
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Fri, 26 May 2017 20:16:08 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170526-242" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_60__FeedIdentifier" name="Packages[60].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_60__Id" name="Packages[60].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_60__Version" name="Packages[60].Version" type="hidden" value="1.0.0-beta2-20170526-242" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170526-242" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170526-242">
+                                        1.0.0-beta2-20170526-242
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Fri, 26 May 2017 07:13:26 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170523-241" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_61__FeedIdentifier" name="Packages[61].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_61__Id" name="Packages[61].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_61__Version" name="Packages[61].Version" type="hidden" value="1.0.0-beta2-20170523-241" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170523-241" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170523-241">
+                                        1.0.0-beta2-20170523-241
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Tue, 23 May 2017 16:28:14 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170522-240" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_62__FeedIdentifier" name="Packages[62].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_62__Id" name="Packages[62].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_62__Version" name="Packages[62].Version" type="hidden" value="1.0.0-beta2-20170522-240" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170522-240" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170522-240">
+                                        1.0.0-beta2-20170522-240
+                                    </a> 
+                                </td>
+                                <td>5.67 KB</td>
+                                <td>Mon, 22 May 2017 20:47:55 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170519-239" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_63__FeedIdentifier" name="Packages[63].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_63__Id" name="Packages[63].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_63__Version" name="Packages[63].Version" type="hidden" value="1.0.0-beta2-20170519-239" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170519-239" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170519-239">
+                                        1.0.0-beta2-20170519-239
+                                    </a> 
+                                </td>
+                                <td>5.11 KB</td>
+                                <td>Fri, 19 May 2017 13:49:30 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170518-237" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_64__FeedIdentifier" name="Packages[64].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_64__Id" name="Packages[64].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_64__Version" name="Packages[64].Version" type="hidden" value="1.0.0-beta2-20170518-237" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170518-237" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170518-237">
+                                        1.0.0-beta2-20170518-237
+                                    </a> 
+                                </td>
+                                <td>5.11 KB</td>
+                                <td>Thu, 18 May 2017 18:57:13 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170518-234" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_65__FeedIdentifier" name="Packages[65].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_65__Id" name="Packages[65].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_65__Version" name="Packages[65].Version" type="hidden" value="1.0.0-beta2-20170518-234" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170518-234" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170518-234">
+                                        1.0.0-beta2-20170518-234
+                                    </a> 
+                                </td>
+                                <td>5.12 KB</td>
+                                <td>Thu, 18 May 2017 17:32:30 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170518-232" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_66__FeedIdentifier" name="Packages[66].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_66__Id" name="Packages[66].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_66__Version" name="Packages[66].Version" type="hidden" value="1.0.0-beta2-20170518-232" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170518-232" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170518-232">
+                                        1.0.0-beta2-20170518-232
+                                    </a> 
+                                </td>
+                                <td>5.11 KB</td>
+                                <td>Thu, 18 May 2017 17:16:16 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170518-231" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_67__FeedIdentifier" name="Packages[67].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_67__Id" name="Packages[67].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_67__Version" name="Packages[67].Version" type="hidden" value="1.0.0-beta2-20170518-231" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170518-231" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170518-231">
+                                        1.0.0-beta2-20170518-231
+                                    </a> 
+                                </td>
+                                <td>5.11 KB</td>
+                                <td>Thu, 18 May 2017 16:57:28 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170517-226" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_68__FeedIdentifier" name="Packages[68].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_68__Id" name="Packages[68].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_68__Version" name="Packages[68].Version" type="hidden" value="1.0.0-beta2-20170517-226" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170517-226" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170517-226">
+                                        1.0.0-beta2-20170517-226
+                                    </a> 
+                                </td>
+                                <td>5.11 KB</td>
+                                <td>Thu, 18 May 2017 05:49:43 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170517-225" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_69__FeedIdentifier" name="Packages[69].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_69__Id" name="Packages[69].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_69__Version" name="Packages[69].Version" type="hidden" value="1.0.0-beta2-20170517-225" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170517-225" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170517-225">
+                                        1.0.0-beta2-20170517-225
+                                    </a> 
+                                </td>
+                                <td>5.11 KB</td>
+                                <td>Wed, 17 May 2017 15:17:20 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170515-223" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_70__FeedIdentifier" name="Packages[70].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_70__Id" name="Packages[70].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_70__Version" name="Packages[70].Version" type="hidden" value="1.0.0-beta2-20170515-223" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170515-223" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170515-223">
+                                        1.0.0-beta2-20170515-223
+                                    </a> 
+                                </td>
+                                <td>5.11 KB</td>
+                                <td>Tue, 16 May 2017 06:16:15 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170505-222" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_71__FeedIdentifier" name="Packages[71].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_71__Id" name="Packages[71].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_71__Version" name="Packages[71].Version" type="hidden" value="1.0.0-beta2-20170505-222" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170505-222" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170505-222">
+                                        1.0.0-beta2-20170505-222
+                                    </a> 
+                                </td>
+                                <td>4.81 KB</td>
+                                <td>Sat, 06 May 2017 01:46:44 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170504-221" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_72__FeedIdentifier" name="Packages[72].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_72__Id" name="Packages[72].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_72__Version" name="Packages[72].Version" type="hidden" value="1.0.0-beta2-20170504-221" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170504-221" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170504-221">
+                                        1.0.0-beta2-20170504-221
+                                    </a> 
+                                </td>
+                                <td>4.81 KB</td>
+                                <td>Fri, 05 May 2017 01:14:10 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170504-220" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_73__FeedIdentifier" name="Packages[73].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_73__Id" name="Packages[73].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_73__Version" name="Packages[73].Version" type="hidden" value="1.0.0-beta2-20170504-220" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170504-220" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170504-220">
+                                        1.0.0-beta2-20170504-220
+                                    </a> 
+                                </td>
+                                <td>4.81 KB</td>
+                                <td>Fri, 05 May 2017 00:22:49 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170504-218" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_74__FeedIdentifier" name="Packages[74].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_74__Id" name="Packages[74].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_74__Version" name="Packages[74].Version" type="hidden" value="1.0.0-beta2-20170504-218" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170504-218" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170504-218">
+                                        1.0.0-beta2-20170504-218
+                                    </a> 
+                                </td>
+                                <td>4.81 KB</td>
+                                <td>Thu, 04 May 2017 23:47:43 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170502-214" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_75__FeedIdentifier" name="Packages[75].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_75__Id" name="Packages[75].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_75__Version" name="Packages[75].Version" type="hidden" value="1.0.0-beta2-20170502-214" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170502-214" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170502-214">
+                                        1.0.0-beta2-20170502-214
+                                    </a> 
+                                </td>
+                                <td>4.81 KB</td>
+                                <td>Tue, 02 May 2017 08:53:54 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170427-205" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_76__FeedIdentifier" name="Packages[76].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_76__Id" name="Packages[76].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_76__Version" name="Packages[76].Version" type="hidden" value="1.0.0-beta2-20170427-205" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170427-205" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170427-205">
+                                        1.0.0-beta2-20170427-205
+                                    </a> 
+                                </td>
+                                <td>4.81 KB</td>
+                                <td>Fri, 28 Apr 2017 02:35:38 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                        <a href="https://dotnet.myget.org/F/templating/api/v2/package/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170421-198" title="Download package">
+                                            <img class="package-icon" src="/Content/images/packageDefaultIcon_nuget.png" onerror="this.src = 'https://mygetwww-2e16.kxcdn.com/Content/images/packageDefaultIcon_nuget.png?c=MjAxOC4xLjAuMTcy';" />
+                                        </a>
+                                </td>
+                                <td>
+                                    <input id="Packages_77__FeedIdentifier" name="Packages[77].FeedIdentifier" type="hidden" value="" />
+                                    <input id="Packages_77__Id" name="Packages[77].Id" type="hidden" value="Microsoft.DotNet.Web.ItemTemplates" />
+                                    <input id="Packages_77__Version" name="Packages[77].Version" type="hidden" value="1.0.0-beta2-20170421-198" />
+
+                                    <a href="/feed/templating/package/nuget/Microsoft.DotNet.Web.ItemTemplates/1.0.0-beta2-20170421-198" title="Details for Microsoft.DotNet.Web.ItemTemplates 1.0.0-beta2-20170421-198">
+                                        1.0.0-beta2-20170421-198
+                                    </a> 
+                                </td>
+                                <td>4.81 KB</td>
+                                <td>Sat, 22 Apr 2017 05:00:57 GMT</td>
+                                <td>0</td>
+                                <td>
+                                        <span class="badge badge-success" style="margin-left: 10px;"><i class="icon-ok icon-white"></i></span>
+                                </td>
+                                <td style="text-align: right;">
+
+                                    <!-- TODO: make these actions async -->
+
+                                </td>
+                            </tr>
+                    </tbody>
+                </table>
+        </div>
+    </div>
+</article>
+            </div>
+        </div>
+
+        <footer class="footer">
+          
+<div class="container">
+    <div class="row">
+        <div class="span4">
+            <h2><img src="https://mygetwww-2e16.kxcdn.com/Content/images/myget/myget_125x25_white.png?c=MjAxOC4xLjAuMTcy" width="125" height="25" /></h2>
+            MyGet. Best-in-class Package Management.<br />
+            <br />
+            <p class="colofon">
+                &copy; 2011-2018 <a href="https://www.myget.org/company">MyGet (TechTomato BVBA)</a>. All rights reserved.<br/>
+                MyGet&reg; and the MyGet logo are trademarks registered with the EU Intellectual Property Office.</p>
+            <p class="colofon">
+                <a href="https://www.myget.org/policies/terms">Terms of Service</a>
+                | <a href="https://www.myget.org/policies/disclaimer">Disclaimer</a>
+                | <a href="https://www.myget.org/policies/privacy">Privacy</a>
+                | <a href="https://www.myget.org/policies/security">Security</a>
+            </p>
+        </div>
+        <div class="span2">
+            <h2>Learn more</h2>
+            <ul>
+                <li><a href="https://www.myget.org/features">Features</a></li>
+                <li><a href="https://www.myget.org/testimonials">Customers</a></li>
+                <li><a href="https://www.myget.org/pricing">Pricing</a></li>
+                <li><a href="https://www.myget.org/partners">Partners &amp; resellers</a></li>
+                <li><a href="https://www.myget.org/company">About us</a></li>
+            </ul>
+        </div>
+        <div class="span2">
+            <h2>Support and Help</h2>
+            <ul>
+                <li><a href="https://docs.myget.org/docs/reference/faq">FAQ</a></li>
+                <li><a href="https://docs.myget.org">Documentation</a></li>
+                <li><a href="/Support">Support</a></li>
+            </ul>
+        </div>
+        <div class="span2">
+            <h2>News and Updates</h2>
+            <ul>
+                <li><a href="https://blog.myget.org">Our Blog</a> &rarr;</li>
+                <li><a href="https://twitter.com/mygetteam">Follow us on Twitter</a> &rarr;</li>
+                <li><a href="https://myget.uservoice.com">Feedback via UserVoice</a> &rarr;</li>
+                <li><a href="/Status">Status Page</a> &rarr;</li>
+            </ul>
+        </div>
+    </div>
+</div>
+  
+          
+        <script type="text/javascript">
+          jQuery(function () {
+            myget.cookieConsent.bannerDisallowUrl = '';
+            myget.cookieConsent.bannerAcceptUrl = '';
+            myget.cookieConsent.init();
+          });
+        </script>
+
+
+
+    <script type="text/javascript">
+      window['ga-disable-UA-576836-11'] = true; // disable GA
+    </script>
+
+
+        </footer>
+    </div>
+
+    <div id="ajaxActivity"></div>
+    <script type="text/html" id="blank-template"></script>
+    <form id="_AntiForgeryForm" class="hidden"><input name="__RequestVerificationToken" type="hidden" value="-H4nHWokks5--M2LZGy_b_P302Nty85JZz2d9WTzML2MRCLTEma9h8ZIqU-IqNF41RFVCIfSnivlYhmUSiUU7JDgamE1" /></form>
+
+    
+</body>
+</html>
