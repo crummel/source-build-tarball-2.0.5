@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <Compile Include="fsyacc.fsx" />
-    <ProjectReference Include="../../fsharp/FSharp.Core/FSharp.Core.BuildFromSource.fsproj" />
+    <ProjectReference Include="../../buildfromsource/FSharp.Core/FSharp.Core.fsproj" />
   </ItemGroup>
 
 </Project>

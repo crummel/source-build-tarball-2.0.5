@@ -1,17 +1,22 @@
-From aac23949fd9838dd3f589b5a2a1b9bc14232e32c Mon Sep 17 00:00:00 2001
+From 3c83e2d81f1bac0544c0d74dc392771ad85b074a Mon Sep 17 00:00:00 2001
 From: karajas <karajas@microsoft.com>
-Date: Tue, 30 Jan 2018 16:44:12 -0500
+Date: Thu, 1 Feb 2018 17:54:17 -0500
 Subject: [PATCH 6/6] Add 'rtm' to prerelease tag
 
 ---
- src/buildfromsource/FSharp.Compiler.nuget/FSharp.Compiler.nuget.fsproj | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ src/buildfromsource/FSharp.Compiler.nuget/FSharp.Compiler.nuget.fsproj | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/src/buildfromsource/FSharp.Compiler.nuget/FSharp.Compiler.nuget.fsproj b/src/buildfromsource/FSharp.Compiler.nuget/FSharp.Compiler.nuget.fsproj
-index 70d5835..7034320 100644
+index 70d5835..43f21cd 100644
 --- a/src/buildfromsource/FSharp.Compiler.nuget/FSharp.Compiler.nuget.fsproj
 +++ b/src/buildfromsource/FSharp.Compiler.nuget/FSharp.Compiler.nuget.fsproj
-@@ -19,7 +19,7 @@
+@@ -14,12 +14,11 @@
+   <Import Project="..\BuildFromSource.targets" />
+ 
+   <PropertyGroup>
+-    <BuildRevision>$([System.DateTime]::Now.ToString(`yyMMdd`))</BuildRevision>
+     <PackageLicenceUrl Condition="'$(PackageLicenceUrl)' == ''">https://github.com/Microsoft/visualfsharp/blob/master/License.txt</PackageLicenceUrl>
      <PackageProjectUrl Condition="'$(PackageProjectUrl)' == ''">https://github.com/Microsoft/visualfsharp</PackageProjectUrl>
      <PackageAuthors    Condition="'$(PackageAuthors)' == ''"   >Microsoft and F# Software Foundation</PackageAuthors> 
      <PackageTags       Condition="'$(PackageTags)' == ''"      >Visual F# Compiler FSharp functional programming</PackageTags> 
