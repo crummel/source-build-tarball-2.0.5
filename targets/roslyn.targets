@@ -12,12 +12,6 @@
   </ItemGroup>
 
   <Target Name="Restore" BeforeTargets="Build">
-    <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/build/ToolsetPackages/BaseToolset.csproj"
-          WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
-    <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/build/ToolsetPackages/CoreToolset.csproj"
-          WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
     <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/CLI.sln"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
