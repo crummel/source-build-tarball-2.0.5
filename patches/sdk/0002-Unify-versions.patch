@@ -18,7 +18,7 @@ index e3f7b59..c5128f0 100644
 -    <MsBuildPackagesVersion>15.2.0-preview-000093-02</MsBuildPackagesVersion>
 -    <DependencyModelVersion>2.0.0-preview1-001960</DependencyModelVersion>
 -    <PlatformAbstractionsVersion>2.0.0-preview1-001960</PlatformAbstractionsVersion>
-+    <MsBuildPackagesVersion>15.4.8</MsBuildPackagesVersion>
++    <MsBuildPackagesVersion>15.5.180</MsBuildPackagesVersion>
 +    <DependencyModelVersion>2.0.0</DependencyModelVersion>
 +    <PlatformAbstractionsVersion>2.0.0</PlatformAbstractionsVersion>
      <NuGetVersion>4.4.0-preview3-4475</NuGetVersion>
