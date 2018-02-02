@@ -6,7 +6,9 @@
     <NuGetPackageVersion>2.6.0-pre-20171122-1</NuGetPackageVersion>
     <BuildNumber>20170721.5</BuildNumber>
     <CommitHash>ad0efbb6975c74e3e19051896be7ffcbb70d2122</CommitHash>
-    <BuildCommand>$(DotNetCommand) build $(ProjectDirectory)/CLI.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=$(BuildNumber) /p:DotNetBuildFromSource=true</BuildCommand>
+    <BuildArgs>/p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=$(BuildNumber) /p:DotNetBuildFromSource=true</BuildArgs>
+    <PublishArgs>-f netcoreapp2.0 $(BuildArgs)</PublishArgs>
+    <BuildCommand>$(DotNetCommand) build $(ProjectDirectory)/CLI.sln $(BuildArgs)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
   </PropertyGroup>
 
