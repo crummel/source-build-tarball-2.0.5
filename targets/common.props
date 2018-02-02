@@ -3,6 +3,6 @@
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
-    <PackagesOutput>$(ProjectDirectory)src/Microsoft.Extensions.CommandLineUtils/bin/$(Configuration)/</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)/artifacts/build/</PackagesOutput>
   </PropertyGroup>
 </Project>
