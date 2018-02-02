@@ -1,2 +1,0 @@
-0000000000022A40 31 instance void [System.Threading.Tasks.Extensions] System.Runtime.CompilerServices.AsyncMethodBuilderAttribute::.ctor(class [System.Runtime]System.Type)
-0000000000022A80 11 instance class [System.Runtime]System.Type [System.Threading.Tasks.Extensions] System.Runtime.CompilerServices.AsyncMethodBuilderAttribute::get_BuilderType()
