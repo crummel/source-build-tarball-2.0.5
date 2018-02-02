@@ -7,7 +7,7 @@
     <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.Common.nuspec" />
     <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.Compilers.nuspec" />
     <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.VisualBasic.nuspec" />
-    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.Net.Compilers.netcore.nuspec" />
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.NETCore.Compilers.nuspec" />
     <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.Build.Tasks.nuspec" />
   </ItemGroup>
   
