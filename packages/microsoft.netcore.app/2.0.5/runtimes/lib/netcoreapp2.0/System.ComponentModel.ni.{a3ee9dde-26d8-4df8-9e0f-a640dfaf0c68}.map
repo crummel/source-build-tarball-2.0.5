@@ -1,4 +1,0 @@
-0000000000020F00 11 instance bool [System.ComponentModel] System.ComponentModel.CancelEventArgs::get_Cancel()
-0000000000020F20 11 instance void [System.ComponentModel] System.ComponentModel.CancelEventArgs::set_Cancel(bool)
-0000000000020F40 11 instance void [System.ComponentModel] System.ComponentModel.CancelEventArgs::.ctor()
-0000000000020F60 27 instance void [System.ComponentModel] System.ComponentModel.CancelEventArgs::.ctor(bool)
