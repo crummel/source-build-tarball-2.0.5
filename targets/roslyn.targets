@@ -10,18 +10,12 @@
     <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.NETCore.Compilers.nuspec" />
     <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.Build.Tasks.nuspec" />
   </ItemGroup>
-  
+
   <Target Name="Restore" BeforeTargets="Build">
     <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/build/ToolsetPackages/BaseToolset.csproj"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
     <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/build/ToolsetPackages/CoreToolset.csproj"
-          WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
-    <Exec Command="$(DotNetCommand) publish  $(ProjectDirectory)/src/Compilers/CSharp/csc/csc.csproj --framework netcoreapp2.0 /p:Configuration=$(Configuration)"
-          WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
-    <Exec Command="$(DotNetCommand) publish $(ProjectDirectory)/src/Compilers/VisualBasic/vbc/vbc.csproj --framework netcoreapp2.0 /p:Configuration=$(Configuration)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
     <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/CLI.sln"
@@ -34,6 +28,13 @@
   </Target>
 
   <Target Name="Package" AfterTargets="Build">
+    <!-- Need to publish csc/vbc projects to get necessary files for packaging -->
+    <Exec Command="$(DotNetCommand) publish $(ProjectDirectory)/src/Compilers/CSharp/csc $(PublishArgs)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+    <Exec Command="$(DotNetCommand) publish $(ProjectDirectory)/src/Compilers/VisualBasic/vbc $(PublishArgs)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
     <Exec Command="$(DotNetCommand) pack --no-build $(ProjectDirectory)/src/NuGet/PackHelper.csproj -p:Configuration=$(Configuration) -p:NuspecFile=%(NuSpecFiles.Identity) -p:NuspecBasePath=$(ProjectDirectory)/Binaries/$(Configuration) -p:PackageOutputPath=$(PackagesOutput)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
