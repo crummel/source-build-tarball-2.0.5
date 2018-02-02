@@ -18,6 +18,12 @@
     <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/build/ToolsetPackages/CoreToolset.csproj"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
+    <Exec Command="$(DotNetCommand) publish  $(ProjectDirectory)/src/Compilers/CSharp/csc/csc.csproj --framework netcoreapp2.0 /p:Configuration=$(Configuration)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+    <Exec Command="$(DotNetCommand) publish $(ProjectDirectory)/src/Compilers/VisualBasic/vbc/vbc.csproj --framework netcoreapp2.0 /p:Configuration=$(Configuration)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
     <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/CLI.sln"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
