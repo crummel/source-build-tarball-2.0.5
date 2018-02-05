@@ -1,0 +1,26 @@
+From 5eba41800e855bc786b9d5e6118d54550631b9ae Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 5 Feb 2018 15:59:40 -0600
+Subject: [PATCH] Source init-tools so early exit when Tools are already
+ present works to fix offline build.
+
+---
+ src/core-setup/run.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/core-setup/run.sh b/src/core-setup/run.sh
+index 56e18f212..8c73c020a 100755
+--- a/src/core-setup/run.sh
++++ b/src/core-setup/run.sh
+@@ -14,7 +14,7 @@ __toolsLocalPath=$__scriptpath/Tools
+ # We do not want to run the first-time experience.
+ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+ 
+-$__scriptpath/init-tools.sh
++. $__scriptpath/init-tools.sh
+ 
+ __dotnet=$__toolsLocalPath/dotnetcli/dotnet
+ 
+-- 
+2.14.1
+

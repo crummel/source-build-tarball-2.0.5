@@ -14,7 +14,7 @@ __toolsLocalPath=$__scriptpath/Tools
 # We do not want to run the first-time experience.
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
-$__scriptpath/init-tools.sh
+. $__scriptpath/init-tools.sh
 
 __dotnet=$__toolsLocalPath/dotnetcli/dotnet
 
