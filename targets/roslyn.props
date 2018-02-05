@@ -5,7 +5,7 @@
     <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <NuGetPackageVersion>2.6.0-pre-20171122-1</NuGetPackageVersion>
     <BuildNumber>20170721.5</BuildNumber>
-    <CommitHash>ad0efbb6975c74e3e19051896be7ffcbb70d2122</CommitHash>
+    <CommitHash>d3f6b8e7e17ebc52a62150db7bb952daf0dc2c29 </CommitHash>
     <BuildArgs>/p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=$(BuildNumber) /p:DotNetBuildFromSource=true</BuildArgs>
     <PublishArgs>-f netcoreapp2.0 $(BuildArgs)</PublishArgs>
     <BuildCommand>$(DotNetCommand) build $(ProjectDirectory)/CLI.sln $(BuildArgs)</BuildCommand>

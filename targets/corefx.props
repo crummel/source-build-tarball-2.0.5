@@ -8,7 +8,7 @@
     <BuildPackagesCommand>$(ProjectDirectory)/build-packages.sh -- /p:BuildAllPackages=true /p:ConfigurationGroup=Release</BuildPackagesCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
-    <LatestCommit>7ff205bf1e4514402108d0159cbf52e8a62d4a1f</LatestCommit>
+    <LatestCommit>3b42d01009ea91b988f2a03475892b99fdc2503e</LatestCommit>
   </PropertyGroup>
 
   <ItemGroup>

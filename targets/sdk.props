@@ -5,7 +5,7 @@
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)/Packages</PackagesOutput>
     <BuildNumber>20170926-1</BuildNumber>
-    <CommitHash>fe87160ff61b4b4f9e0299a01ca17218f926d01f</CommitHash>
+    <CommitHash>a57434e053a521aaaaa085a5c7c443c4fa16a532</CommitHash>
     <BuildCommand>$(DotNetCommand) msbuild /t:BuildForCli /p:Configuration=$(Configuration) /p:BuildNumber=$(BuildNumber) /p:BUILD_SOURCEVERSION=$(CommitHash) $(ProjectDirectory)/build/build.proj</BuildCommand>
   </PropertyGroup>
 

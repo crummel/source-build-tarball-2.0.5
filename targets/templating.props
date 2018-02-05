@@ -4,7 +4,7 @@
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <PackagesOutput>$(ProjectDirectory)artifacts/packages</PackagesOutput>
-    <CommitHash>238e130268b235be44641bff66d57d75214475d9</CommitHash>
+    <CommitHash>71c5c12c4dbd25c35776431640238c29e01999e8</CommitHash>
     <BuildNumber>304</BuildNumber>
     <PackageDateTime>20170810</PackageDateTime>
     <PackageBuildQuality>beta2</PackageBuildQuality>

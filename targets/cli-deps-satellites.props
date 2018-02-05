@@ -5,7 +5,7 @@
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)</PackagesOutput>
     <BuildNumber>20170727-1</BuildNumber>
-    <CommitHash>4ae79a97bb5aadc5486d0f72223bfbf90dd9cfce</CommitHash>
+    <CommitHash>0ebf7499296fe714103dc70a09b67b279d012c53</CommitHash>
   </PropertyGroup>
   <ItemGroup>
     <EnvironmentVariables Include="BuildNumber=$(BuildNumber)" />

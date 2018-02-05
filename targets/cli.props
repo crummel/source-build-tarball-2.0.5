@@ -9,7 +9,7 @@
     <PackagesOutput>$(ProjectDirectory)artifacts/$(FixRid)/packages/</PackagesOutput>
     <TarBallOutput>$(PackagesOutput)</TarBallOutput>
     <GitCommitCount>6908</GitCommitCount>
-    <GitCommitHash>c85173f757bf9607675de0aa53734de9df782497</GitCommitHash>
+    <GitCommitHash>5e8add2190a75e5578bf6ac90dc6dfee8c69e578</GitCommitHash>
   </PropertyGroup>
 
   <ItemGroup>
